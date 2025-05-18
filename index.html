@@ -37,32 +37,32 @@
         header p {
             font-size: 1.2rem;
             opacity: 0.9;
-            max-width: 800px;
+            max-width: 500px;
             margin: 0 auto;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 1rem;
         }
 
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            margin-bottom: 3rem;
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
 
         .tool-card {
             background-color: #FFFFFD;
-            border-radius: 10px;
+            border-radius: 6px;
             padding: 2rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 98, 196, 0.15);
+            box-shadow: 0 2px 6px rgba(0, 90, 170, 0.10);
             display: flex;
             flex-direction: column;
-            height: 100%;
+            height: 95%;
             color: #122930;
             border: 1px solid rgba(0, 98, 196, 0.1);
         }
@@ -71,7 +71,7 @@
             background-color: #0062c4;
             color: #FFFFFD;
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 98, 196, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 98, 196, 0.3);
         }
 
         .tool-card h2 {
@@ -85,13 +85,13 @@
         }
 
         .tool-card p {
-            margin-bottom: 1.8rem;
+            margin-bottom: 1.3rem;
             flex-grow: 1;
             color: #555555;
         }
 
         .tool-card:hover p {
-            color: rgba(255, 255, 253, 0.9);
+            color: rgba(200, 200, 202, 0.5);
         }
 
         .tool-card .btn {
@@ -121,8 +121,8 @@
             background-color: #133336;
             color: #FFFFFF;
             text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
+            padding: 1rem;
+            margin-top: 2.50rem;
         }
 
         footer p {
@@ -130,9 +130,9 @@
             margin-bottom: 0.5rem;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 500px) {
             .tools-grid {
-                gap: 1.5rem;
+                gap: 1.1rem;
             }
             
             .tool-card {
@@ -140,7 +140,7 @@
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 500px) {
             .tools-grid {
                 grid-template-columns: 1fr;
             }
@@ -150,9 +150,9 @@
             }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 500px) {
             .container {
-                padding: 0 1.2rem;
+                padding: 0 1rem;
             }
             
             .tool-card {
@@ -164,7 +164,7 @@
             }
             
             header {
-                padding: 2rem 1rem;
+                padding: 1rem 1rem;
             }
             
             header h1 {
@@ -261,7 +261,7 @@
                 <button class="btn" onclick="redirectToTool('SEO Marketing')">Use Tool</button>
             </div>
 
-            <!-- Video Tools -->
+            <h2>Video Tools</h2>
             <div class="tool-card">
                 <h2>Video Converter</h2>
                 <p>Convert videos between MP4, AVI, MOV, MKV and other popular formats.</p>
@@ -322,7 +322,7 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2023 TOOLS BAZAR. All rights reserved.</p>
+            <p>&copy; 2025 TOOLS BAZAR. All rights reserved.</p>
             <p>Your one-stop destination for all online tools</p>
         </div>
     </footer>
