@@ -22,9 +22,9 @@
             background-color: #133336;
             color: #FFFFFF;
             text-align: center;
-            padding: 1rem 1rem;
+            padding: 2rem 1rem;
             margin-bottom: 2rem;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         header h1 {
@@ -37,12 +37,12 @@
         header p {
             font-size: 1.2rem;
             opacity: 0.9;
-            max-width: 350px;
+            max-width: 550px;
             margin: 0 auto;
         }
 
         .container {
-            max-width: 500px;
+            max-width: 550px;
             margin: 0 auto;
             padding: 0 1rem;
         }
@@ -50,19 +50,19 @@
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+            gap: 1.50rem;
             margin-bottom: 2rem;
         }
 
         .tool-card {
             background-color: #FFFFFD;
-            border-radius: 3px;
+            border-radius: 10px;
             padding: 1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 6px 10px rgba(0, 90, 170, 0.10);
+            box-shadow: 0 4px 10px rgba(0, 90, 170, 0.10);
             display: flex;
             flex-direction: column;
-            height: 80%;
+            height: 90%;
             color: #122930;
             border: 1px solid rgba(0, 98, 196, 0.1);
         }
@@ -71,7 +71,7 @@
             background-color: #0062c4;
             color: #FFFFFD;
             transform: translateY(-5px);
-            box-shadow: 0 6px 10px rgba(0, 98, 196, 0.3);
+            box-shadow: 0 6px 12px rgba(0, 98, 196, 0.3);
         }
 
         .tool-card h2 {
@@ -85,13 +85,13 @@
         }
 
         .tool-card p {
-            margin-bottom: 1.3rem;
+            margin-bottom: 1.5rem;
             flex-grow: 1;
             color: #555555;
         }
 
         .tool-card:hover p {
-            color: rgba(180, 180, 183, 0.5);
+            color: rgba(195, 195, 190, 0.6);
         }
 
         .tool-card .btn {
@@ -120,7 +120,7 @@
             background-color: #133336;
             color: #FFFFFF;
             text-align: center;
-            padding: 1rem;
+            padding: 1.50rem;
             margin-top: 2.20rem;
         }
 
@@ -129,7 +129,7 @@
             margin-bottom: 0.5rem;
         }
 
-        @media (max-width: 400px) {
+        @media (max-width: 550px) {
             .tools-grid {
                 gap: 1.1rem;
             }
@@ -139,7 +139,7 @@
             }
         }
 
-        @media (max-width: 400px) {
+        @media (max-width: 550px) {
             .tools-grid {
                 grid-template-columns: 1fr;
             }
@@ -149,7 +149,7 @@
             }
         }
 
-        @media (max-width: 400px) {
+        @media (max-width: 450px) {
             .container {
                 padding: 0 1rem;
             }
@@ -159,15 +159,15 @@
             }
 
             .tool-card h2 {
-                font-size: 1rem;
+                font-size: 1.1rem;
             }
             
             header {
-                padding: 1rem 1rem;
+                padding: 1.50rem 1rem;
             }
             
             header h1 {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
             
             header p {
@@ -186,10 +186,8 @@
 
     <main class="container">
         <div class="tools-grid">
-                                        <h2>Image Tools<h2 headerh1 { margin-bottom: 1.3rem;
-                                                         flex-grow: 1;
-                                                        color: #555555;
-        
+                                        <h2>Image Tools<h2header {
+                                                         padding: 1.50rem 1rem;
             <div class="tool-card">
                 <h2>Image Converter</h2>
                 <p>Convert between JPG, PNG, WEBP, and other image formats with high quality output.</p>
@@ -238,7 +236,8 @@
                 <button class="btn" onclick="redirectToTool('JPG to Vector')">Use Tool</button>
             </div>
 
-            <!-- Social Media Tools -->
+                                          <h2>Social Media Tools<h2header {
+                                                         padding: 1.50rem 1rem;
             <div class="tool-card">
                 <h2>Hashtag Generator</h2>
                 <p>Generate trending hashtags for your social media posts to increase engagement.</p>
@@ -282,7 +281,8 @@
                 <button class="btn" onclick="redirectToTool('Video Enhancer')">Use Tool</button>
             </div>
 
-            <!-- Calculator Tools -->
+                                              <h2>Calculator Tools<h2header {
+                                                         padding: 1.50rem 1rem;
             <div class="tool-card">
                 <h2>Age Calculator</h2>
                 <p>Calculate exact age in years, months, days, and even hours or minutes.</p>
@@ -307,7 +307,8 @@
                 <button class="btn" onclick="redirectToTool('Forex Calculator')">Use Tool</button>
             </div>
 
-            <!-- Audio Tools -->
+                                                 <h2>Audio Tools<h2header {
+                                                         padding: 1.50rem 1rem;
             <div class="tool-card">
                 <h2>Audio Trim</h2>
                 <p>Cut and trim audio files online with precision editing tools.</p>
