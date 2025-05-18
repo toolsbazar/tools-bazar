@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tools Bazar - Your Ultimate Online Tool Collection</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #1E1E2F;
+            color: #EAEAEA;
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #850101;
+            color: #FFD700;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Main Content Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Tool Card Styles */
+        .tool-card {
+            background-color: #3A3D5B;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .tool-card:hover {
+            background-color: #FFD700;
+            color: #1E1E2F;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(255, 215, 0, 0.3);
+        }
+
+        .tool-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #FFD700;
+        }
+
+        .tool-card:hover h2 {
+            color: #1E1E2F;
+        }
+
+        .tool-card p {
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .tool-card .btn {
+            display: inline-block;
+            background-color: #FFD700;
+            color: #1E1E2F;
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .tool-card .btn:hover {
+            background-color: #E6C200;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #850101;
+            color: #FFD700;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tool-card {
+                padding: 1rem;
+            }
+
+            .tool-card h2 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tools Bazar</h1>
+        <p>Your one-stop destination for all online tools</p>
+    </header>
+
+    <main class="container">
+        <div class="tools-grid">
+            <!-- Image Tools -->
+            <div class="tool-card">
+                <h2>Image Converter</h2>
+                <p>Convert your images between JPG, PNG, WEBP, and other formats with ease.</p>
+                <button class="btn" onclick="redirectToTool('Image Converter')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Image Compressor</h2>
+                <p>Reduce image file size without losing quality. Perfect for web optimization.</p>
+                <button class="btn" onclick="redirectToTool('Image Compressor')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Image Crop</h2>
+                <p>Crop your images to any size or aspect ratio with precision.</p>
+                <button class="btn" onclick="redirectToTool('Image Crop')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Image Enhancer</h2>
+                <p>Improve your image quality, adjust brightness, contrast, and more.</p>
+                <button class="btn" onclick="redirectToTool('Image Enhancer')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Image to PDF</h2>
+                <p>Convert multiple images into a single PDF document quickly.</p>
+                <button class="btn" onclick="redirectToTool('Image to PDF')">Use Tool</button>
+            </div>
+
+            <!-- Video Tools -->
+            <div class="tool-card">
+                <h2>Video Converter</h2>
+                <p>Convert videos between MP4, AVI, MOV, MKV and other popular formats.</p>
+                <button class="btn" onclick="redirectToTool('Video Converter')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>All Video Downloader</h2>
+                <p>Download videos from various platforms in multiple quality options.</p>
+                <button class="btn" onclick="redirectToTool('All Video Downloader')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>TikTok Video Downloader</h2>
+                <p>Download TikTok videos without watermark in HD quality.</p>
+                <button class="btn" onclick="redirectToTool('TikTok Video Downloader')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Instagram Video Downloader</h2>
+                <p>Download Instagram videos, reels, and IGTV content easily.</p>
+                <button class="btn" onclick="redirectToTool('Instagram Video Downloader')">Use Tool</button>
+            </div>
+
+            <!-- Calculator Tools -->
+            <div class="tool-card">
+                <h2>Age Calculator</h2>
+                <p>Calculate your exact age in years, months, days, and even seconds!</p>
+                <button class="btn" onclick="redirectToTool('Age Calculator')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>EMI Calculator</h2>
+                <p>Calculate your Equated Monthly Installments for loans and mortgages.</p>
+                <button class="btn" onclick="redirectToTool('EMI Calculator')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>SIP Calculator</h2>
+                <p>Plan your Systematic Investment Plan returns with our smart calculator.</p>
+                <button class="btn" onclick="redirectToTool('SIP Calculator')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Forex Calculator</h2>
+                <p>Convert between currencies and calculate forex rates in real-time.</p>
+                <button class="btn" onclick="redirectToTool('Forex Calculator')">Use Tool</button>
+            </div>
+
+            <!-- Audio Tools -->
+            <div class="tool-card">
+                <h2>Audio Trim</h2>
+                <p>Trim your audio files online without any software installation.</p>
+                <button class="btn" onclick="redirectToTool('Audio Trim')">Use Tool</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Tools Bazar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function redirectToTool(toolName) {
+            alert(`Redirecting to ${toolName} - Tools Bazar`);
+            // In a real implementation, you would redirect to the actual tool page
+            // window.location.href = `/tools/${toolName.toLowerCase().replace(/ /g, '-')}`;
+        }
+    </script>
+</body>
+</html>
