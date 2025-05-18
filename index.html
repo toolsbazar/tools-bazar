@@ -3,34 +3,329 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Converter Tool - TOOLS BAZAR</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>TOOLS BAZAR - Ultimate Online Tools Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #122930;
+            color: #EAEAEA;
+            line-height: 1.3;
+        }
+
+        header {
+            background-color: #133336;
+            color: #FFFFFF;
+            text-align: center;
+            padding: 2.3rem 1rem;
+            margin-bottom: 2.3rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            font-size: 2.80rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 0 1.50rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.50rem;
+            margin-bottom: 2.50rem;
+        }
+
+        .tool-card {
+            background-color: #FFFFFD;
+            border-radius: 8px;
+            padding: 1.50rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 90, 170, 0.10);
+            display: flex;
+            flex-direction: column;
+            height: 95%;
+            color: #122930;
+            border: 1px solid rgba(0, 98, 196, 0.1);
+        }
+
+        .tool-card:hover {
+            background-color: #0062c4;
+            color: #FFFFFD;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 14px rgba(0, 98, 196, 0.3);
+        }
+
+        .tool-card h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: #0062c4;
+        }
+
+        .tool-card:hover h2 {
+            color: #FFFFFD;
+        }
+
+        .tool-card p {
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+            color: #555555;
+        }
+
+        .tool-card:hover p {
+            color: rgba(230, 230, 229, 0.7);
+        }
+
+        .tool-card .btn {
+            display: inline-block;
+            background-color: #0062c4;
+            color: #FFFFFF;
+            padding: 0.8rem 1.8rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            width: fit-content;
+            margin-top: auto;
+        }
+
+        .tool-card .btn:hover {
+            background-color: #004a94;
+            transform: scale(1.01);
+        }
+
+        footer {
+            background-color: #133336;
+            color: #FFFFFF;
+            text-align: center;
+            padding: 1.50rem;
+            margin-top: 2.20rem;
+        }
+
+        footer p {
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 550px) {
+            .tools-grid {
+                gap: 1.3rem;
+            }
+            
+            .tool-card {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .container {
+                padding: 0 1.1rem;
+            }
+            
+            .tool-card {
+                padding: 1.2rem;
+            }
+
+            .tool-card h2 {
+                font-size: 1.2rem;
+            }
+            
+            header {
+                padding: 1.50rem 1rem;
+            }
+            
+            header h1 {
+                font-size: 1.6rem;
+            }
+            
+            header p {
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Image Converter Tool</h1>
+        <div class="container">
+            <h1>TOOLS BAZAR</h1>
+            <p>Your comprehensive collection of essential online tools for all your digital needs</p>
+        </div>
     </header>
-    <main>
-        <div class="converter-container">
-            <input type="file" id="imageInput" accept=".png, .jpg, .jpeg, .bmp, .gif, .tiff, .webp" />
-            <select id="outputFormat">
-                <option value="png">PNG</option>
-                <option value="jpg">JPG</option>
-                <option value="jpeg">JPEG</option>
-                <option value="bmp">BMP</option>
-                <option value="gif">GIF</option>
-                <option value="tiff">TIFF</option>
-                <option value="webp">WEBP</option>
-            </select>
-            <button id="convertButton">Convert</button>
-            <div id="loadingMessage" class="hidden">Processing image...</div>
-            <div id="outputContainer" class="hidden">
-                <h2>Preview:</h2>
-                <img id="outputImage" alt="Converted Image Preview" />
-                <a id="downloadLink" class="hidden" download>Download Converted Image</a>
+
+    <main class="container">
+        <div class="tools-grid">
+                                        
+            <div class="tool-card">
+                <h2>Image Converter</h2>
+                <p>Convert between JPG, PNG, WEBP, and other image formats with high quality output.</p>
+                <button class="btn" onclick="redirectToTool('Image Converter')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Image Compressor</h2>
+                <p>Reduce image file size while maintaining visual quality for faster web loading.</p>
+                <button class="btn" onclick="redirectToTool('Image Compressor')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Image Crop</h2>
+                <p>Precisely crop your images to any dimension or aspect ratio you need.</p>
+                <button class="btn" onclick="redirectToTool('Image Crop')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Image Enhance</h2>
+                <p>Improve image quality, adjust colors, brightness and remove imperfections.</p>
+                <button class="btn" onclick="redirectToTool('Image Enhance')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Image to PDF</h2>
+                <p>Convert multiple images into a single PDF document with customizable settings.</p>
+                <button class="btn" onclick="redirectToTool('Image to PDF')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>JPG to PDF</h2>
+                <p>Convert JPG images to PDF files with options for quality and page size.</p>
+                <button class="btn" onclick="redirectToTool('JPG to PDF')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>JPG to PNG</h2>
+                <p>Convert JPG images to PNG format with transparent background options.</p>
+                <button class="btn" onclick="redirectToTool('JPG to PNG')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>JPG to Vector</h2>
+                <p>Convert raster JPG images to scalable vector graphics (SVG) format.</p>
+                <button class="btn" onclick="redirectToTool('JPG to Vector')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Hashtag Generator</h2>
+                <p>Generate trending hashtags for your social media posts to increase engagement.</p>
+                <button class="btn" onclick="redirectToTool('Hashtag Generator')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Instagram Caption Generator</h2>
+                <p>Create catchy Instagram captions with emojis for your perfect post.</p>
+                <button class="btn" onclick="redirectToTool('Instagram Caption Generator')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>YouTube Title Generator</h2>
+                <p>Generate compelling YouTube titles and descriptions to boost your views.</p>
+                <button class="btn" onclick="redirectToTool('YouTube Title Generator')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>SEO Marketing</h2>
+                <p>Optimize your content with our SEO tools for better search engine rankings.</p>
+                <button class="btn" onclick="redirectToTool('SEO Marketing')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Video Converter</h2>
+                <p>Convert videos between MP4, AVI, MOV, MKV and other popular formats.</p>
+                <button class="btn" onclick="redirectToTool('Video Converter')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>All Social Media Video Downloader</h2>
+                <p>Download videos from Instagram, Facebook, Twitter, and other platforms.</p>
+                <button class="btn" onclick="redirectToTool('All Social Media Video Downloader')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Video Enhancer</h2>
+                <p>Improve video quality, upscale resolution, and enhance colors automatically.</p>
+                <button class="btn" onclick="redirectToTool('Video Enhancer')">Use Tool</button>
+            </div>
+                                              
+            <div class="tool-card">
+                <h2>Age Calculator</h2>
+                <p>Calculate exact age in years, months, days, and even hours or minutes.</p>
+                <button class="btn" onclick="redirectToTool('Age Calculator')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>EMI Calculator</h2>
+                <p>Calculate Equated Monthly Installments for loans with detailed breakdown.</p>
+                <button class="btn" onclick="redirectToTool('EMI Calculator')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>SIP Calculator</h2>
+                <p>Calculate returns on your Systematic Investment Plans with projections.</p>
+                <button class="btn" onclick="redirectToTool('SIP Calculator')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Forex Calculator</h2>
+                <p>Convert currencies and calculate forex rates with up-to-date exchange data.</p>
+                <button class="btn" onclick="redirectToTool('Forex Calculator')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Audio Trim</h2>
+                <p>Cut and trim audio files online with precision editing tools.</p>
+                <button class="btn" onclick="redirectToTool('Audio Trim')">Use Tool</button>
+            </div>
+
+            <div class="tool-card">
+                <h2>Text to Audio</h2>
+                <p>Convert written text to natural sounding speech in multiple languages.</p>
+                <button class="btn" onclick="redirectToTool('Text to Audio')">Use Tool</button>
             </div>
         </div>
     </main>
-    <script src="converter.js"></script>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 TOOLS BAZAR. All rights reserved.</p>
+            <p>Your one-stop destination for all online tools</p>
+        </div>
+    </footer>
+
+    <script>
+        function redirectToTool(toolName) {
+            alert(`Redirecting to ${toolName} - TOOLS BAZAR`)
+        }
+    </script>
 </body>
 </html>
