@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi Tool Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #1E1E2F;
+            color: #EAEAEA;
+            text-align: center;
+        }
+
+        .header {
+            background: #2B2D42;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        .tool-card {
+            background: #3A3D5B;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: 0.3s;
+            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+        }
+
+        .tool-card:hover {
+            background: #FFD700;
+            color: #1E1E2F;
+        }
+
+        .tool-card h2 {
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #FFD700;
+            color: #1E1E2F;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #E6C200;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Multi Tool Hub</div>
+    
+    <div class="container">
+        <div class="tool-card">
+            <h2>Image Converter</h2>
+            <p>Convert images to different formats easily.</p>
+            <button class="btn" onclick="goToSection('image-converter')">Go to Tool</button>
+        </div>
+
+        <div class="tool-card">
+            <h2>Image Compressor</h2>
+            <p>Compress images without losing quality.</p>
+            <button class="btn" onclick="goToSection('image-compressor')">Go to Tool</button>
+        </div>
+
+        <div class="tool-card">
+            <h2>Image Crop</h2>
+            <p>Crop images to the desired size and dimensions.</p>
+            <button class="btn" onclick="goToSection('image-crop')">Go to Tool</button>
+        </div>
+
+        <div class="tool-card">
+            <h2>Video Converter</h2>
+            <p>Convert videos to different formats quickly.</p>
+            <button class="btn" onclick="goToSection('video-converter')">Go to Tool</button>
+        </div>
+
+        <div class="tool-card">
+            <h2>Age Calculator</h2>
+            <p>Find your exact age in years, months, and days.</p>
+            <button class="btn" onclick="goToSection('age-calculator')">Go to Tool</button>
+        </div>
+
+        <div class="tool-card">
+            <h2>EMI Calculator</h2>
+            <p>Calculate your loan EMIs quickly.</p>
+            <button class="btn" onclick="goToSection('emi-calculator')">Go to Tool</button>
+        </div>
+
+        <div class="tool-card">
+            <h2>SIP Calculator</h2>
+            <p>Calculate your SIP returns effortlessly.</p>
+            <button class="btn" onclick="goToSection('sip-calculator')">Go to Tool</button>
+        </div>
+
+        <div class="tool-card">
+            <h2>Audio Trim</h2>
+            <p>Trim audio files to your required length.</p>
+            <button class="btn" onclick="goToSection('audio-trim')">Go to Tool</button>
+        </div>
+    </div>
+
+    <script>
+        function goToSection(sectionId) {
+            alert('Redirecting to ' + sectionId + ' (Page under development)');
+            // Replace with actual navigation logic when the pages are ready
+        }
+    </script>
+</body>
+</html>
+
+  
