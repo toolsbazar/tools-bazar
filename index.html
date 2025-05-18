@@ -5,9 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TOOLS BAZAR</title>
     <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
+</head>background-color: #133336;
+    color: #EAEAEA;
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+<body>{
+    font-family: sans-serif;
+    background-color: #122930;
+    color: #EAEAEA;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+    <header>margin: 0;
+    font-size: 2.5em;
         <h1>TOOLS BAZAR</h1>
     </header>
     <main class="tools-grid">
@@ -116,8 +133,87 @@
             <p>Convert your text into spoken audio.</p>
             <button onclick="showAlert('Text to Audio')">Go to Tool</button>
         </div>
-    </main>
+    </main>tools-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 30px;
+    width: 90%;
+    max-width: 1200px;
+    box-sizing: border-box;
+}
 
+.tool-card {
+    background-color: #FFFFFD;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 5px 5px 15px rgba(255, 215, 0, 0.2);
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.tool-card:hover {
+    background-color: #0062c4;
+    color: #1E1E2F;
+    cursor: pointer;
+}
+
+.tool-card h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    color: #333; /* Adjust text color for light background */
+}
+
+.tool-card p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: #555; /* Adjust text color for light background */
+}
+
+.tool-card button {
+    background-color: #0062c4;
+    color: #EAEAEA;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.tool-card button:hover {
+    background-color: #0052a3; /* Deeper shade of the accent color */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .tools-grid {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+
+    .tool-card {
+        padding: 15px;
+    }
+
+    .tool-card h2 {
+        font-size: 1.3em;
+    }
+
+    .tool-card p {
+        font-size: 0.9em;
+    }
+
+    .tool-card button {
+        padding: 8px 16px;
+        font-size: 0.9em;
+    }
+}
+JavaScript
+
+function showAlert(toolName) {
+    alert(`Redirecting to ${toolName}`);
+}
     <script>
         function showAlert(toolName) {
             alert(`Redirecting to ${toolName}`);
