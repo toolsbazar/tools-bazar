@@ -1,140 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOOLS BAZAR</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background: #292929;
-            color: #003c78;
-            text-align: center;
-        }
-
-        .header {
-            background: #133336;
-            padding: 20px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #c40000;
-        }
-
-        .container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            max-width: 900px;
-            margin: 40px auto;
-        }
-
-        .tool-card {
-            background: #FFFFFD;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            transition: 0.3s;
-            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
-        }
-
-        .tool-card:hover {
-            background: #0062c4;
-            color: #FFFFFD;
-        }
-
-        .tool-card h2 {
-            margin-bottom: 10px;
-        }
-
-        .btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            background: #0062c4;
-            color: #1E1E2F;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn:hover {
-            background: #003c78;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    
+    <
+<meta charset="UTF-8">
+    
+  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi Tool Hub</title>
+    
+  
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="header">TOOLS BAZAR</div>
+    <header>
+        <h1>Multi Tool Hub</h1>
+    </header>
     
-    <div class="container">
-        <div class="tool-card">
-            <h2>Image Converter</h2>
-            <p>Convert images to different formats easily.</p>
-            <button class="btn" onclick="goToSection('image-converter')">Go to Tool</button>
-        </div>
+ 
+<main>
+        
+      
+<div class="tool-grid">
+            <div class="tool-card">
+                
+               
+<h2>Image Converter</h2>
+                
+                <
 
-        <div class="tool-card">
-            <h2>Image Compressor</h2>
-            <p>Compress images without losing quality.</p>
-            <button class="btn" onclick="goToSection('image-compressor')">Go to Tool</button>
-        </div>
+   
+<p>Convert images between different formats easily.</p>
+                
+             
+<button onclick="redirect('Image Converter')">Go to Tool</button>
+            </div>
+            <div class="tool-card">
+                
+   
+<h2>Image Compressor</h2>
+                
+                <
+<p>Reduce image size without losing quality.</p>
+                <button onclick="redirect('Image Compressor')">Go to Tool</button>
+            </div>
+            
+ 
+<div class="tool-card">
+                
+ 
+<h2>Image Crop</h2>
+                <p>Crop images to your desired dimensions.</p>
+                <button onclick="redirect('Image Crop')">Go to Tool</button>
+            
+   
+</div>
+            
+    
+<div class="tool-card">
+                <h2>Video Converter</h2>
+                
+    
+<p>Convert videos to different formats quickly.</p>
+                
+        
+<button onclick="redirect('Video Converter')">Go to Tool</button>
+            
+         
+</div>
+            
+      
+<div class="tool-card">
+                
+ 
+<h2>Age Calculator</h2>
+                
+      
+<p>Calculate your age in years, months, and days.</p>
+                
+     
+<button onclick="redirect('Age Calculator')">Go to Tool</button>
+            </div>
+            
+     
+<div class="tool-card">
+                
+              
+<h2>EMI Calculator</h2>
+                
+      
+<p>Calculate your Equated Monthly Installment.</p>
+                <button onclick="redirect('EMI Calculator')">Go to Tool</button>
+            
+       
+</div>
+            
+        
+<div class="tool-card">
+                
+                
 
-        <div class="tool-card">
-            <h2>Image Crop</h2>
-            <p>Crop images to the desired size and dimensions.</p>
-            <button class="btn" onclick="goToSection('image-crop')">Go to Tool</button>
-        </div>
-
-        <div class="tool-card">
-            <h2>Video Converter</h2>
-            <p>Convert videos to different formats quickly.</p>
-            <button class="btn" onclick="goToSection('video-converter')">Go to Tool</button>
-        </div>
-
-        <div class="tool-card">
-            <h2>Age Calculator</h2>
-            <p>Find your exact age in years, months, and days.</p>
-            <button class="btn" onclick="goToSection('age-calculator')">Go to Tool</button>
-        </div>
-
-        <div class="tool-card">
-            <h2>EMI Calculator</h2>
-            <p>Calculate your loan EMIs quickly.</p>
-            <button class="btn" onclick="goToSection('emi-calculator')">Go to Tool</button>
-        </div>
-
-        <div class="tool-card">
-            <h2>SIP Calculator</h2>
-            <p>Calculate your SIP returns effortlessly.</p>
-            <button class="btn" onclick="goToSection('sip-calculator')">Go to Tool</button>
-        </div>
-
-        <div class="tool-card">
-            <h2>Audio Trim</h2>
-            <p>Trim audio files to your required length.</p>
-            <button class="btn" onclick="goToSection('audio-trim')">Go to Tool</button>
-        </div>
-    </div>
-
-    <script>
-        function goToSection(sectionId) {
-            alert('Redirecting to ' + sectionId + ' (Page under development)');
-            // Replace with actual navigation logic when the pages are ready
-        }
-    </script>
-</body>
-</html>
-
+ 
+<h2>SIP Calculator</h2>
+                
+      
+<p>Calculate your Systematic Investment Plan returns.</p>
+                
+   
+<button onclick="redirect('SIP Calculator')">Go to Tool</button>
+            </div>
+            
+    
+<div class="tool-card">
+                
+   
+<h2>Audio Trim</h2>
+                
+           
+<p>Trim audio files to your desired length.</p>
+                
+                
+<button onclick="redirect('Audio Trim')">Go to Tool</button>
+            
   
+</div>
+        </div>
+    
+ 
+</main>
+    
+    <
+<script src="script.js"></script>
+
+</bod
+</body>
+
+</ht
+</html>  {box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    
+ 
+font-family: Arial, sans-serif;
+    
+    
+background-color: #3a3d5b;
+    color: #EAEAEA;
+}
+
+
+}
+header {
+    
+  
+background-color: #2B2D42;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    margin: 0;
+}
+
+.tool-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+
+}
+
+.
+.tool-card {
+    
+    backgrou
+
+    
+background-color: #FFFFFF;
+    
+    pad
+padding: 20px;
+    
+   
+border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+}
+
+.tool-card:hover {
+    background-color: #38ACEC;
+    color: #3a3d5b;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+}
+
+.tool-card h2 {
+    margin-bottom: 10px;
+}
+
+.tool-card p {
+    margin-bottom: 15px;
+}
+
+button {
+    
+    backg
+background-color: #FFD700;
+    border: none;
+    color: #3a3d5b;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #E6C200;
+}
+
+@media (max-width: 600px) {
+    .tool-grid {
+        grid-template-columns: 1fr;
+    }
+}
+function redirect(toolName) {
+    alert("Redirecting to " + toolName);
+}
