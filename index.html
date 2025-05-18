@@ -15,20 +15,20 @@
         body {
             background-color: #122930;
             color: #EAEAEA;
-            line-height: 1.2;
+            line-height: 1;
         }
 
         header {
             background-color: #133336;
             color: #FFFFFF;
             text-align: center;
-            padding: 2rem 1rem;
-            margin-bottom: 2.1rem;
+            padding: 1rem 1rem;
+            margin-bottom: 2rem;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
         header h1 {
-            font-size: 3rem;
+            font-size: 2rem;
             margin-bottom: 0.5rem;
             letter-spacing: 1px;
             text-transform: uppercase;
@@ -37,12 +37,12 @@
         header p {
             font-size: 1.2rem;
             opacity: 0.9;
-            max-width: 500px;
+            max-width: 350px;
             margin: 0 auto;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 500px;
             margin: 0 auto;
             padding: 0 1rem;
         }
@@ -56,13 +56,13 @@
 
         .tool-card {
             background-color: #FFFFFD;
-            border-radius: 6px;
-            padding: 2rem;
+            border-radius: 3px;
+            padding: 1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 6px rgba(0, 90, 170, 0.10);
+            box-shadow: 0 6px 10px rgba(0, 90, 170, 0.10);
             display: flex;
             flex-direction: column;
-            height: 95%;
+            height: 80%;
             color: #122930;
             border: 1px solid rgba(0, 98, 196, 0.1);
         }
@@ -71,7 +71,7 @@
             background-color: #0062c4;
             color: #FFFFFD;
             transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0, 98, 196, 0.3);
+            box-shadow: 0 6px 10px rgba(0, 98, 196, 0.3);
         }
 
         .tool-card h2 {
@@ -91,7 +91,7 @@
         }
 
         .tool-card:hover p {
-            color: rgba(200, 200, 202, 0.5);
+            color: rgba(180, 180, 183, 0.5);
         }
 
         .tool-card .btn {
@@ -113,16 +113,15 @@
 
         .tool-card .btn:hover {
             background-color: #004a94;
-            transform: scale(1.02);
+            transform: scale(1.00);
         }
 
-        /* Footer Styles */
         footer {
             background-color: #133336;
             color: #FFFFFF;
             text-align: center;
             padding: 1rem;
-            margin-top: 2.50rem;
+            margin-top: 2.20rem;
         }
 
         footer p {
@@ -130,7 +129,7 @@
             margin-bottom: 0.5rem;
         }
 
-        @media (max-width: 500px) {
+        @media (max-width: 400px) {
             .tools-grid {
                 gap: 1.1rem;
             }
@@ -140,7 +139,7 @@
             }
         }
 
-        @media (max-width: 500px) {
+        @media (max-width: 400px) {
             .tools-grid {
                 grid-template-columns: 1fr;
             }
@@ -150,17 +149,17 @@
             }
         }
 
-        @media (max-width: 500px) {
+        @media (max-width: 400px) {
             .container {
                 padding: 0 1rem;
             }
             
             .tool-card {
-                padding: 1.2rem;
+                padding: 1rem;
             }
 
             .tool-card h2 {
-                font-size: 1.4rem;
+                font-size: 1rem;
             }
             
             header {
@@ -168,7 +167,7 @@
             }
             
             header h1 {
-                font-size: 1.8rem;
+                font-size: 1.5rem;
             }
             
             header p {
@@ -187,7 +186,10 @@
 
     <main class="container">
         <div class="tools-grid">
-            <!-- Image Tools -->
+                                        <h2>Image Tools<h2 headerh1 { margin-bottom: 1.3rem;
+                                                         flex-grow: 1;
+                                                        color: #555555;
+        
             <div class="tool-card">
                 <h2>Image Converter</h2>
                 <p>Convert between JPG, PNG, WEBP, and other image formats with high quality output.</p>
