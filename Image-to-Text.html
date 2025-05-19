@@ -218,34 +218,35 @@
             opacity: 1;
         }
 
-        .preview-area {
-            margin-bottom: 20px;
+        .preview-section {
             display: flex;
-            flex-wrap: wrap;
             gap: 20px;
-            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
-        .preview-item {
+        .image-preview {
+            flex: 1;
+            min-width: 300px;
             text-align: center;
-            max-width: 100%;
         }
 
-        .preview-item img {
+        .image-preview img {
             max-width: 100%;
             max-height: 300px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .preview-item p {
+        .image-preview p {
             color: var(--text-secondary);
             font-size: 0.9rem;
             margin-top: 10px;
         }
 
         .text-area {
-            margin-bottom: 20px;
+            flex: 1;
+            min-width: 300px;
         }
 
         .text-area label {
@@ -257,7 +258,7 @@
 
         .text-area textarea {
             width: 100%;
-            height: 200px;
+            height: 300px;
             padding: 12px;
             border-radius: 5px;
             border: none;
@@ -278,6 +279,7 @@
             gap: 15px;
             justify-content: center;
             flex-wrap: wrap;
+            margin-bottom: 20px;
         }
 
         .btn {
@@ -303,6 +305,18 @@
             color: var(--primary);
         }
 
+        .copy-btn {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            display: none;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
         .download-btn {
             background-color: transparent;
             color: var(--primary);
@@ -313,6 +327,17 @@
         .download-btn:hover {
             background-color: var(--primary);
             color: var(--white);
+        }
+
+        .clear-btn {
+            background-color: var(--text-secondary);
+            color: var(--dark);
+            border: 2px solid var(--text-secondary);
+        }
+
+        .clear-btn:hover {
+            background-color: transparent;
+            color: var(--text-secondary);
         }
 
         .loading::after {
@@ -462,8 +487,13 @@
                 font-size: 32px;
             }
 
-            .preview-item {
-                max-width: 100%;
+            .preview-section {
+                flex-direction: column;
+            }
+
+            .image-preview,
+            .text-area {
+                min-width: 100%;
             }
 
             .language-selector {
@@ -550,16 +580,20 @@
                     <p>Drag and drop an image here or click to upload (Max 5MB)</p>
                     <input type="file" id="imageInput" accept="image/jpeg,image/png,image/bmp,image/gif,image/tiff" style="display: none;">
                 </div>
-                <div class="preview-area" id="previewArea">
-                    <!-- Preview image will be inserted here -->
-                </div>
-                <div class="text-area">
-                    <label for="extractedText">Extracted Text</label>
-                    <textarea id="extractedText" placeholder="Extracted text will appear here..." readonly></textarea>
+                <div class="preview-section" id="previewSection">
+                    <div class="image-preview" id="imagePreview">
+                        <!-- Image preview will be inserted here -->
+                    </div>
+                    <div class="text-area">
+                        <label for="extractedText">Extracted Text</label>
+                        <textarea id="extractedText" placeholder="Extracted text will appear here..." readonly></textarea>
+                    </div>
                 </div>
                 <div class="action-buttons">
                     <button class="btn extract-btn" id="extractBtn" disabled>Extract Text</button>
+                    <button class="btn copy-btn" id="copyBtn">Copy Text</button>
                     <a class="btn download-btn" id="downloadBtn" href="#" download>Download Text</a>
+                    <button class="btn clear-btn" id="clearBtn">Clear All</button>
                 </div>
                 <p class="error-message" id="errorMessage">Please upload a valid image file.</p>
                 <p class="progress-message" id="progressMessage">Processing image...</p>
@@ -599,10 +633,12 @@
     <script>
         const uploadArea = document.getElementById('uploadArea');
         const imageInput = document.getElementById('imageInput');
-        const previewArea = document.getElementById('previewArea');
+        const imagePreview = document.getElementById('imagePreview');
         const extractedText = document.getElementById('extractedText');
         const extractBtn = document.getElementById('extractBtn');
+        const copyBtn = document.getElementById('copyBtn');
         const downloadBtn = document.getElementById('downloadBtn');
+        const clearBtn = document.getElementById('clearBtn');
         const errorMessage = document.getElementById('errorMessage');
         const progressMessage = document.getElementById('progressMessage');
         const languageSelect = document.getElementById('languageSelect');
@@ -664,13 +700,12 @@
 
             const reader = new FileReader();
             reader.onload = () => {
-                previewArea.innerHTML = `
-                    <div class="preview-item">
-                        <img src="${reader.result}" alt="Uploaded Image">
-                        <p>Image Size: ${(file.size / 1024).toFixed(2)} KB</p>
-                    </div>
+                imagePreview.innerHTML = `
+                    <img src="${reader.result}" alt="Uploaded Image">
+                    <p>Image Size: ${(file.size / 1024).toFixed(2)} KB</p>
                 `;
                 extractedText.value = '';
+                copyBtn.style.display = 'none';
                 downloadBtn.style.display = 'none';
             };
             reader.readAsDataURL(file);
@@ -680,9 +715,10 @@
             errorMessage.textContent = message;
             errorMessage.style.display = 'block';
             progressMessage.style.display = 'none';
-            previewArea.innerHTML = '';
+            imagePreview.innerHTML = '';
             extractedText.value = '';
             extractBtn.disabled = true;
+            copyBtn.style.display = 'none';
             downloadBtn.style.display = 'none';
             originalImage = null;
             cleanup();
@@ -739,6 +775,7 @@
                     textURL = URL.createObjectURL(textBlob);
                     downloadBtn.href = textURL;
                     downloadBtn.download = `extracted_text_${originalImage.name.replace(/\.[^/.]+$/, '')}.txt`;
+                    copyBtn.style.display = 'inline-block';
                     downloadBtn.style.display = 'inline-block';
                 } else {
                     showError('No text detected in the image.');
@@ -753,6 +790,34 @@
                 extractBtn.textContent = 'Extract Text';
                 cleanup();
             }
+        });
+
+        copyBtn.addEventListener('click', () => {
+            if (extractedText.value) {
+                extractedText.select();
+                try {
+                    document.execCommand('copy');
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy Text';
+                    }, 2000);
+                } catch (err) {
+                    showError('Failed to copy text.');
+                }
+            }
+        });
+
+        clearBtn.addEventListener('click', () => {
+            imageInput.value = '';
+            imagePreview.innerHTML = '';
+            extractedText.value = '';
+            extractBtn.disabled = true;
+            copyBtn.style.display = 'none';
+            downloadBtn.style.display = 'none';
+            errorMessage.style.display = 'none';
+            progressMessage.style.display = 'none';
+            originalImage = null;
+            cleanup();
         });
 
         // Cleanup on page unload
