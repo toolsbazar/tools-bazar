@@ -1,745 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<
 <head>
-    
-    <
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <
-<title>Image to Text - Tools Bazar</title>
-    
-    <
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    
-<style>
-        bo
+    <title>Image to Text (OCR) - Tools Bazar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #b71c1c;
+            --primary-dark: #7f0000;
+            --primary-light: #f05545;
+            --dark: #121212;
+            --dark-gray: #1e1e1e;
+            --light-gray: #2d2d2d;
+            --text: #f5f5f5;
+            --text-secondary: #bdbdbd;
+        }
 
-    
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            color: #d32f2f;
-        }
-
-        .upload-section {
-            display: flex;
-            flex-direction: column;
-        }
-
-        input[type="f
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            color: #d32f2f;
-        }
-
-        .upload-section {
-            display: flex;
-            flex-direction: column;
-        }
-
-        input[type="file"] {
-            margin-bottom: 10px;
-        }
-
-        button {
-            background-color: #d32f2f;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #b71c1c;
-        }
-
-        select {
-            margin-bottom: 10px;
-        }
-
-        .image-preview {
-            margin: 20px 0;
+            background-color: var(--dark);
+            color: var(--text);
+            line-height: 1.6;
             display: flex;
             justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        .image-preview img {
-            max-width: 100%;
+        .container {
+            background-color: var(--dark-gray);
+            padding: 30px;
             border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 600px;
         }
 
-        .progress-container {
+        h2 {
+            color: var(--primary-light);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .upload-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .upload-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .upload-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .upload-icon {
+            margin-right: 10px;
+        }
+
+        #image-upload {
             display: none;
-            margin: 10px 0;
         }
 
-        .progress-bar {
-            width: 0;
-            height: 20px;
-            background-color: #d32f2f;
-            border-radius: 5px;
+        #file-name {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
-        .extracted-text {
-            margin-top: 20px;
+        .preview-section {
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            padding: 15px;
+        }
+
+        #uploaded-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .result-section {
+            margin-top: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
             padding: 10px;
-            background-color: #f0f0f0;
-            border-radius: 5px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            background-color: var(--dark);
+            color: var(--text);
+            font-size: 1rem;
+            resize: vertical;
         }
 
-        @media (max-width: 600px) {
+        .extract-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .extract-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        #extracted-text {
+            white-space: pre-wrap;
+        }
+
+        .loading-indicator {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--primary-light);
+            font-size: 1.2rem;
+            display: none;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
             .container {
-                padding: 10px;
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
-    
- 
-<div class="container">
-        <header>
-            <h1>Image to Text</h1>
-        
-        </head
-</header>
-        <main>
-            
-   
-<div class="upload-section">
-                
-                <
-<input type="file" id="imageUpload" accept="image/*">
-                
-            
+    <div class="container">
+        <h2><i class="fas fa-font"></i> Image to Text (OCR)</h2>
+        <div class="upload-section">
+            <label for="image-upload" class="upload-button">
+                <i class="fas fa-upload upload-icon"></i>
+                Upload Image
+            </label>
+            <input type="file" id="image-upload" accept="image/*">
+            <p id="file-name"></p>
+        </div>
 
- 
-<button id="uploadBtn">Upload Image</button>
-                
- 
-<select id="languageSelect">
-                    
-                 
-<option value="eng">English</option>
-                    
-           
-<option value="spa">Spanish</option>
-                    
-               
-<option value="fra">French</option>
-                    
-                    <
-<option value="deu">German</option>
-                    
-                   
+        <div class="preview-section">
+            <h3>Preview</h3>
+            <img id="uploaded-image" src="#" alt="Uploaded Image">
+        </div>
 
-        
-<option value="ita">Italian</option>
-                    
-             
-<option value="por">Portuguese</option>
-                    
-             
+        <button id="extract-button" class="extract-button" disabled>Extract Text</button>
 
-   
-<option value="rus">Russian</option>
-                    
-                
-<option value="jpn">Japanese</option>
-                    
-                  
-<option value="kor">Korean</option>
-                
-                </sele
+        <div class="loading-indicator" id="loading">Extracting Text...</div>
 
-            
+        <div class="result-section">
+            <label for="extracted-text">Extracted Text:</label>
+            <textarea id="extracted-text" placeholder="Extracted text will appear here" readonly></textarea>
+        </div>
+    </div>
 
-  
-</select>
-                
-                
-<div id="imagePreview" class="image-preview"></div>
-                
-        
-<div id="progressContainer" class="progress-container">
-                    
-       
-<div id="progressBar" class="progress-bar"></div>
-                    
-  
-<span id="progressText"></span>
-                
-                
-
-     
-</div>
-                
-               
-
-    
-<div id="extractedText" class="extracted-text"></div>
-                
-         
-<button id="downloadBtn" style="display:none;">Download Text</button>
-            
-           
-</div>
-        
-        </main
-</main>
-    
-    </div
-</div>
     <script>
-       
+        document.addEventListener('DOMContentLoaded', () => {
+            const imageUpload = document.getElementById('image-upload');
+            const fileNameDisplay = document.getElementById('file-name');
+            const uploadedImage = document.getElementById('uploaded-image');
+            const extractButton = document.getElementById('extract-button');
+            const extractedTextarea = document.getElementById('extracted-text');
+            const loadingIndicator = document.getElementById('loading');
 
-        document.getElementById('uploadBtn').addEventListener('cli
+            let uploadedFile;
 
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressCo
-
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('prog
-
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progr
-
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const extractedText = document.getElementById('extractedText');
-            const downloadBtn = document.getElementById('downlo
-
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const extractedText = document.getElementById('extractedText');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            if (fileInput.files.length === 0) {
-                alert('Ple
-
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const extractedText = document.getElementById('extractedText');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            if (fileInput.files.length === 0) {
-                alert('Please upload an image file.');
-                return;
-            }
-
-            const file = fileInput.files[0];
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File size exceeds 5MB l
-
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const extractedText = document.getElementById('extractedText');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            if (fileInput.files.length === 0) {
-                alert('Please upload an image file.');
-                return;
-            }
-
-            const file = fileInput.files[0];
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File size 
-
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const extractedText = document.getElementById('extractedText');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            if (fileInput.files.length === 0) {
-                alert('Please upload an image file.');
-                return;
-            }
-
-            const file = fileInput.files[0];
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File size exceeds 5MB limit.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                imagePreview.innerHTML = '';
-                imagePreview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-
-            // Simulating OCR process
-            progressContainer.style.display = 'block';
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                progressBar.style.width = progress + '%';
-                progressText.textContent = progress + '
-
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const extractedText = document.getElementById('extractedText');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            if (fileInput.files.length === 0) {
-                alert('Please upload an image file.');
-                return;
-            }
-
-            const file = fileInput.files[0];
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File size exceeds 5MB limit.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                imagePreview.innerHTML = '';
-                imagePreview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-
-            // Simulating OCR process
-            progressContainer.style.display = 'block';
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                progressBar.style.width = progress + '%';
-                progressText.textContent = progress + '%';
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    // Simulated extracted text
-                    const text = "Extracted text from 
-
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const extractedText = document.getElementById('extractedText');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            if (fileInput.files.length === 0) {
-                alert('Please upload an image file.');
-                return;
-            }
-
-            const file = fileInput.files[0];
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File size exceeds 5MB limit.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                imagePreview.innerHTML = '';
-                imagePreview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-
-            // Simulating OCR process
-            progressContainer.style.display = 'block';
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                progressBar.style.width = progress + '%';
-                progressText.textContent = progress + '%';
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    // Simulated extracted text
-                    const text = "Extrac
-
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const extractedText = document.getElementById('extractedText');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            if (fileInput.files.length === 0) {
-                alert('Please upload an image file.');
-                return;
-            }
-
-            const file = fileInput.files[0];
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File size exceeds 5MB limit.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                imagePreview.innerHTML = '';
-                imagePreview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-
-            // Simulating OCR process
-            progressContainer.style.display = 'block';
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                progressBar.style.width = progress + '%';
-                progressText.textContent = progress + '%';
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    // Simulated extracted text
-                    const text = "Extracted text from the image.";
-                    extractedText.textContent = text;
-                    downloadBtn.style.display = 'inli
-
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const extractedText = document.getElementById('extractedText');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            if (fileInput.files.length === 0) {
-                alert('Please upload an image file.');
-                return;
-            }
-
-            const file = fileInput.files[0];
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File size exceeds 5MB limit.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                imagePreview.innerHTML = '';
-                imagePreview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-
-            // Simulating OCR process
-            progressContainer.style.display = 'block';
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                progressBar.style.width = progress + '%';
-                progressText.textContent = progress + '%';
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    // Simulated extracted text
-                    const text = "Extracted text from the image.";
-                    extractedText.textContent = text;
-                    downloadBtn.style.display = 'inline-block';
+            imageUpload.addEventListener('change', (event) => {
+                uploadedFile = event.target.files[0];
+                if (uploadedFile) {
+                    fileNameDisplay.textContent = uploadedFile.name;
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        uploadedImage.src = e.target.result;
+                        extractButton.disabled = false;
+                    };
+                    reader.readAsDataURL(uploadedFile);
+                } else {
+                    fileNameDisplay.textContent = '';
+                    uploadedImage.src = '#';
+                    extractButton.disabled = true;
+                    extractedTextarea.value = '';
                 }
-            }, 300);
-        });
+            });
 
-        document.getElementById('download
-
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const extractedText = document.getElementById('extractedText');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            if (fileInput.files.length === 0) {
-                alert('Please upload an image file.');
-                return;
-            }
-
-            const file = fileInput.files[0];
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File size exceeds 5MB limit.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                imagePreview.innerHTML = '';
-                imagePreview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-
-            // Simulating OCR process
-            progressContainer.style.display = 'block';
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                progressBar.style.width = progress + '%';
-                progressText.textContent = progress + '%';
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    // Simulated extracted text
-                    const text = "Extracted text from the image.";
-                    extractedText.textContent = text;
-                    downloadBtn.style.display = 'inline-block';
+            extractButton.addEventListener('click', async () => {
+                if (!uploadedFile) {
+                    alert('Please upload an image first.');
+                    return;
                 }
-            }, 300);
-        });
 
-        document.getElementById('downloadBtn').addEventListener('c
+                loadingIndicator.style.display = 'block';
+                extractedTextarea.value = 'Processing...';
+                extractButton.disabled = true;
 
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const extractedText = document.getElementById('extractedText');
-            const downloadBtn = document.getElementById('downloadBtn');
+                try {
+                    const formData = new FormData();
+                    formData.append('image', uploadedFile);
 
-            if (fileInput.files.length === 0) {
-                alert('Please upload an image file.');
-                return;
-            }
+                    // Replace with your actual OCR API endpoint
+                    const apiUrl = 'YOUR_OCR_API_ENDPOINT_HERE';
 
-            const file = fileInput.files[0];
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File size exceeds 5MB limit.');
-                return;
-            }
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        body: formData
+                    });
 
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                imagePreview.innerHTML = '';
-                imagePreview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
 
-            // Simulating OCR process
-            progressContainer.style.display = 'block';
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                progressBar.style.width = progress + '%';
-                progressText.textContent = progress + '%';
+                    const data = await response.json();
 
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    // Simulated extracted text
-                    const text = "Extracted text from the image.";
-                    extractedText.textContent = text;
-                    downloadBtn.style.display = 'inline-block';
+                    // Assuming the API response has a 'text' field containing the extracted text
+                    if (data && data.text) {
+                        extractedTextarea.value = data.text;
+                    } else {
+                        extractedTextarea.value = 'Could not extract text from the image.';
+                    }
+
+                } catch (error) {
+                    console.error('Error during OCR:', error);
+                    extractedTextarea.value = 'An error occurred during text extraction.';
+                } finally {
+                    loadingIndicator.style.display = 'none';
+                    extractButton.disabled = false;
                 }
-            }, 300);
-        });
-
-        document.getElementById('downloadBtn').addEventListener('click', () => {
-            const text = document.getElementById('
-
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const extractedText = document.getElementById('extractedText');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            if (fileInput.files.length === 0) {
-                alert('Please upload an image file.');
-                return;
-            }
-
-            const file = fileInput.files[0];
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File size exceeds 5MB limit.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                imagePreview.innerHTML = '';
-                imagePreview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-
-            // Simulating OCR process
-            progressContainer.style.display = 'block';
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                progressBar.style.width = progress + '%';
-                progressText.textContent = progress + '%';
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    // Simulated extracted text
-                    const text = "Extracted text from the image.";
-                    extractedText.textContent = text;
-                    downloadBtn.style.display = 'inline-block';
-                }
-            }, 300);
-        });
-
-        document.getElementById('downloadBtn').addEventListener('click', () => {
-            const text = document.getElementById('extractedText').textContent;
-            const blob = new Blob([text], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'extrac
-
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const extractedText = document.getElementById('extractedText');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            if (fileInput.files.length === 0) {
-                alert('Please upload an image file.');
-                return;
-            }
-
-            const file = fileInput.files[0];
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File size exceeds 5MB limit.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                imagePreview.innerHTML = '';
-                imagePreview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-
-            // Simulating OCR process
-            progressContainer.style.display = 'block';
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                progressBar.style.width = progress + '%';
-                progressText.textContent = progress + '%';
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    // Simulated extracted text
-                    const text = "Extracted text from the image.";
-                    extractedText.textContent = text;
-                    downloadBtn.style.display = 'inline-block';
-                }
-            }, 300);
-        });
-
-        document.getElementById('downloadBtn').addEventListener('click', () => {
-            const text = document.getElementById('extractedText').textContent;
-            const blob = new Blob([text], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'extracted_text.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            });
         });
     </script>
 </body>
