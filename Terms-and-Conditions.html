@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms and Conditions - Tools Bazar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #b71c1c;
+            --primary-dark: #7f0000;
+            --primary-light: #f05545;
+            --dark: #121212;
+            --dark-gray: #1e1e1e;
+            --light-gray: #2d2d2d;
+            --text: #f5f5f5;
+            --text-secondary: #bdbdbd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--dark-gray);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+        }
+
+        nav ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-light);
+        }
+
+        .contact-email {
+            color: var(--text-secondary);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-email i {
+            margin-right: 5px;
+            color: var(--primary);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .terms-section {
+            padding: 60px 0;
+        }
+
+        .terms-container {
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .terms-container h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        .terms-container h2 {
+            font-size: 1.5rem;
+            color: var(--primary-light);
+            margin: 20px 0 10px;
+        }
+
+        .terms-container p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .terms-container ul {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .terms-container ul li {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .terms-container ul li::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-gray);
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .footer-logo span {
+            color: var(--primary);
+        }
+
+        .footer-about p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .footer-contact p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-contact i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .footer-links h3 {
+            color: var(--text);
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links ul li a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--light-gray);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .terms-container h1 {
+                font-size: 2.2rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .contact-email {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .terms-section {
+                padding: 40px 0;
+            }
+
+            .terms-container {
+                padding: 20px;
+            }
+
+            .terms-container h1 {
+                font-size: 1.8rem;
+            }
+
+            .terms-container h2 {
+                font-size: 1.3rem;
+            }
+
+            .terms-container p,
+            .terms-container ul li {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .terms-container {
+                padding: 15px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-contact p {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">Tools <span>Bazar</span></a>
+
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#tools">Tools</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="index.html#social">Social Media</a></li>
+                </ul>
+            </nav>
+
+            <div class="contact-email">
+                <i class="fas fa-envelope"></i>
+                toolsbazar002@gmail.com
+            </div>
+        </div>
+    </header>
+
+    <!-- Terms and Conditions Section -->
+    <section class="terms-section">
+        <div class="container">
+            <div class="terms-container">
+                <h1>Terms and Conditions</h1>
+                <p>Last Updated: May 19, 2025</p>
+                <p>Welcome to Tools Bazar. These Terms and Conditions ("Terms") govern your use of our website, tools, and services, including but not limited to our image compressor, document converters, calculators, and social media tools. By accessing or using our website, you agree to be bound by these Terms. If you do not agree, please do not use our services.</p>
+
+                <h2>1. Use of Our Services</h2>
+                <p>You agree to use Tools Bazar’s website and tools in accordance with these Terms and applicable laws. You may:</p>
+                <ul>
+                    <li>Use our tools (e.g., image compressor, QR code generator) for personal or professional purposes, provided you comply with these Terms.</li>
+                    <li>Upload files (e.g., images, documents) for processing, understanding that such files are processed temporarily and not stored unless explicitly stated.</li>
+                    <li>Contact us via email (toolsbazar002@gmail.com) for support or inquiries.</li>
+                </ul>
+                <p>You may not:</p>
+                <ul>
+                    <li>Use our services for illegal activities, including uploading unlawful or harmful content.</li>
+                    <li>Attempt to reverse-engineer, hack, or disrupt our website or tools.</li>
+                    <li>Distribute malicious software or content through our services.</li>
+                </ul>
+
+                <h2>2. User Responsibilities</h2>
+                <p>As a user, you are responsible for:</p>
+                <ul>
+                    <li>Ensuring that any files you upload (e.g., images for compression) do not infringe on third-party rights, including copyrights or trademarks.</li>
+                    <li>Maintaining the security of your devices and accounts used to access our website.</li>
+                    <li>Complying with these Terms and our <a href="privacy-policy.html" style="color: var(--primary); text-decoration: none;">Privacy Policy</a>.</li>
+                </ul>
+
+                <h2>3. Intellectual Property</h2>
+                <p>All content on Tools Bazar, including text, graphics, logos, and software, is the property of Tools Bazar or its licensors and is protected by intellectual property laws. You may not:</p>
+                <ul>
+                    <li>Copy, reproduce, or distribute our content without prior written permission.</li>
+                    <li>Use our tools to create derivative works without authorization.</li>
+                    <li>Claim ownership of any output generated by our tools (e.g., compressed images) beyond your lawful use.</li>
+                </ul>
+
+                <h2>4. Limitation of Liability</h2>
+                <p>Tools Bazar provides its services on an "as-is" basis. We do not guarantee:</p>
+                <ul>
+                    <li>The accuracy, reliability, or availability of our tools.</li>
+                    <li>That our services will be uninterrupted or error-free.</li>
+                    <li>The quality or suitability of processed files (e.g., compressed images) for your specific needs.</li>
+                </ul>
+                <p>To the fullest extent permitted by law, Tools Bazar and its affiliates shall not be liable for any indirect, incidental, or consequential damages arising from your use of our services.</p>
+
+                <h2>5. Third-Party Services</h2>
+                <p>Our website may include links to third-party websites or services (e.g., social media platforms for video downloaders). We are not responsible for:</p>
+                <ul>
+                    <li>The content, privacy practices, or availability of third-party sites.</li>
+                    <li>Any damages or losses resulting from your use of third-party services.</li>
+                </ul>
+
+                <h2>6. Termination</h2>
+                <p>We reserve the right to suspend or terminate your access to Tools Bazar’s services at our discretion, including for:</p>
+                <ul>
+                    <li>Violation of these Terms.</li>
+                    <li>Abuse of our tools or website.</li>
+                    <li>Engaging in activities that harm Tools Bazar or its users.</li>
+                </ul>
+
+                <h2>7. Changes to These Terms</h2>
+                <p>We may update these Terms periodically. Changes will be posted on this page with an updated “Last Updated” date. Your continued use of our services after changes constitutes acceptance of the updated Terms.</p>
+
+                <h2>8. Governing Law</h2>
+                <p>These Terms are governed by the laws of [Insert Jurisdiction, e.g., the United States]. Any disputes arising from your use of Tools Bazar shall be resolved in the courts of [Insert Jurisdiction].</p>
+
+                <h2>9. Contact Us</h2>
+                <p>If you have questions about these Terms or our services, please contact us at:</p>
+                <p>Email: <a href="mailto:toolsbazar002@gmail.com" style="color: var(--primary); text-decoration: none;">toolsbazar002@gmail.com</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <a href="index.html" class="footer-logo">Tools <span>Bazar</span></a>
+                    <p>Simplifying your digital life with powerful, easy-to-use tools for all your needs.</p>
+                </div>
+
+                <div class="footer-contact">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-envelope"></i> toolsbazar002@gmail.com</p>
+                </div>
+
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#tools">Tools</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="index.html#social">Social Media Tools</a></li>
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms-and-conditions.html">Terms of Use</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2025 Tools Bazar. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            const navUl = document.querySelector('nav ul');
+            navUl.style.display = navUl.style.display === 'flex' ? 'none' : 'flex';
+        });
+    </script>
+</body>
+</html>
