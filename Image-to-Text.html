@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image to Text (OCR) - Tools Bazar</title>
+    <title>Image to Text (OCR) | Tools Bazar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap">
+    <script src="https://unpkg.com/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
     <style>
         :root {
-            --primary: #b71c1c;
-            --primary-dark: #7f0000;
-            --primary-light: #f05545;
+            --primary: #d32f2f;
+            --primary-dark: #9a0007;
+            --primary-light: #ff6659;
             --dark: #121212;
             --dark-gray: #1e1e1e;
             --light-gray: #2d2d2d;
-            --text: #f5f5f5;
+            --white: #f5f5f5;
             --text-secondary: #bdbdbd;
         }
 
@@ -26,240 +28,735 @@
 
         body {
             background-color: var(--dark);
-            color: var(--text);
+            color: var(--white);
             line-height: 1.6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
         }
 
         .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
             background-color: var(--dark-gray);
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            width: 90%;
-            max-width: 600px;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
-        h2 {
-            color: var(--primary-light);
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .upload-section {
+        .header-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .upload-button {
-            background-color: var(--primary);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
 
-        .upload-button:hover {
-            background-color: var(--primary-dark);
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--white);
+            text-decoration: none;
         }
 
-        .upload-icon {
-            margin-right: 10px;
+        .logo span {
+            color: var(--primary);
         }
 
-        #image-upload {
+        .mobile-menu-btn {
             display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 24px;
+            cursor: pointer;
         }
 
-        #file-name {
-            margin-top: 10px;
-            font-size: 0.9rem;
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+        }
+
+        nav ul li a {
             color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
         }
 
-        .preview-section {
-            margin-bottom: 20px;
+        nav ul li a:hover {
+            color: var(--primary-light);
+        }
+
+        .contact-email {
+            color: var(--text-secondary);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-email i {
+            margin-right: 5px;
+            color: var(--primary);
+        }
+
+        .ocr-section {
+            padding: 60px 0;
+        }
+
+        .section-header {
             text-align: center;
-            border: 1px solid var(--light-gray);
-            border-radius: 6px;
-            padding: 15px;
+            margin-bottom: 40px;
         }
 
-        #uploaded-image {
-            max-width: 100%;
-            height: auto;
-            display: block;
+        .section-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            max-width: 700px;
             margin: 0 auto;
         }
 
-        .result-section {
-            margin-top: 25px;
+        .ocr-tool {
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            padding: 30px;
+            border: 1px solid var(--dark-gray);
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-secondary);
-            font-weight: bold;
+        .language-selector {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        textarea {
-            width: 100%;
-            min-height: 150px;
-            padding: 10px;
-            border: 1px solid var(--light-gray);
-            border-radius: 4px;
-            background-color: var(--dark);
-            color: var(--text);
-            font-size: 1rem;
-            resize: vertical;
+        .language-selector label {
+            color: var(--white);
+            font-weight: 500;
         }
 
-        .extract-button {
-            background-color: var(--primary);
-            color: white;
-            padding: 12px 24px;
+        .language-selector select {
+            padding: 8px;
+            border-radius: 5px;
             border: none;
-            border-radius: 6px;
+            background-color: var(--dark-gray);
+            color: var(--white);
+            font-size: 14px;
             cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-            margin-top: 20px;
-            width: 100%;
         }
 
-        .extract-button:hover {
-            background-color: var(--primary-dark);
+        .language-selector select:focus {
+            outline: 2px solid var(--primary);
         }
 
-        #extracted-text {
-            white-space: pre-wrap;
-        }
-
-        .loading-indicator {
+        .upload-area {
+            border: 2px dashed var(--text-secondary);
+            border-radius: 10px;
+            padding: 30px;
             text-align: center;
-            margin-top: 20px;
-            color: var(--primary-light);
-            font-size: 1.2rem;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: var(--primary);
+            background-color: var(--dark-gray);
+        }
+
+        .upload-area i {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .upload-area p {
+            color: var(--text-secondary);
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark-gray);
+            color: var(--white);
+            text-align: center;
+            border-radius: 5px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .preview-area {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .preview-item {
+            text-align: center;
+            max-width: 100%;
+        }
+
+        .preview-item img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .preview-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .text-area {
+            margin-bottom: 20px;
+        }
+
+        .text-area label {
+            display: block;
+            color: var(--white);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .text-area textarea {
+            width: 100%;
+            height: 200px;
+            padding: 12px;
+            border-radius: 5px;
+            border: none;
+            background-color: var(--dark-gray);
+            color: var(--white);
+            font-size: 16px;
+            resize: vertical;
+            font-family: 'Noto Sans Devanagari', 'Segoe UI', sans-serif;
+            line-height: 1.8;
+        }
+
+        .text-area textarea:focus {
+            outline: 2px solid var(--primary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .extract-btn {
+            background-color: var(--primary);
+            color: var(--white);
+            border: 2px solid var(--primary);
+        }
+
+        .extract-btn:hover {
+            background-color: transparent;
+            color: var(--primary);
+        }
+
+        .download-btn {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
             display: none;
         }
 
-        /* Mobile Responsive */
+        .download-btn:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--white);
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .error-message {
+            color: #ff4444;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+            background-color: rgba(255, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .progress-message {
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+            background-color: var(--dark-gray);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        footer {
+            background-color: var(--dark-gray);
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .footer-logo span {
+            color: var(--primary);
+        }
+
+        .footer-about p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .footer-contact p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-contact i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .footer-links h3 {
+            color: var(--white);
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links ul li a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--light-gray);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 992px) {
+            nav ul {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .contact-email {
+                display: none;
+            }
+
+            .section-header h1 {
+                font-size: 1.8rem;
+            }
+        }
+
         @media (max-width: 768px) {
-            .container {
+            .ocr-section {
+                padding: 40px 0;
+            }
+
+            .ocr-tool {
                 padding: 20px;
+            }
+
+            .upload-area {
+                padding: 20px;
+            }
+
+            .upload-area i {
+                font-size: 32px;
+            }
+
+            .preview-item {
+                max-width: 100%;
+            }
+
+            .language-selector {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-contact p {
+                justify-content: center;
+            }
+
+            .tooltip .tooltiptext {
+                width: 150px;
+                bottom: 110%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2><i class="fas fa-font"></i> Image to Text (OCR)</h2>
-        <div class="upload-section">
-            <label for="image-upload" class="upload-button">
-                <i class="fas fa-upload upload-icon"></i>
-                Upload Image
-            </label>
-            <input type="file" id="image-upload" accept="image/*">
-            <p id="file-name"></p>
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">Tools <span>Bazar</span></a>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#tools">Tools</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="index.html#social">Social Media</a></li>
+                </ul>
+            </nav>
+            <div class="contact-email">
+                <i class="fas fa-envelope"></i>
+                toolsbazar002@gmail.com
+            </div>
         </div>
+    </header>
 
-        <div class="preview-section">
-            <h3>Preview</h3>
-            <img id="uploaded-image" src="#" alt="Uploaded Image">
+    <section class="ocr-section">
+        <div class="container">
+            <div class="section-header">
+                <h1>Image to Text (OCR)</h1>
+                <p>Extract text from images with Optical Character Recognition. Supports JPG, PNG, BMP, GIF, and TIFF.</p>
+            </div>
+            <div class="ocr-tool">
+                <div class="language-selector">
+                    <label for="languageSelect">Select Language:</label>
+                    <div class="tooltip">
+                        <select id="languageSelect">
+                            <option value="eng">English</option>
+                            <option value="hin">Hindi</option>
+                            <option value="jpn">Japanese</option>
+                            <option value="chi_sim">Chinese (Simplified)</option>
+                            <option value="rus">Russian</option>
+                            <option value="spa">Spanish</option>
+                            <option value="deu">German</option>
+                            <option value="fra">French</option>
+                            <option value="ita">Italian</option>
+                            <option value="por">Portuguese</option>
+                        </select>
+                        <span class="tooltiptext">Choose the language of the text in your image for better accuracy.</span>
+                    </div>
+                </div>
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Drag and drop an image here or click to upload (Max 5MB)</p>
+                    <input type="file" id="imageInput" accept="image/jpeg,image/png,image/bmp,image/gif,image/tiff" style="display: none;">
+                </div>
+                <div class="preview-area" id="previewArea">
+                    <!-- Preview image will be inserted here -->
+                </div>
+                <div class="text-area">
+                    <label for="extractedText">Extracted Text</label>
+                    <textarea id="extractedText" placeholder="Extracted text will appear here..." readonly></textarea>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn extract-btn" id="extractBtn" disabled>Extract Text</button>
+                    <a class="btn download-btn" id="downloadBtn" href="#" download>Download Text</a>
+                </div>
+                <p class="error-message" id="errorMessage">Please upload a valid image file.</p>
+                <p class="progress-message" id="progressMessage">Processing image...</p>
+            </div>
         </div>
+    </section>
 
-        <button id="extract-button" class="extract-button" disabled>Extract Text</button>
-
-        <div class="loading-indicator" id="loading">Extracting Text...</div>
-
-        <div class="result-section">
-            <label for="extracted-text">Extracted Text:</label>
-            <textarea id="extracted-text" placeholder="Extracted text will appear here" readonly></textarea>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <a href="index.html" class="footer-logo">Tools <span>Bazar</span></a>
+                    <p>Simplifying your digital life with powerful, easy-to-use tools for all your needs.</p>
+                </div>
+                <div class="footer-contact">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-envelope"></i> toolsbazar002@gmail.com</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#tools">Tools</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="index.html#social">Social Media Tools</a></li>
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms-and-conditions.html">Terms of Use</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 Tools Bazar. All rights reserved.</p>
+            </div>
         </div>
-    </div>
+    </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const imageUpload = document.getElementById('image-upload');
-            const fileNameDisplay = document.getElementById('file-name');
-            const uploadedImage = document.getElementById('uploaded-image');
-            const extractButton = document.getElementById('extract-button');
-            const extractedTextarea = document.getElementById('extracted-text');
-            const loadingIndicator = document.getElementById('loading');
+        const uploadArea = document.getElementById('uploadArea');
+        const imageInput = document.getElementById('imageInput');
+        const previewArea = document.getElementById('previewArea');
+        const extractedText = document.getElementById('extractedText');
+        const extractBtn = document.getElementById('extractBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const progressMessage = document.getElementById('progressMessage');
+        const languageSelect = document.getElementById('languageSelect');
 
-            let uploadedFile;
+        let originalImage = null;
+        let textURL = null;
+        let worker = null;
 
-            imageUpload.addEventListener('change', (event) => {
-                uploadedFile = event.target.files[0];
-                if (uploadedFile) {
-                    fileNameDisplay.textContent = uploadedFile.name;
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        uploadedImage.src = e.target.result;
-                        extractButton.disabled = false;
-                    };
-                    reader.readAsDataURL(uploadedFile);
-                } else {
-                    fileNameDisplay.textContent = '';
-                    uploadedImage.src = '#';
-                    extractButton.disabled = true;
-                    extractedTextarea.value = '';
-                }
-            });
-
-            extractButton.addEventListener('click', async () => {
-                if (!uploadedFile) {
-                    alert('Please upload an image first.');
-                    return;
-                }
-
-                loadingIndicator.style.display = 'block';
-                extractedTextarea.value = 'Processing...';
-                extractButton.disabled = true;
-
-                try {
-                    const formData = new FormData();
-                    formData.append('image', uploadedFile);
-
-                    // Replace with your actual OCR API endpoint
-                    const apiUrl = 'YOUR_OCR_API_ENDPOINT_HERE';
-
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const data = await response.json();
-
-                    // Assuming the API response has a 'text' field containing the extracted text
-                    if (data && data.text) {
-                        extractedTextarea.value = data.text;
-                    } else {
-                        extractedTextarea.value = 'Could not extract text from the image.';
-                    }
-
-                } catch (error) {
-                    console.error('Error during OCR:', error);
-                    extractedTextarea.value = 'An error occurred during text extraction.';
-                } finally {
-                    loadingIndicator.style.display = 'none';
-                    extractButton.disabled = false;
-                }
-            });
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            const navUl = document.querySelector('nav ul');
+            navUl.style.display = navUl.style.display === 'flex' ? 'none' : 'flex';
         });
+
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            handleFile(file);
+        });
+
+        uploadArea.addEventListener('click', () => imageInput.click());
+
+        imageInput.addEventListener('change', () => {
+            const file = imageInput.files[0];
+            handleFile(file);
+        });
+
+        function handleFile(file) {
+            if (!file) return;
+
+            const validTypes = ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/tiff'];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+
+            if (!validTypes.includes(file.type)) {
+                showError('Unsupported file format. Please upload JPG, PNG, BMP, GIF, or TIFF.');
+                return;
+            }
+
+            if (file.size > maxSize) {
+                showError('File size exceeds 5MB limit.');
+                return;
+            }
+
+            errorMessage.style.display = 'none';
+            originalImage = file;
+            extractBtn.disabled = false;
+            cleanup();
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                previewArea.innerHTML = `
+                    <div class="preview-item">
+                        <img src="${reader.result}" alt="Uploaded Image">
+                        <p>Image Size: ${(file.size / 1024).toFixed(2)} KB</p>
+                    </div>
+                `;
+                extractedText.value = '';
+                downloadBtn.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            progressMessage.style.display = 'none';
+            previewArea.innerHTML = '';
+            extractedText.value = '';
+            extractBtn.disabled = true;
+            downloadBtn.style.display = 'none';
+            originalImage = null;
+            cleanup();
+        }
+
+        function cleanup() {
+            if (textURL) {
+                URL.revokeObjectURL(textURL);
+                textURL = null;
+            }
+            if (worker) {
+                worker.terminate();
+                worker = null;
+            }
+        }
+
+        extractBtn.addEventListener('click', async () => {
+            if (!originalImage) {
+                showError('Please upload an image.');
+                return;
+            }
+
+            extractBtn.disabled = true;
+            extractBtn.classList.add('loading');
+            extractBtn.textContent = 'Extracting...';
+            progressMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+
+            try {
+                worker = await Tesseract.createWorker({
+                    logger: (m) => {
+                        if (m.status === 'recognizing text') {
+                            progressMessage.textContent = `Processing image... ${Math.round(m.progress * 100)}%`;
+                        }
+                    },
+                });
+
+                await worker.loadLanguage(languageSelect.value);
+                await worker.initialize(languageSelect.value);
+                await worker.setParameters({
+                    tessedit_char_whitelist: languageSelect.value === 'hin' ? '' : undefined,
+                    preserve_interword_spaces: '1',
+                });
+                const { data: { text } } = await worker.recognize(originalImage);
+
+                extractedText.value = text.trim();
+                progressMessage.style.display = 'none';
+                extractBtn.disabled = false;
+                extractBtn.classList.remove('loading');
+                extractBtn.textContent = 'Extract Text';
+
+                if (text.trim()) {
+                    const textBlob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+                    textURL = URL.createObjectURL(textBlob);
+                    downloadBtn.href = textURL;
+                    downloadBtn.download = `extracted_text_${originalImage.name.replace(/\.[^/.]+$/, '')}.txt`;
+                    downloadBtn.style.display = 'inline-block';
+                } else {
+                    showError('No text detected in the image.');
+                }
+
+                await worker.terminate();
+                worker = null;
+            } catch (e) {
+                showError('Text extraction failed. Please try another image.');
+                extractBtn.disabled = false;
+                extractBtn.classList.remove('loading');
+                extractBtn.textContent = 'Extract Text';
+                cleanup();
+            }
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', cleanup);
     </script>
 </body>
 </html>
