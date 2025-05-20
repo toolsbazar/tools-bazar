@@ -8,14 +8,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-           --primary-dark: #0a192f;
-            --secondary-dark: #172a45;
-            --dark-green: #1e3a2a;
-            --accent-green: #2d6a4f;
-            --light-green: #52b788;
-            --red-accent: #ff4d4d;
-            --text-light: #f8f9fa;
-            --text-muted: #adb5bd; 0 0 10px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.6), 0 0 30px rgba(0, 255, 0, 0.4);
+            --primary-dark: #0a192f; /* Very dark blue for primary background */
+            --secondary-dark: #172a45; /* Darker blue for secondary background/sections */
+            --dark-green: #1e3a2a; /* Main dark green for accents */
+            --accent-green: #2d6a4f; /* A slightly brighter green for buttons/highlights */
+            --light-green: #52b788; /* Lightest green for text on hover/active states */
+            --red-accent: #ff4d4d; /* Red accent if needed, though not primary theme */
+            --text-light: #f8f9fa; /* Light white for main text */
+            --text-muted: #adb5bd; /* Muted text for descriptions */
+            --neon-glow: 0 0 10px rgba(82, 183, 136, 0.8), 0 0 20px rgba(82, 183, 136, 0.6), 0 0 30px rgba(82, 183, 136, 0.4);
         }
 
         * {
@@ -26,15 +27,15 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: var(--secondary);
-            color: var(--text);
+            background-color: var(--primary-dark);
+            color: var(--text-light);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
         a {
-            color: var(--primary);
+            color: var(--light-green);
             text-decoration: none;
         }
 
@@ -44,9 +45,9 @@
 
         /* Header */
         .header {
-            background-color: var(--secondary);
+            background-color: var(--primary-dark);
             padding: 1rem 0;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--secondary-dark);
         }
 
         .header-content {
@@ -61,7 +62,7 @@
         .logo {
             font-size: 1.8rem;
             font-weight: 700;
-            color: var(--text);
+            color: var(--text-light);
         }
 
         .nav-links ul {
@@ -74,47 +75,47 @@
         }
 
         .nav-links a {
-            color: var(--text);
+            color: var(--text-light);
             font-weight: 600;
             transition: color 0.3s ease;
         }
 
         .nav-links a:hover {
-            color: var(--primary);
+            color: var(--light-green);
             text-decoration: none;
         }
 
         .contact-email {
             font-size: 0.9rem;
-            color: var(--text);
+            color: var(--text-muted);
         }
 
         /* Hero Section */
         .hero {
-            background-color: var(--secondary);
+            background-color: var(--primary-dark);
             text-align: center;
             padding: 4rem 1.5rem;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--secondary-dark);
         }
 
         .hero h1 {
             font-size: 2.8rem;
             margin-bottom: 1rem;
             line-height: 1.2;
-            color: var(--primary);
+            color: var(--light-green);
         }
 
         .hero p {
             font-size: 1.2rem;
             max-width: 800px;
             margin: 0 auto 2rem auto;
-            color: var(--text);
+            color: var(--text-light);
         }
 
         .cta-button {
             display: inline-block;
-            background-color: var(--primary);
-            color: var(--text);
+            background-color: var(--accent-green);
+            color: var(--text-light);
             padding: 0.9rem 2rem;
             border-radius: 5px;
             font-weight: 600;
@@ -123,9 +124,9 @@
         }
 
         .cta-button:hover {
-            background-color: var(--accent);
+            background-color: var(--light-green);
             transform: translateY(-2px);
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+            box-shadow: 0 0 15px rgba(82, 183, 136, 0.7);
             text-decoration: none;
         }
 
@@ -140,26 +141,26 @@
         .hero-icon-item {
             text-align: center;
             font-size: 1rem;
-            color: var(--text);
+            color: var(--text-light);
         }
 
         .hero-icon-item .tool-icon-small {
             font-size: 24px;
-            color: var(--primary);
+            color: var(--light-green);
             margin-bottom: 15px;
             animation: neon-pulse 3s infinite alternate;
         }
 
         .hero-icon-item:hover .tool-icon-small {
             animation: neon-pulse 1.5s infinite alternate;
-            color: var(--accent);
+            color: var(--accent-green);
         }
 
         /* Search Bar */
         .search-bar-section {
             padding: 2rem 1.5rem;
-            background-color: var(--secondary);
-            border-bottom: 1px solid var(--border-color);
+            background-color: var(--primary-dark);
+            border-bottom: 1px solid var(--secondary-dark);
             text-align: center;
         }
 
@@ -174,22 +175,22 @@
             width: 100%;
             padding: 0.8rem 1.2rem;
             font-size: 1.1rem;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--secondary-dark);
             border-radius: 8px;
-            background-color: var(--card-bg);
-            color: var(--text);
+            background-color: var(--secondary-dark);
+            color: var(--text-light);
             outline: none;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .search-bar input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.3);
+            border-color: var(--light-green);
+            box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.3);
         }
 
         .search-bar input::placeholder {
-            color: #aaa;
+            color: var(--text-muted);
         }
 
         /* Tool Sections */
@@ -205,14 +206,14 @@
 
         .tool-category-heading {
             font-size: 2.2rem;
-            color: var(--primary);
+            color: var(--light-green);
             margin-bottom: 0.5rem;
             text-align: center;
         }
 
         .tool-category-subheading {
             font-size: 1.1rem;
-            color: var(--text);
+            color: var(--text-light);
             margin-bottom: 2rem;
             text-align: center;
             opacity: 0.9;
@@ -225,7 +226,7 @@
         }
 
         .tool-card {
-            background-color: var(--card-bg);
+            background-color: var(--secondary-dark);
             border-radius: 12px;
             padding: 1.5rem;
             text-align: center;
@@ -247,17 +248,17 @@
         @keyframes neon-pulse {
             0%, 100% {
                 text-shadow: var(--neon-glow);
-                box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+                box-shadow: 0 0 10px rgba(82, 183, 136, 0.5);
             }
             50% {
-                text-shadow: 0 0 5px rgba(0, 255, 0, 0.3), 0 0 10px rgba(0, 255, 0, 0.2);
-                box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+                text-shadow: 0 0 5px rgba(82, 183, 136, 0.3), 0 0 10px rgba(82, 183, 136, 0.2);
+                box-shadow: 0 0 5px rgba(82, 183, 136, 0.3);
             }
         }
 
         .tool-card-icon {
             font-size: 3rem;
-            color: var(--primary);
+            color: var(--light-green);
             margin-bottom: 1rem;
             animation: neon-pulse 2s infinite alternate;
             transition: all 0.3s ease;
@@ -265,26 +266,26 @@
 
         .tool-card:hover .tool-card-icon {
             animation: neon-pulse 1s infinite alternate;
-            color: var(--accent);
+            color: var(--accent-green);
         }
 
         .tool-card h3 {
             font-size: 1.4rem;
             margin-bottom: 0.5rem;
-            color: var(--text);
+            color: var(--text-light);
         }
 
         .tool-card p {
             font-size: 0.95rem;
-            color: #ccc;
+            color: var(--text-muted);
             margin-bottom: 1.5rem;
             flex-grow: 1;
         }
 
         .use-tool-button {
             display: inline-block;
-            background-color: var(--primary);
-            color: var(--text);
+            background-color: var(--accent-green);
+            color: var(--text-light);
             padding: 0.7rem 1.5rem;
             border-radius: 5px;
             font-weight: 600;
@@ -293,18 +294,18 @@
         }
 
         .use-tool-button:hover {
-            background-color: var(--accent);
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+            background-color: var(--light-green);
+            box-shadow: 0 0 15px rgba(82, 183, 136, 0.7);
             text-decoration: none;
         }
 
         /* Footer */
         .footer {
-            background-color: var(--secondary);
-            color: var(--text);
+            background-color: var(--primary-dark);
+            color: var(--text-light);
             padding: 2.5rem 1.5rem;
             text-align: center;
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid var(--secondary-dark);
         }
 
         .footer .logo {
@@ -315,18 +316,18 @@
         .footer p {
             font-size: 0.9rem;
             margin-bottom: 1.5rem;
-            color: #ccc;
+            color: var(--text-muted);
         }
 
         .footer-links a {
-            color: var(--text);
+            color: var(--text-light);
             margin: 0 0.8rem;
             font-size: 0.9rem;
             transition: color 0.3s ease;
         }
 
         .footer-links a:hover {
-            color: var(--primary);
+            color: var(--light-green);
             text-decoration: none;
         }
 
@@ -536,7 +537,7 @@
             </div>
         </section>
 
-        <hr>
+        ---
 
         <section class="tool-category" id="document-tools">
             <h2 class="tool-category-heading">📄 Document Tools</h2>
