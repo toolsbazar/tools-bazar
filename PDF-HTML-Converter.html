@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to HTML Converter - Tools Bazar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <style>
+        :root {
+            --primary: #b71c1c;
+            --primary-dark: #7f0000;
+            --primary-light: #f05545;
+            --dark: #121212;
+            --dark-gray: #1e1e1e;
+            --light-gray: #2d2d2d;
+            --text: #f5f5f5;
+            --text-secondary: #bdbdbd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--dark-gray);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+        }
+
+        nav ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-light);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Converter Section */
+        .converter-section {
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .converter-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .converter-section p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .converter-box {
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--text-secondary);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--primary);
+            background-color: var(--dark-gray);
+        }
+
+        .file-upload-area i {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .file-upload-area p {
+            color: var(--text-secondary);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .preview-section {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .pdf-preview, .html-preview {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--dark-gray);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .pdf-preview canvas {
+            max-width: 100%;
+            border: 1px solid var(--text-secondary);
+            border-radius: 5px;
+        }
+
+        .html-preview {
+            text-align: left;
+            position: relative;
+        }
+
+        .html-preview pre {
+            background-color: var(--dark);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 400px;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .copy-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .convert-button {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .convert-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .convert-button:disabled {
+            background-color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            display: none;
+            width: 100%;
+            height: 10px;
+            background-color: var(--dark-gray);
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .progress-bar div {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 5px;
+            width: 0;
+            transition: width 0.3s;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-gray);
+            padding: 60px 0 30px;
+            text-align: center;
+        }
+
+        .footer-content {
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .footer-logo span {
+            color: var(--primary);
+        }
+
+        .footer-content p {
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid var(--light-gray);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .converter-section h1 {
+                font-size: 2.2rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .converter-section h1 {
+                font-size: 1.8rem;
+            }
+
+            .converter-section p {
+                font-size: 1rem;
+            }
+
+            .converter-box {
+                padding: 20px;
+            }
+
+            .preview-section {
+                flex-direction: column;
+            }
+
+            .pdf-preview, .html-preview {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .converter-section {
+                padding: 40px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">Tools <span>Bazar</span></a>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#tools">Tools</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="index.html#social">Social Media</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Converter Section -->
+    <section class="converter-section">
+        <div class="container">
+            <h1>PDF to HTML Converter</h1>
+            <p>Upload your PDF file to extract its content as HTML and preview both the PDF and the generated HTML.</p>
+            <div class="converter-box">
+                <div class="file-upload-area" id="dropArea">
+                    <i class="fas fa-file-upload"></i>
+                    <p>Drag and drop a PDF file here or click to upload</p>
+                    <input type="file" id="fileInput" accept=".pdf">
+                </div>
+                <div class="preview-section">
+                    <div class="pdf-preview">
+                        <h3>PDF Preview</h3>
+                        <canvas id="pdfCanvas"></canvas>
+                    </div>
+                    <div class="html-preview">
+                        <h3>HTML Output</h3>
+                        <button class="copy-button" id="copyBtn" style="display: none;">Copy HTML</button>
+                        <pre id="htmlOutput"></pre>
+                    </div>
+                </div>
+                <button class="convert-button" id="convertBtn" disabled>Convert to HTML</button>
+                <div class="progress-bar" id="progressBar"><div></div></div>
+                <div class="status-message" id="statusMessage"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <a href="index.html" class="footer-logo">Tools <span>Bazar</span></a>
+                <p>Simplifying your digital life with powerful, easy-to-use tools for all your needs.</p>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 Tools Bazar. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+        const fileInput = document.getElementById('fileInput');
+        const dropArea = document.getElementById('dropArea');
+        const pdfCanvas = document.getElementById('pdfCanvas');
+        const htmlOutput = document.getElementById('htmlOutput');
+        const copyBtn = document.getElementById('copyBtn');
+        const convertBtn = document.getElementById('convertBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressBarInner = progressBar.querySelector('div');
+        const statusMessage = document.getElementById('statusMessage');
+        let selectedFile = null;
+
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            const navUl = document.querySelector('nav ul');
+            navUl.style.display = navUl.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // File upload handling
+        dropArea.addEventListener('click', () => fileInput.click());
+        dropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropArea.classList.add('dragover');
+        });
+        dropArea.addEventListener('dragleave', () => dropArea.classList.remove('dragover'));
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type === 'application/pdf') {
+                handleFile(file);
+            } else {
+                statusMessage.textContent = 'Please upload a valid PDF file.';
+            }
+        });
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (file && file.type === 'application/pdf') {
+                handleFile(file);
+            } else {
+                statusMessage.textContent = 'Please upload a valid PDF file.';
+            }
+        });
+
+        function handleFile(file) {
+            selectedFile = file;
+            convertBtn.disabled = false;
+            statusMessage.textContent = `Selected file: ${file.name}`;
+            renderPDFPreview(file);
+        }
+
+        async function renderPDFPreview(file) {
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                const page = await pdf.getPage(1);
+                const viewport = page.getViewport({ scale: 1.0 });
+                const canvasContext = pdfCanvas.getContext('2d');
+
+                pdfCanvas.height = viewport.height;
+                pdfCanvas.width = viewport.width;
+
+                await page.render({
+                    canvasContext: canvasContext,
+                    viewport: viewport
+                }).promise;
+            } catch (error) {
+                console.error('Error rendering PDF:', error);
+                statusMessage.textContent = 'Error rendering PDF preview.';
+            }
+        }
+
+        convertBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+            convertBtn.disabled = true;
+            progressBar.style.display = 'block';
+            statusMessage.textContent = 'Converting...';
+
+            try {
+                const arrayBuffer = await selectedFile.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                let htmlContent = '<div>\n';
+
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    const textContent = await page.getTextContent();
+                    const pageText = textContent.items.map(item => item.str).join(' ');
+                    const lines = pageText.split('\n').map(line => line.trim()).filter(line => line);
+
+                    htmlContent += `  <h2>Page ${pageNum}</h2>\n`;
+                    lines.forEach(line => {
+                        htmlContent += `  <p>${line.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>\n`;
+                    });
+
+                    progressBarInner.style.width = `${(pageNum / pdf.numPages) * 100}%`;
+                }
+
+                htmlContent += '</div>';
+                htmlOutput.textContent = htmlContent;
+                copyBtn.style.display = 'block';
+                statusMessage.textContent = 'Conversion complete! HTML generated.';
+            } catch (error) {
+                console.error('Error:', error);
+                statusMessage.textContent = 'Error during conversion. Please try again.';
+            } finally {
+                convertBtn.disabled = false;
+                setTimeout(() => {
+                    progressBar.style.display = 'none';
+                    progressBarInner.style.width = '0';
+                }, 3000);
+            }
+        });
+
+        copyBtn.addEventListener('click', () => {
+            const text = htmlOutput.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                statusMessage.textContent = 'HTML copied to clipboard!';
+                setTimeout(() => {
+                    statusMessage.textContent = '';
+                }, 2000);
+            }).catch(() => {
+                statusMessage.textContent = 'Failed to copy HTML.';
+            });
+        });
+    </script>
+</body>
+</html>
