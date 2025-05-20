@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF Converter - Tools Bazar</title>
     <style>
+        /* CSS Styling */
         :root {
             --primary: #8B0000; /* Dark red */
             --secondary: #121212; /* Dark black */
@@ -168,6 +169,7 @@
             font-weight: bold;
         }
 
+
         /* Status & Download */
         .status-message, .error-message {
             text-align: center;
@@ -310,7 +312,7 @@
             <h2>Select Output Format</h2>
             <div class="format-options">
                 <label>
-                    <input type="radio" name="output-format" value="jpg" checked> JPG (Editable Images)
+                    <input type="radio" name="output-format" value="jpg" checked> JPG (Image per page)
                 </label>
                 <label>
                     <input type="radio" name="output-format" value="word"> Word (DOCX)
@@ -351,6 +353,7 @@
     </footer>
 
     <script>
+        // JavaScript Logic
         document.addEventListener('DOMContentLoaded', () => {
             const dropArea = document.getElementById('drop-area');
             const pdfInput = document.getElementById('pdf-input');
@@ -410,6 +413,8 @@
                         formatSelectionSection.classList.remove('hidden');
                         conversionStatusSection.classList.add('hidden'); // Hide status section on new upload
                         errorMessage.classList.add('hidden'); // Clear any previous errors
+                        statusMessage.textContent = ''; // Clear previous status
+                        downloadSection.classList.add('hidden'); // Hide download link
                     } else {
                         alert('Please upload a PDF file.');
                         fileNameDisplay.textContent = '';
@@ -441,10 +446,11 @@
                 formData.append('outputFormat', selectedFormat);
 
                 try {
-                    // --- THIS IS WHERE YOU'LL MAKE AN ACTUAL API CALL TO YOUR BACKEND ---
-                    // Replace with your actual backend API endpoint. For example:
-                    // const response = await fetch('http://localhost:5000/api/convert-pdf', {
-                    const response = await fetch('/api/convert-pdf', { // Assuming same origin or configured CORS
+                    // *** IMPORTANT: This is the placeholder for your backend API call ***
+                    // You will need a server-side application (like the Python Flask example provided previously)
+                    // to actually perform the PDF conversion.
+                    // Replace '/api/convert-pdf' with the actual URL of your backend's conversion endpoint.
+                    const response = await fetch('/api/convert-pdf', {
                         method: 'POST',
                         body: formData,
                     });
@@ -454,14 +460,14 @@
                         throw new Error(errorData.message || 'Conversion failed on server.');
                     }
 
-                    // Assuming your backend sends back a direct file or a URL to download
+                    // Assuming your backend sends back a direct file blob or a URL to download
                     const blob = await response.blob();
                     const downloadUrl = URL.createObjectURL(blob);
 
                     // Determine file extension based on format
                     let fileExtension;
                     switch (selectedFormat) {
-                        case 'jpg': fileExtension = 'zip'; break; // For multiple images, zip is best
+                        case 'jpg': fileExtension = 'zip'; break; // JPG often results in multiple images, best as a zip
                         case 'word': fileExtension = 'docx'; break;
                         case 'text': fileExtension = 'txt'; break;
                         case 'excel': fileExtension = 'xlsx'; break;
@@ -478,12 +484,15 @@
                     loadingSpinner.classList.add('hidden');
                     downloadSection.classList.remove('hidden');
 
+                    // Clean up the object URL after a short delay (or on next action)
+                    // URL.revokeObjectURL(downloadUrl);
+
                 } catch (error) {
                     console.error('Conversion error:', error);
                     statusMessage.classList.add('hidden');
                     loadingSpinner.classList.add('hidden');
                     errorMessage.classList.remove('hidden');
-                    errorMessage.textContent = `Error: ${error.message}`;
+                    errorMessage.textContent = `Error: ${error.message}. (Server-side conversion failed or is not set up)`;
                     downloadSection.classList.add('hidden');
                 }
             });
