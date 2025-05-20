@@ -4,533 +4,488 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF Converter - Tools Bazar</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
             --primary: #8B0000; /* Dark red */
             --secondary: #121212; /* Dark black */
             --accent: #A52A2A; /* Lighter red */
             --text: #F5F5F5; /* Light gray */
-            --card-bg: #1E1E1E; /* Slightly lighter than secondary */
-            --border-color: #333; /* For subtle borders */
-            --neon-glow: 0 0 10px rgba(255, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.6), 0 0 30px rgba(255, 0, 0, 0.4);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            --card-bg: #1E1E1E; /* Dark gray for cards */
+            --border-color: #333;
+            --transition-speed: 0.3s ease;
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--secondary);
             color: var(--text);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        /* Header (Re-using from your main site, keep consistent) */
-        .header {
-            background-color: var(--secondary);
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--card-bg);
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
+            margin: 0;
+            padding: 0;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 1.5rem;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
+        header {
+            background-color: var(--primary);
             color: var(--text);
-        }
-
-        .nav-links ul {
-            list-style: none;
-            display: flex;
-        }
-
-        .nav-links li {
-            margin-left: 1.5rem;
-        }
-
-        .nav-links a {
-            color: var(--text);
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .contact-email {
-            font-size: 0.9rem;
-            color: var(--text);
-        }
-
-        /* PDF Converter Section */
-        .pdf-converter-section {
-            max-width: 900px;
-            margin: 3rem auto;
-            padding: 2rem;
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            padding: 20px 0;
             text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        .pdf-converter-section h1 {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
         }
 
-        .pdf-converter-section p {
-            font-size: 1.1rem;
-            color: var(--text);
-            margin-bottom: 2rem;
+        header p {
+            margin-top: 5px;
+            font-size: 1.1em;
+            opacity: 0.9;
         }
 
-        .upload-area {
-            border: 3px dashed var(--primary);
-            border-radius: 10px;
-            padding: 3rem 1.5rem;
-            margin-bottom: 2rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-
-        .upload-area:hover {
-            background-color: rgba(139, 0, 0, 0.1);
-            border-color: var(--accent);
-        }
-
-        .upload-area i {
-            font-size: 4rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-            animation: neon-pulse 2s infinite alternate; /* Apply neon glow */
-        }
-
-        .upload-area p {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 0.5rem;
-        }
-
-        .upload-area span {
-            font-size: 0.9rem;
-            color: var(--text);
-            opacity: 0.8;
-        }
-
-        .file-input {
-            display: none; /* Hide the default file input */
-        }
-
-        .file-name {
-            font-size: 1.1rem;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            display: none; /* Hidden by default */
-        }
-
-        .convert-options {
-            margin-bottom: 2rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
-            padding: 0 1rem;
-        }
-
-        .convert-button {
-            background-color: var(--card-bg);
-            color: var(--text);
-            padding: 0.8rem 1.2rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 600;
-            transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        main {
+            flex-grow: 1;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100px; /* Fixed height for consistency */
+            gap: 20px;
+            max-width: 900px;
+            margin: 20px auto;
         }
 
-        .convert-button i {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            transition: color 0.3s ease;
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        .convert-button:hover {
-            background-color: var(--accent);
+        .card h2 {
+            color: var(--accent);
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8em;
+        }
+
+        /* Upload Area */
+        .drop-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+
+        .drop-area:hover,
+        .drop-area.dragover {
+            background-color: rgba(var(--primary), 0.1);
             border-color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
         }
 
-        .convert-button:hover i {
-            color: var(--text);
+        .drop-area p {
+            margin: 10px 0;
+            font-size: 1.1em;
         }
 
-        .download-area {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background-color: var(--secondary);
-            border: 1px solid var(--card-bg);
-            border-radius: 10px;
-            display: none; /* Hidden until conversion is done */
-        }
-
-        .download-area h3 {
+        .uploaded-file-name {
+            margin-top: 15px;
+            font-weight: bold;
             color: var(--primary);
-            margin-bottom: 1rem;
         }
 
-        .download-link {
+        /* Buttons */
+        .button {
             display: inline-block;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color var(--transition-speed), transform 0.1s ease;
+        }
+
+        .button.primary {
             background-color: var(--primary);
             color: var(--text);
-            padding: 0.8rem 1.5rem;
-            border-radius: 5px;
-            font-weight: 600;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            text-transform: uppercase;
-            margin-top: 1rem;
         }
 
-        .download-link:hover {
+        .button.primary:hover {
             background-color: var(--accent);
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
-            text-decoration: none;
+            transform: translateY(-2px);
         }
 
-        /* Neon Glow Animation */
-        @keyframes neon-pulse {
-            0%, 100% {
-                text-shadow: var(--neon-glow);
-                box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-            }
-            50% {
-                text-shadow: 0 0 5px rgba(255, 0, 0, 0.3), 0 0 10px rgba(255, 0, 0, 0.2);
-                box-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
-            }
+        .button.accent {
+            background-color: var(--accent);
+            color: var(--text);
         }
 
-        /* Footer (Re-using from your main site, keep consistent) */
-        .footer {
+        .button.accent:hover {
+            background-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Format Options */
+        .format-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .format-options label {
+            background-color: var(--secondary);
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+            display: flex;
+            align-items: center;
+        }
+
+        .format-options input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--primary); /* Styles the radio button itself */
+        }
+
+        .format-options label:hover {
+            background-color: var(--card-bg);
+            border-color: var(--accent);
+        }
+
+        .format-options input[type="radio"]:checked + * { /* Selects the next sibling after checked radio */
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Status & Download */
+        .status-message, .error-message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        .status-message {
+            background-color: rgba(var(--primary), 0.15);
+            color: var(--primary);
+        }
+
+        .error-message {
+            background-color: rgba(255, 0, 0, 0.15);
+            color: red;
+        }
+
+        .download-section {
+            text-align: center;
+        }
+
+        .download-section h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        /* Spinner (basic CSS spinner) */
+        .spinner {
+            border: 4px solid rgba(245, 245, 245, 0.3); /* Light gray */
+            border-top: 4px solid var(--primary); /* Red */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Utility classes */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Footer */
+        footer {
             background-color: var(--secondary);
             color: var(--text);
-            padding: 2.5rem 1.5rem;
             text-align: center;
-            border-top: 1px solid var(--card-bg);
-            margin-top: 3rem;
-        }
-
-        .footer .logo {
-            font-size: 1.6rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .footer p {
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-            color: #ccc;
-        }
-
-        .footer-links a {
-            color: var(--text);
-            margin: 0 0.8rem;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-            text-decoration: none;
+            padding: 20px 0;
+            margin-top: auto; /* Pushes footer to the bottom */
+            border-top: 1px solid var(--border-color);
         }
 
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                text-align: center;
+            header h1 {
+                font-size: 2em;
             }
 
-            .nav-links ul {
-                flex-direction: column;
-                margin-top: 1rem;
+            main {
+                padding: 15px;
+                gap: 15px;
             }
 
-            .nav-links li {
-                margin: 0.5rem 0;
+            .card {
+                padding: 20px;
             }
 
-            .pdf-converter-section {
-                margin: 2rem 1rem;
-                padding: 1.5rem;
+            .card h2 {
+                font-size: 1.5em;
             }
 
-            .pdf-converter-section h1 {
-                font-size: 2rem;
+            .drop-area {
+                padding: 30px 15px;
             }
 
-            .pdf-converter-section p {
-                font-size: 1rem;
+            .button {
+                padding: 10px 20px;
+                font-size: 0.95em;
             }
 
-            .upload-area {
-                padding: 2rem 1rem;
+            .format-options {
+                flex-direction: column; /* Stack options vertically */
+                align-items: stretch; /* Stretch labels to full width */
             }
 
-            .upload-area i {
-                font-size: 3rem;
-            }
-
-            .upload-area p {
-                font-size: 1.1rem;
-            }
-
-            .convert-options {
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            }
-
-            .convert-button {
-                height: 80px;
-                font-size: 0.85rem;
-                padding: 0.6rem 1rem;
-            }
-
-            .convert-button i {
-                font-size: 1.8rem;
+            .format-options label {
+                justify-content: center; /* Center content within label */
             }
         }
 
         @media (max-width: 480px) {
-            .logo {
-                font-size: 1.5rem;
+            header h1 {
+                font-size: 1.8em;
             }
 
-            .pdf-converter-section h1 {
-                font-size: 1.8rem;
+            main {
+                padding: 10px;
             }
 
-            .pdf-converter-section p {
-                font-size: 0.9rem;
+            .card {
+                padding: 15px;
             }
 
-            .upload-area p {
-                font-size: 1rem;
+            .button {
+                width: 100%; /* Full width buttons */
+                margin-bottom: 10px;
             }
 
-            .upload-area span {
-                font-size: 0.8rem;
-            }
-
-            .convert-options {
-                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-                gap: 0.8rem;
-            }
-
-            .convert-button {
-                height: 70px;
-                font-size: 0.75rem;
-                padding: 0.5rem 0.8rem;
-            }
-
-            .convert-button i {
-                font-size: 1.5rem;
+            .drop-area p {
+                font-size: 1em;
             }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">Tools Bazar</div>
-            <nav class="nav-links">
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="#">Tools</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#">Social Media</a></li>
-                </ul>
-            </nav>
-            <div class="contact-email">
-                Contact: <a href="mailto:toolsbazar002@gmail.com">toolsbazar002@gmail.com</a>
-            </div>
-        </div>
+    <header>
+        <h1>PDF Converter</h1>
+        <p>Convert your PDFs to various editable formats.</p>
     </header>
 
-    <main class="pdf-converter-section">
-        <h1>PDF Converter</h1>
-        <p>Convert your PDF files to various formats quickly and securely.</p>
+    <main>
+        <section id="upload-section" class="card">
+            <h2>Upload Your PDF</h2>
+            <div id="drop-area" class="drop-area">
+                <p>Drag & Drop your PDF here, or</p>
+                <input type="file" id="pdf-input" accept="application/pdf" hidden>
+                <label for="pdf-input" class="button primary">Browse Files</label>
+                <p id="file-name" class="uploaded-file-name"></p>
+            </div>
+        </section>
 
-        <div class="upload-area" id="uploadArea">
-            <input type="file" id="pdfFileInput" class="file-input" accept=".pdf">
-            <i class="fas fa-file-upload"></i>
-            <p>Drag & Drop your PDF here, or <span>Click to Upload</span></p>
-            <span>Max file size: 50MB</span>
-        </div>
+        <section id="format-selection-section" class="card hidden">
+            <h2>Select Output Format</h2>
+            <div class="format-options">
+                <label>
+                    <input type="radio" name="output-format" value="jpg" checked> JPG (Editable Images)
+                </label>
+                <label>
+                    <input type="radio" name="output-format" value="word"> Word (DOCX)
+                </label>
+                <label>
+                    <input type="radio" name="output-format" value="text"> Text (TXT)
+                </label>
+                <label>
+                    <input type="radio" name="output-format" value="excel"> Excel (XLSX)
+                </label>
+                <label>
+                    <input type="radio" name="output-format" value="html"> HTML
+                </label>
+                <label>
+                    <input type="radio" name="output-format" value="ppt"> PowerPoint (PPTX)
+                </label>
+                <label>
+                    <input type="radio" name="output-format" value="cad-dwg"> CAD-DWG
+                </label>
+            </div>
+            <button id="convert-button" class="button primary">Convert PDF</button>
+        </section>
 
-        <p class="file-name" id="fileName">No file selected.</p>
-
-        <h2>Convert to:</h2>
-        <div class="convert-options">
-            <button class="convert-button" data-format="jpg">
-                <i class="fas fa-image"></i>
-                JPG
-            </button>
-            <button class="convert-button" data-format="word">
-                <i class="fas fa-file-word"></i>
-                Word
-            </button>
-            <button class="convert-button" data-format="text">
-                <i class="fas fa-file-alt"></i>
-                Text
-            </button>
-            <button class="convert-button" data-format="excel">
-                <i class="fas fa-file-excel"></i>
-                Excel
-            </button>
-            <button class="convert-button" data-format="powerpoint">
-                <i class="fas fa-file-powerpoint"></i>
-                PowerPoint
-            </button>
-            <button class="convert-button" data-format="cad-dwg">
-                <i class="fas fa-drafting-compass"></i>
-                CAD-DWG
-            </button>
-        </div>
-
-        <div class="download-area" id="downloadArea">
-            <h3>Conversion Complete!</h3>
-            <p>Your file is ready for download.</p>
-            <a href="#" id="downloadLink" class="download-link" download>Download Converted File</a>
-            <p style="margin-top: 1rem; font-size: 0.9rem; color: #aaa;">Note: Converted files will be available for a limited time.</p>
-        </div>
+        <section id="conversion-status-section" class="card hidden">
+            <h2>Conversion Status</h2>
+            <div id="status-message" class="status-message"></div>
+            <div id="loading-spinner" class="spinner hidden"></div>
+            <div id="download-section" class="download-section hidden">
+                <h3>Conversion Complete!</h3>
+                <a id="download-link" href="#" class="button accent" download>Download Converted File</a>
+            </div>
+            <div id="error-message" class="error-message hidden"></div>
+        </section>
     </main>
 
-    <footer class="footer">
-        <div class="logo">Tools Bazar</div>
-        <p>Simplifying your digital life.</p>
-        <div class="contact-email">
-            Contact: <a href="mailto:toolsbazar002@gmail.com">toolsbazar002@gmail.com</a>
-        </div>
-        <div class="footer-links">
-            <a href="#">Privacy Policy</a> | <a href="#">Terms of Conditions</a>
-        </div>
+    <footer>
+        <p>&copy; <span id="current-year"></span> Tools Bazar. All rights reserved.</p>
     </footer>
 
     <script>
-        const uploadArea = document.getElementById('uploadArea');
-        const pdfFileInput = document.getElementById('pdfFileInput');
-        const fileNameDisplay = document.getElementById('fileName');
-        const convertButtons = document.querySelectorAll('.convert-button');
-        const downloadArea = document.getElementById('downloadArea');
-        const downloadLink = document.getElementById('downloadLink');
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropArea = document.getElementById('drop-area');
+            const pdfInput = document.getElementById('pdf-input');
+            const fileNameDisplay = document.getElementById('file-name');
+            const formatSelectionSection = document.getElementById('format-selection-section');
+            const convertButton = document.getElementById('convert-button');
+            const conversionStatusSection = document.getElementById('conversion-status-section');
+            const statusMessage = document.getElementById('status-message');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const downloadSection = document.getElementById('download-section');
+            const downloadLink = document.getElementById('download-link');
+            const errorMessage = document.getElementById('error-message');
 
-        // Handle click on upload area
-        uploadArea.addEventListener('click', () => {
-            pdfFileInput.click();
-        });
+            let uploadedFile = null;
 
-        // Handle file selection
-        pdfFileInput.addEventListener('change', () => {
-            if (pdfFileInput.files.length > 0) {
-                const file = pdfFileInput.files[0];
-                fileNameDisplay.textContent = `Selected File: ${file.name}`;
-                fileNameDisplay.style.display = 'block';
-                downloadArea.style.display = 'none'; // Hide download area if a new file is selected
-            } else {
-                fileNameDisplay.textContent = 'No file selected.';
-                fileNameDisplay.style.display = 'none';
+            // Set current year in footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // --- File Upload Logic ---
+            ;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
             }
-        });
 
-        // Handle drag and drop
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.style.backgroundColor = 'rgba(139, 0, 0, 0.2)'; /* Lighter red on drag over */
-            uploadArea.style.borderColor = var(--accent);
-        });
+            ;['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, () => dropArea.classList.add('dragover'), false);
+            });
 
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.style.backgroundColor = 'transparent';
-            uploadArea.style.borderColor = var(--primary);
-        });
+            ;['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, () => dropArea.classList.remove('dragover'), false);
+            });
 
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.style.backgroundColor = 'transparent';
-            uploadArea.style.borderColor = var(--primary);
+            dropArea.addEventListener('drop', handleDrop, false);
+            pdfInput.addEventListener('change', handleFileSelect, false);
 
-            const files = e.dataTransfer.files;
-            if (files.length > 0 && files[0].type === 'application/pdf') {
-                pdfFileInput.files = files; // Assign dropped file to input
-                const file = files[0];
-                fileNameDisplay.textContent = `Selected File: ${file.name}`;
-                fileNameDisplay.style.display = 'block';
-                downloadArea.style.display = 'none';
-            } else {
-                alert('Please drop a PDF file.');
-                fileNameDisplay.textContent = 'No file selected.';
-                fileNameDisplay.style.display = 'none';
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
             }
-        });
 
-        // Handle convert button clicks (This is where backend integration would start)
-        convertButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const format = button.dataset.format;
-                const file = pdfFileInput.files[0];
+            function handleFileSelect(e) {
+                const files = e.target.files;
+                handleFiles(files);
+            }
 
-                if (!file) {
-                    alert('Please select a PDF file to convert.');
+            function handleFiles(files) {
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (file.type === 'application/pdf') {
+                        uploadedFile = file;
+                        fileNameDisplay.textContent = `File uploaded: ${file.name}`;
+                        formatSelectionSection.classList.remove('hidden');
+                        conversionStatusSection.classList.add('hidden'); // Hide status section on new upload
+                        errorMessage.classList.add('hidden'); // Clear any previous errors
+                    } else {
+                        alert('Please upload a PDF file.');
+                        fileNameDisplay.textContent = '';
+                        uploadedFile = null;
+                        formatSelectionSection.classList.add('hidden');
+                        conversionStatusSection.classList.add('hidden');
+                    }
+                }
+            }
+
+            // --- Conversion Logic (Frontend part) ---
+            convertButton.addEventListener('click', async () => {
+                if (!uploadedFile) {
+                    alert('Please upload a PDF file first.');
                     return;
                 }
 
-                // In a real application, you would send 'file' and 'format' to a backend server here.
-                // The server would handle the conversion and return a download URL.
+                const selectedFormat = document.querySelector('input[name="output-format"]:checked').value;
 
-                // --- Placeholder for demonstration ---
-                console.log(`Converting ${file.name} to ${format}...`);
-                alert(`Simulating conversion of "${file.name}" to ${format}. In a real app, this would send to a server.`);
+                // Show status section
+                conversionStatusSection.classList.remove('hidden');
+                statusMessage.textContent = `Converting "${uploadedFile.name}" to ${selectedFormat.toUpperCase()}...`;
+                loadingSpinner.classList.remove('hidden');
+                downloadSection.classList.add('hidden');
+                errorMessage.classList.add('hidden');
 
-                // Simulate successful conversion and show download link
-                setTimeout(() => {
-                    const simulatedDownloadUrl = `converted_file.${format}`; // Replace with actual URL from backend
-                    downloadLink.href = simulatedDownloadUrl;
-                    downloadLink.setAttribute('download', `${file.name.replace('.pdf', '')}.${format}`);
-                    downloadArea.style.display = 'block';
-                }, 1500); // Simulate network delay
-                // --- End Placeholder ---
+                const formData = new FormData();
+                formData.append('pdfFile', uploadedFile);
+                formData.append('outputFormat', selectedFormat);
+
+                try {
+                    // --- THIS IS WHERE YOU'LL MAKE AN ACTUAL API CALL TO YOUR BACKEND ---
+                    // Replace with your actual backend API endpoint. For example:
+                    // const response = await fetch('http://localhost:5000/api/convert-pdf', {
+                    const response = await fetch('/api/convert-pdf', { // Assuming same origin or configured CORS
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || 'Conversion failed on server.');
+                    }
+
+                    // Assuming your backend sends back a direct file or a URL to download
+                    const blob = await response.blob();
+                    const downloadUrl = URL.createObjectURL(blob);
+
+                    // Determine file extension based on format
+                    let fileExtension;
+                    switch (selectedFormat) {
+                        case 'jpg': fileExtension = 'zip'; break; // For multiple images, zip is best
+                        case 'word': fileExtension = 'docx'; break;
+                        case 'text': fileExtension = 'txt'; break;
+                        case 'excel': fileExtension = 'xlsx'; break;
+                        case 'html': fileExtension = 'html'; break;
+                        case 'ppt': fileExtension = 'pptx'; break;
+                        case 'cad-dwg': fileExtension = 'dwg'; break;
+                        default: fileExtension = 'file';
+                    }
+
+                    const originalFileNameWithoutExt = uploadedFile.name.split('.').slice(0, -1).join('.');
+                    downloadLink.href = downloadUrl;
+                    downloadLink.download = `${originalFileNameWithoutExt}_converted.${fileExtension}`; // Suggest a filename
+                    statusMessage.textContent = 'Conversion successful!';
+                    loadingSpinner.classList.add('hidden');
+                    downloadSection.classList.remove('hidden');
+
+                } catch (error) {
+                    console.error('Conversion error:', error);
+                    statusMessage.classList.add('hidden');
+                    loadingSpinner.classList.add('hidden');
+                    errorMessage.classList.remove('hidden');
+                    errorMessage.textContent = `Error: ${error.message}`;
+                    downloadSection.classList.add('hidden');
+                }
             });
         });
     </script>
