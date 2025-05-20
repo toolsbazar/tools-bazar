@@ -3,969 +3,499 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tools Bazar: Advanced Image Watermark Remover</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* General Styles */
+    
+   
+<title>WatermarkAway</title>
+    
+ 
+<style>
+    
+
         body {
-            font-family: 'Segoe UI', Arial, sans-serif; /* A more modern font */
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #FFFFFF;
-            color: #333333;
-            line-height: 1.6;
+            background-color: #f4f4f4;
         }
 
         header {
-            background-color: #8B0000;
-            padding: 15px 20px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-        }
-
-        .logo {
-            font-size: 28px; /* Slightly larger for prominence */
-            color: #FFFFFF;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 60px 20px; /* More vertical padding */
-            background: linear-gradient(to right, #FFF, #F5F5F5); /* Subtle gradient background */
-        }
-
-        .hero h1 {
-            color: #8B0000;
-            font-size: 38px; /* Larger title */
-            margin-bottom: 15px;
-        }
-
-        .hero p {
-            color: #555555; /* Slightly softer text color */
-            font-size: 19px;
-            max-width: 700px;
-            margin: 0 auto 30px auto; /* Center and add bottom margin */
-        }
-
-        .cta-button {
-            background-color: #8B0000;
-            color: #FFFFFF;
-            border: none;
-            padding: 18px 40px; /* Larger button */
-            font-size: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
-            border-radius: 5px; /* Slightly rounded corners */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .cta-button:hover {
-            background-color: #A52A2A;
-            transform: translateY(-2px); /* Slight lift on hover */
-        }
-
-        .section-title {
-            text-align: center;
-            color: #8B0000;
-            font-size: 28px;
-            margin-top: 40px;
-            margin-bottom: 25px;
-        }
-
-        .upload-section {
-            padding: 40px 20px;
-            background-color: #FFFFFF;
-        }
-
-        .upload-area {
-            border: 3px dashed #8B0000; /* Thicker dashed border */
-            padding: 60px 30px; /* More padding */
-            margin: 25px auto;
-            max-width: 800px;
-            border-radius: 10px; /* Rounded corners */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s ease;
-        }
-
-        .upload-area.drag-over {
-            background-color: #FFEEEC; /* Light red background on drag over */
-        }
-
-        .upload-area p {
-            color: #555555;
-            font-size: 17px;
-            margin: 5px 0;
-        }
-
-        .upload-area .icon { /* Add an icon for visual appeal */
-            font-size: 50px;
-            color: #8B0000;
-            margin-bottom: 15px;
-        }
-
-        .browse-button {
-            background-color: #8B0000;
-            color: #FFFFFF;
-            border: none;
-            padding: 12px 25px;
-            font-size: 17px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            border-radius: 5px;
-        }
-
-        .browse-button:hover {
-            background-color: #A52A2A;
-            transform: translateY(-1px);
-        }
-
-        .supported-formats {
-            font-size: 14px;
-            color: #777777;
-            margin-top: 15px;
-        }
-
-        .image-preview-container { /* Container for better preview management */
-            margin-top: 30px;
-            display: flex;
-            justify-content: center;
-            min-height: 150px; /* Ensure space even without image */
-            align-items: center;
-            background-color: #F8F8F8;
-            border: 1px solid #E0E0E0;
-            border-radius: 8px;
-            padding: 15px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .image-preview-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .image-preview-placeholder {
-            color: #AAAAAA;
-            font-style: italic;
-        }
-
-        .removal-interface {
-            display: flex;
-            flex-wrap: wrap; /* Allows wrapping on smaller screens */
-            justify-content: center; /* Center items when wrapped */
-            padding: 40px 20px;
-            gap: 30px; /* Space between flex items */
-            background-color: #FDFDFD;
-        }
-
-        .controls {
-            flex: 1; /* Allows it to grow and shrink */
-            min-width: 280px; /* Minimum width for controls panel */
-            background-color: #FFFFFF;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid #EDEDED;
-        }
-
-        .controls h3 {
-            margin-top: 0;
-            color: #8B0000;
-            border-bottom: 2px solid #8B0000;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .controls label {
-            display: flex; /* Use flexbox for better alignment of radio buttons */
-            align-items: center;
-            margin-bottom: 15px;
-            font-size: 17px;
-            color: #333333;
-            cursor: pointer;
-        }
-
-        .controls input[type="radio"] {
-            margin-right: 10px;
-            accent-color: #8B0000; /* Style the radio button itself */
-            transform: scale(1.2); /* Slightly larger radio button */
-        }
-
-        .tool-options {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px dashed #DDD;
-        }
-
-        .tool-options label {
-            margin-bottom: 10px;
-        }
-
-        .tool-options input[type="range"] {
-            width: 100%;
-            margin-top: 5px;
-            accent-color: #8B0000; /* Style the slider track */
-        }
-
-        .action-buttons {
-            margin-top: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px; /* Space between action buttons */
-        }
-
-        .reset-button,
-        .apply-button {
-            flex: 1; /* Allow buttons to take equal space */
-            min-width: 120px; /* Minimum width for buttons */
-            background-color: #8B0000;
-            color: #FFFFFF;
-            border: none;
-            padding: 14px 20px;
-            font-size: 17px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .reset-button:hover,
-        .apply-button:hover {
-            background-color: #A52A2A;
-            transform: translateY(-1px);
-        }
-
-        .image-editor {
-            flex: 2; /* Takes more space than controls */
-            min-width: 320px; /* Minimum width for editor panel */
-            background-color: #FFFFFF;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid #EDEDED;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .image-editor h3 {
-            margin-top: 0;
-            color: #8B0000;
-            border-bottom: 2px solid #8B0000;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            width: 100%; /* Ensure heading spans full width */
+            background: #007BFF;
+            color: white;
+            padding: 20px 0;
             text-align: center;
         }
 
-        .canvas-container { /* To manage canvas dimensions and overflow */
-            position: relative;
-            width: 100%;
-            max-width: 700px; /* Max width for canvas */
-            height: 450px; /* Fixed height for consistency */
-            background-color: #F0F0F0;
-            border: 2px solid #8B0000;
-            border-radius: 8px;
-            overflow: hidden; /* Hide overflow from image */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: inset 0 1px 5px rgba(0,0,0,0.1);
+        h1 {
+            margin: 0;
         }
 
-        .canvas-overlay { /* Overlay for drawing selections */
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; /* Allows clicks to pass through to underlying image */
-            background-color: transparent;
+        h2 {
+            margin-top: 10px;
         }
 
-        .canvas { /* Ensure canvas itself doesn't cause overflow */
-            position: absolute; /* Position the canvas directly */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Ensures image fits within bounds without cropping */
-        }
-
-        .canvas-placeholder {
-            color: #AAAAAA;
-            font-style: italic;
-            position: absolute; /* Position placeholder over canvas */
-            text-align: center;
-            width: 100%;
+        main {
             padding: 20px;
-            box-sizing: border-box;
         }
 
-        /* Progress and Error Messages */
-        .message-container {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 25px;
+        .description, .features, .cta {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
             border-radius: 8px;
-            font-size: 16px;
-            z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            display: none; /* Hidden by default */
-            align-items: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .message-container.show {
-            display: flex;
+        h3 {
+            color: #007BFF;
         }
 
-        .message-container.success {
-            background-color: #E6F7EC; /* Light green */
-            color: #28A745; /* Green text */
-            border: 1px solid #28A745;
+        ul {
+            list-style-type: none;
+            padding: 0;
         }
 
-        .message-container.error {
-            background-color: #FFE6E6; /* Light red */
-            color: #DC3545; /* Red text */
-            border: 1px solid #DC3545;
-        }
-
-        .message-container.info {
-            background-color: #E0F2F7; /* Light blue */
-            color: #17A2B8; /* Blue text */
-            border: 1px solid #17A2B8;
-        }
-
-        .message-container .spinner {
-            border: 3px solid #f3f3f3; /* Light grey */
-            border-top: 3px solid #8B0000; /* Dark red */
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .download-section {
-            text-align: center;
-            padding: 40px 20px;
-            background-color: #FDFDFD;
-        }
-
-        .processed-image-display {
-            margin: 30px auto;
-            max-width: 700px;
-            min-height: 200px; /* Ensure space for processed image */
-            background-color: #F8F8F8;
-            border: 1px solid #E0E0E0;
-            border-radius: 8px;
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .processed-image-display img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .download-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .download-button,
-        .compare-button {
-            background-color: #8B0000;
-            color: #FFFFFF;
+        button {
+            background: #007BFF;
+            color: white;
             border: none;
-            padding: 18px 35px;
-            font-size: 19px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            padding: 10px 20px;
             border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
         }
 
-        .download-button:hover,
-        .compare-button:hover {
-            background-color: #A52A2A;
-            transform: translateY(-2px);
-        }
-
-        .compare-button {
-            background-color: #555555; /* Different color for comparison */
-        }
-
-        .compare-button:hover {
-            background-color: #777777;
+        button:hover {
+            background: #0056b3;
         }
 
         footer {
-            background-color: #8B0000;
-            color: #FFFFFF;
             text-align: center;
-            padding: 15px;
-            font-size: 14px;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Mobile Responsiveness */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 30px;
-            }
-
-            .hero p {
-                font-size: 16px;
-            }
-
-            .cta-button {
-                padding: 15px 30px;
-                font-size: 18px;
-                width: 100%; /* Full width button on mobile */
-                max-width: 300px;
-            }
-
-            .section-title {
-                font-size: 24px;
-            }
-
-            .upload-area {
-                padding: 40px 20px;
-            }
-
-            .upload-area p {
-                font-size: 15px;
-            }
-
-            .browse-button {
-                padding: 10px 20px;
-                font-size: 15px;
-            }
-
-            .removal-interface {
-                flex-direction: column;
-                gap: 20px;
-                padding: 20px;
-            }
-
-            .controls, .image-editor {
-                width: 100%;
-                min-width: unset; /* Remove min-width for mobile */
-                padding: 20px;
-            }
-
-            .action-buttons {
-                flex-direction: column; /* Stack buttons on mobile */
-            }
-
-            .reset-button,
-            .apply-button {
-                width: 100%;
-                min-width: unset;
-            }
-
-            .canvas-container {
-                height: 300px; /* Adjust canvas height for mobile */
-            }
-
-            .download-buttons {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .download-button,
-            .compare-button {
-                width: 100%;
-                max-width: 300px; /* Limit width even if full width */
-                margin: 0 auto;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 26px;
-            }
-
-            .hero p {
-                font-size: 14px;
-            }
-
-            .logo {
-                font-size: 22px;
-            }
-            .upload-area {
-                padding: 30px 15px;
-            }
+            padding: 10px 0;
+            background: #007BFF;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
         }
     </style>
+
+</h
 </head>
 <body>
-    <header>
-        <div class="logo">Tools Bazar</div>
-    </header>
+    
+    
+<header>
+        
+        <
 
-    <section class="hero">
-        <h1>Advanced Image Watermark Remover</h1>
-        <p>Effortlessly remove unwanted watermarks from your images with our intelligent tool. Perfect for photographers, designers, and anyone needing clean visuals.</p>
-        <button class="cta-button" onclick="scrollToSection('upload-section')">Start Removing Watermarks</button>
-    </section>
+    
+<h1>WatermarkAway</h1>
+        
+   
+<h2>Apne Photos ko Bina Rukawat ke Enjoy Karein!</h2>
+    
+    </h
 
-    <section id="upload-section" class="upload-section">
-        <h2 class="section-title">Upload Your Image</h2>
-        <div class="upload-area" id="uploadArea">
-            <i class="fas fa-cloud-upload-alt icon"></i> <p>Drag & Drop Your Image Here</p>
-            <p>or</p>
-            <input type="file" id="imageUploadInput" accept="image/jpeg, image/png, image/bmp, image/gif, image/tiff" style="display: none;">
-            <button class="browse-button" onclick="document.getElementById('imageUploadInput').click()">Browse Files</button>
-            <p class="supported-formats">Supports JPG, PNG, BMP, GIF, TIFF, etc.</p>
-        </div>
-        <div class="image-preview-container" id="imagePreviewContainer">
-            <p class="image-preview-placeholder">No image uploaded.</p>
-        </div>
-    </section>
+  
+</header>
+    
+   
+<main>
+        
+  
+<section class="description">
+            
+            
 
-    <section id="removal-interface" class="removal-interface" style="display: none;"> <div class="controls">
-            <h3>Tools</h3>
-            <label>
-                <input type="radio" name="tool" value="brush" checked> <i class="fas fa-paint-brush"></i> Brush Tool
-            </label>
-            <label>
-                <input type="radio" name="tool" value="rectangle"> <i class="fas fa-vector-square"></i> Rectangle Tool
-            </label>
-            <label>
-                <input type="radio" name="tool" value="auto"> <i class="fas fa-magic"></i> Automatic Detection
-            </label>
+        
 
-            <div class="tool-options" id="brushOptions">
-                <label for="brushSize">Brush Size:</label>
-                <input type="range" id="brushSize" min="5" max="100" value="20">
-            </div>
-            <div class="tool-options" id="rectangleOptions" style="display: none;">
-                <p style="font-size: 14px; color: #777;">Click and drag to select an area.</p>
-            </div>
+    
+<p>
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website aapko fast aur effective solutions provide karti hai.
+            
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website aapko fast aur effective solutions provide karti hai.
+            <
 
-            <div class="action-buttons">
-                <button class="reset-button"><i class="fas fa-undo"></i> Reset Selection</button>
-                <button class="apply-button"><i class="fas fa-check"></i> Apply Removal</button>
-            </div>
-        </div>
-        <div class="image-editor">
-            <h3>Image Editor</h3>
-            <div class="canvas-container">
-                <canvas id="imageCanvas" class="canvas"></canvas>
-                <canvas id="selectionCanvas" class="canvas-overlay"></canvas>
-                <p class="canvas-placeholder">Upload an image to start editing.</p>
-            </div>
-        </div>
-    </section>
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website aapko fast aur effective solutions provide karti hai.
+        
 
-    <section id="download-section" class="download-section" style="display: none;"> <h2 class="section-title">Download Your Processed Image</h2>
-        <div class="processed-image-display" id="processedImageDisplay">
-            <p class="image-preview-placeholder">No processed image available.</p>
-        </div>
-        <div class="download-buttons">
-            <button class="download-button"><i class="fas fa-download"></i> Download Watermark-Free Image</button>
-            <button class="compare-button"><i class="fas fa-exchange-alt"></i> Compare Original & Processed</button>
-        </div>
-    </section>
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website aapko fast aur effective solutions provide karti hai
 
-    <div id="messageContainer" class="message-container">
-        <span id="messageText"></span>
-    </div>
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website aapko fast aur effective solutions provide
 
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website aapko fast aur effective solutio
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website aapko fast aur effec
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website aapko fast aur
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website aapko fast 
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website aapko fas
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website aapko f
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website aapko
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website aap
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website a
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari website
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari websi
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari web
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari w
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, humari
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, huma
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho, h
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna ho
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karna
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean karn
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean kar
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean k
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko clean
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko cl
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko c
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko 
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images ko
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images k
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke images
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke image
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke ima
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke i
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud ke
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud k
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne khud
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne kh
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apne 
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya apn
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya ap
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya 
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho ya
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana ho 
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana h
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataana 
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hataan
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hata
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark hat
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark ha
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark 
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermark
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se watermar
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se waterma
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se waterm
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se wate
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se wa
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se 
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo se
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi photo 
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi phot
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi ph
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kisi 
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko kis
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko k
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aapko
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe aap
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe a
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chahe
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Chah
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                Ch
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+                
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+               
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+              
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+            
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+           
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+         
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+       
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+     
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+    
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+  
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta hai. 
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta h
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha deta
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidha de
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki suvidh
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne ki su
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove karne k
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove kar
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove k
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se remove
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se re
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani se 
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani s
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasani
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko aasa
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks ko 
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermarks k
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se watermar
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se wate
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images se wa
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni images s
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni im
+
+                WatermarkAway ek user-friendly online tool hai jo aapko apni
+
+                WatermarkAway ek user-friendly online tool hai jo aapko a
+
+                WatermarkAway ek user-friendly online tool hai jo aapk
+
+                WatermarkAway ek user-friendly online tool hai jo a
+
+                WatermarkAway ek user-friendly online tool hai j
+
+                WatermarkAway ek user-friendly online tool
+
+                WatermarkAway ek user-friendly online t
+
+                WatermarkAway ek user-friendly onlin
+
+                WatermarkAway ek user-friendly on
+
+                WatermarkAway ek user-friendly
+
+                WatermarkAway ek user-frien
+
+                WatermarkAway ek user-fr
+
+                WatermarkAway ek user
+
+                WatermarkAway ek u
+
+                WatermarkAway e
+
+                WatermarkAwa
+
+                Watermar
+
+                Wate
+
+            
+
+        
+
+    
+</p>
+        
+      
+</section>
+        
+        <
+
+ 
+<section class="features">
+            
+      
+<h3>Features:</h3>
+            
+            <
+
+      
+<ul>
+                
+                <
+
+          
+
+   
+<li>Aasan Upload: Bas apni image ko upload karein aur watermark ko select karein.</li>
+                
+             
+
+ 
+<li>AI-Powered Removal: Hamara advanced AI algorithm watermark ko bina kisi quality loss ke remove karta hai.</li>
+                
+       
+<li>Multiple Formats Supported: JPG, PNG, aur BMP jaise kai formats ko support karta hai.</li>
+                
+ 
+<li>Free Trial: Pehli baar istemal karne walon ke liye free trial available hai!</li>
+                <li>Privacy First: Aapki images sirf aapke liye hain; hum aapki data ko kabhi share nahi karte.</li>
+            </ul>
+        </section>
+        <section class="cta">
+            <h3>Call to Action:</h3>
+            <button id="uploadBtn">Abhi apni image upload karein aur watermark se azadi paayein!</button>
+        </section>
+    </main>
     <footer>
-        <p>&copy; 2025 Tools Bazar. All rights reserved.</p>
+        <p>&copy; 2025 WatermarkAway. All rights reserved.</p>
     </footer>
-
     <script>
-        const imageUploadInput = document.getElementById('imageUploadInput');
-        const uploadArea = document.getElementById('uploadArea');
-        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-        const removalInterface = document.getElementById('removal-interface');
-        const downloadSection = document.getElementById('download-section');
-        const imageCanvas = document.getElementById('imageCanvas');
-        const selectionCanvas = document.getElementById('selectionCanvas');
-        const ctxImage = imageCanvas.getContext('2d');
-        const ctxSelection = selectionCanvas.getContext('2d');
-        const brushSizeSlider = document.getElementById('brushSize');
-        const brushOptions = document.getElementById('brushOptions');
-        const rectangleOptions = document.getElementById('rectangleOptions');
-        const processedImageDisplay = document.getElementById('processedImageDisplay');
-        const messageContainer = document.getElementById('messageContainer');
-        const messageText = document.getElementById('messageText');
-        const canvasPlaceholder = document.querySelector('.canvas-placeholder');
-
-
-        let originalImage = new Image();
-        let currentTool = 'brush';
-        let isDrawing = false;
-        let lastX = 0;
-        let lastY = 0;
-        let selections = []; // To store brush strokes or rectangle coordinates
-        let currentRect = null; // For rectangle tool
-
-        // --- Helper Functions ---
-        function showMessage(text, type, duration = 3000) {
-            messageText.textContent = text;
-            messageContainer.className = `message-container show ${type}`;
-            if (type === 'info' && text.includes('Processing')) {
-                messageContainer.innerHTML = `<div class="spinner"></div><span id="messageText">${text}</span>`;
-            } else {
-                messageContainer.innerHTML = `<span id="messageText">${text}</span>`;
-            }
-
-            if (duration > 0) {
-                setTimeout(() => {
-                    messageContainer.classList.remove('show');
-                }, duration);
-            }
-        }
-
-        function hideMessage() {
-            messageContainer.classList.remove('show');
-        }
-
-        function scrollToSection(id) {
-            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function setupCanvasDimensions() {
-            const container = imageCanvas.parentElement;
-            imageCanvas.width = container.clientWidth;
-            imageCanvas.height = container.clientHeight;
-            selectionCanvas.width = container.clientWidth;
-            selectionCanvas.height = container.clientHeight;
-            if (originalImage.src) {
-                drawImageOnCanvas(originalImage);
-                redrawSelections(); // Redraw selections if canvas size changes
-            }
-        }
-
-        function drawImageOnCanvas(img) {
-            ctxImage.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
-            const aspectRatio = img.width / img.height;
-            let drawWidth = imageCanvas.width;
-            let drawHeight = imageCanvas.height;
-
-            if (drawWidth / drawHeight > aspectRatio) {
-                drawWidth = drawHeight * aspectRatio;
-            } else {
-                drawHeight = drawWidth / aspectRatio;
-            }
-
-            const x = (imageCanvas.width - drawWidth) / 2;
-            const y = (imageCanvas.height - drawHeight) / 2;
-
-            ctxImage.drawImage(img, x, y, drawWidth, drawHeight);
-            imageCanvas.dataset.offsetX = x; // Store offset for accurate selection
-            imageCanvas.dataset.offsetY = y;
-            imageCanvas.dataset.scaleX = drawWidth / img.width;
-            imageCanvas.dataset.scaleY = drawHeight / img.height;
-        }
-
-        function getCanvasCoordinates(event) {
-            const rect = selectionCanvas.getBoundingClientRect();
-            const clientX = event.clientX || (event.touches && event.touches[0] ? event.touches[0].clientX : 0);
-            const clientY = event.clientY || (event.touches && event.touches[0] ? event.touches[0].clientY : 0);
-            const x = clientX - rect.left;
-            const y = clientY - rect.top;
-            return { x, y };
-        }
-
-        function drawSelection(x1, y1, x2, y2, toolType, size) {
-            ctxSelection.fillStyle = 'rgba(139, 0, 0, 0.4)'; // Dark red, semi-transparent
-            ctxSelection.strokeStyle = '#8B0000';
-            ctxSelection.lineWidth = 2;
-
-            if (toolType === 'brush') {
-                ctxSelection.beginPath();
-                ctxSelection.arc(x1, y1, size / 2, 0, Math.PI * 2);
-                ctxSelection.fill();
-            } else if (toolType === 'rectangle') {
-                const width = x2 - x1;
-                const height = y2 - y1;
-                ctxSelection.fillRect(x1, y1, width, height);
-                ctxSelection.strokeRect(x1, y1, width, height);
-            }
-        }
-
-        function redrawSelections() {
-            ctxSelection.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
-            selections.forEach(sel => {
-                if (sel.type === 'brush') {
-                    drawSelection(sel.x, sel.y, 0, 0, 'brush', sel.size);
-                } else if (sel.type === 'rectangle') {
-                    drawSelection(sel.x1, sel.y1, sel.x2, sel.y2, 'rectangle', 0);
-                }
-            });
-            if (currentRect) { // Draw current rectangle if being drawn
-                drawSelection(currentRect.x1, currentRect.y1, currentRect.x2, currentRect.y2, 'rectangle', 0);
-            }
-        }
-
-        // --- Event Listeners ---
-
-        // Handle image upload input change
-        imageUploadInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                if (!file.type.startsWith('image/')) {
-                    showMessage('Unsupported file format. Please upload an image.', 'error');
-                    e.target.value = null; // Clear the input
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    originalImage.onload = () => {
-                        imagePreviewContainer.innerHTML = `<img src="${event.target.result}" alt="Uploaded Image">`;
-                        canvasPlaceholder.style.display = 'none'; // Hide canvas placeholder
-                        removalInterface.style.display = 'flex'; // Show editing interface
-                        downloadSection.style.display = 'none'; // Hide download section until processed
-                        setupCanvasDimensions(); // Set up canvas size based on its container
-                        selections = []; // Clear previous selections
-                        redrawSelections();
-                        showMessage('Image uploaded successfully!', 'success');
-                        scrollToSection('removal-interface'); // Scroll to editor
-                    };
-                    originalImage.src = event.target.result;
-                };
-                reader.readAsDataURL(file);
-            } else {
-                showMessage('No image selected.', 'error');
-            }
+        document.getElementById('uploadBtn').addEventListener('click', function() {
+            alert('Image upload functionality is not implemented yet!');
         });
-
-        // Handle drag and drop
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('drag-over');
-        });
-
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('drag-over');
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('drag-over');
-            const file = e.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) {
-                imageUploadInput.files = e.dataTransfer.files; // Assign dropped file to input
-                imageUploadInput.dispatchEvent(new Event('change')); // Trigger change event
-            } else {
-                showMessage('Only image files are supported.', 'error');
-            }
-        });
-
-        // Handle tool selection
-        document.querySelectorAll('input[name="tool"]').forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                currentTool = e.target.value;
-                brushOptions.style.display = (currentTool === 'brush') ? 'block' : 'none';
-                rectangleOptions.style.display = (currentTool === 'rectangle') ? 'block' : 'none';
-                // Clear selection canvas on tool change, or just clear any ongoing drawing
-                ctxSelection.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
-                redrawSelections(); // Redraw existing selections
-                isDrawing = false;
-                currentRect = null;
-            });
-        });
-
-        // Canvas drawing logic (Brush and Rectangle)
-        selectionCanvas.addEventListener('mousedown', (e) => {
-            if (originalImage.src && (currentTool === 'brush' || currentTool === 'rectangle')) { // Only draw if an image is loaded and tool is manual
-                isDrawing = true;
-                const { x, y } = getCanvasCoordinates(e);
-                lastX = x;
-                lastY = y;
-
-                if (currentTool === 'rectangle') {
-                    currentRect = { x1: x, y1: y, x2: x, y2: y, type: 'rectangle' };
-                }
-            }
-        });
-
-        selectionCanvas.addEventListener('mousemove', (e) => {
-            if (!isDrawing || !originalImage.src) return;
-
-            const { x, y } = getCanvasCoordinates(e);
-
-            if (currentTool === 'brush') {
-                const brushSize = parseInt(brushSizeSlider.value);
-                selections.push({ type: 'brush', x: x, y: y, size: brushSize });
-                redrawSelections(); // Redraw to show continuous stroke
-            } else if (currentTool === 'rectangle') {
-                if (currentRect) {
-                    currentRect.x2 = x;
-                    currentRect.y2 = y;
-                    redrawSelections(); // Update rectangle in real-time
-                }
-            }
-            lastX = x;
-            lastY = y;
-        });
-
-        selectionCanvas.addEventListener('mouseup', () => {
-            if (isDrawing && originalImage.src) {
-                isDrawing = false;
-                if (currentTool === 'rectangle' && currentRect) {
-                    selections.push(currentRect);
-                    currentRect = null; // Reset for next rectangle
-                }
-            }
-        });
-
-        // Handle touch events for mobile drawing
-        selectionCanvas.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Prevent scrolling
-            if (originalImage.src && (currentTool === 'brush' || currentTool === 'rectangle')) {
-                isDrawing = true;
-                const { x, y } = getCanvasCoordinates(e);
-                lastX = x;
-                lastY = y;
-
-                if (currentTool === 'rectangle') {
-                    currentRect = { x1: x, y1: y, x2: x, y2: y, type: 'rectangle' };
-                }
-            }
-        });
-
-        selectionCanvas.addEventListener('touchmove', (e) => {
-            e.preventDefault(); // Prevent scrolling
-            if (!isDrawing || !originalImage.src) return;
-
-            const { x, y } = getCanvasCoordinates(e);
-
-            if (currentTool === 'brush') {
-                const brushSize = parseInt(brushSizeSlider.value);
-                selections.push({ type: 'brush', x: x, y: y, size: brushSize });
-                redrawSelections();
-            } else if (currentTool === 'rectangle') {
-                if (currentRect) {
-                    currentRect.x2 = x;
-                    currentRect.y2 = y;
-                    redrawSelections();
-                }
-            }
-            lastX = x;
-            lastY = y;
-        });
-
-        selectionCanvas.addEventListener('touchend', () => {
-            if (isDrawing && originalImage.src) {
-                isDrawing = false;
-                if (currentTool === 'rectangle' && currentRect) {
-                    selections.push(currentRect);
-                    currentRect = null;
-                }
-            }
-        });
-
-
-        // Reset Selection
-        document.querySelector('.reset-button').addEventListener('click', () => {
-            selections = [];
-            ctxSelection.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
-            showMessage('Selections cleared.', 'info');
-        });
-
-        // Apply Removal (Placeholder for actual processing)
-        document.querySelector('.apply-button').addEventListener('click', () => {
-            if (!originalImage.src) {
-                showMessage('Please upload an image first.', 'error');
-                return;
-            }
-
-            if (currentTool !== 'auto' && selections.length === 0) {
-                 showMessage('Please select an area using the brush or rectangle tool, or choose Automatic Detection.', 'error');
-                 return;
-            }
-
-            showMessage('Processing image... This may take a moment.', 'info', 0); // Show persistent message
-
-            // In a real application, you would send originalImage.src and 'selections' to a backend
-            // for actual watermark removal using libraries like OpenCV, AI models, etc.
-            // For this demo, we'll simulate processing.
-            setTimeout(() => {
-                const processedImageSrc = originalImage.src; // For demo, just use original image for "processed"
-
-                // Display processed image
-                processedImageDisplay.innerHTML = `<img src="${processedImageSrc}" alt="Processed Image">`;
-                downloadSection.style.display = 'block'; // Show download section
-                hideMessage();
-                showMessage('Watermark removal complete!', 'success');
-                scrollToSection('download-section');
-            }, 3000); // Simulate 3 seconds of processing
-        });
-
-        // Download Functionality (Placeholder)
-        document.querySelector('.download-button').addEventListener('click', () => {
-            if (processedImageDisplay.querySelector('img')) {
-                const link = document.createElement('a');
-                link.href = processedImageDisplay.querySelector('img').src;
-                link.download = 'watermark-free-image.png'; // Or dynamically get original name
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                showMessage('Image downloaded!', 'success');
-            } else {
-                showMessage('No processed image to download.', 'error');
-            }
-        });
-
-        // Compare Original & Processed (Placeholder)
-        document.querySelector('.compare-button').addEventListener('click', () => {
-            if (originalImage.src && processedImageDisplay.querySelector('img')) {
-                const processedImgSrc = processedImageDisplay.querySelector('img').src;
-                // A simple toggle for demonstration
-                if (imageCanvas.dataset.isComparing === 'true') {
-                    drawImageOnCanvas(originalImage);
-                    imageCanvas.dataset.isComparing = 'false';
-                    showMessage('Viewing original image. Click compare again for processed.', 'info');
-                } else {
-                    const tempProcessedImage = new Image();
-                    tempProcessedImage.onload = () => {
-                        drawImageOnCanvas(tempProcessedImage);
-                        imageCanvas.dataset.isComparing = 'true';
-                        showMessage('Viewing processed image. Click compare again for original.', 'info');
-                    };
-                    tempProcessedImage.src = processedImgSrc;
-                }
-            } else {
-                showMessage('Upload and process an image to compare.', 'error');
-            }
-        });
-
-        // Initial setup
-        window.addEventListener('resize', setupCanvasDimensions);
-        setupCanvasDimensions(); // Initial canvas setup
     </script>
 </body>
 </html>
