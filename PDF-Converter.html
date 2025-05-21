@@ -3,629 +3,791 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Converter | Tools Bazar</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>PDF Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* CSS Variables for consistent theming */
         :root {
-            --primary: #8B0000; /* Dark red */
-            --secondary: #121212; /* Dark black */
-            --accent: #A52A2A; /* Lighter red */
-            --text: #F5F5F5; /* Light gray */
-            --card-bg: #1E1E1E;
-            --border: #333;
-            --hover: #5a0000;
-            --success: #4CAF50;
+            --dark-red: #8B0000; /* Dark Red */
+            --light-red: #BC1F26; /* A slightly lighter red for accents */
+            --white: #FFFFFF;
+            --light-gray: #F5F5F5;
+            --dark-gray: #333333;
+            --text-color: #444444;
+            --border-color: #E0E0E0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --hover-shadow: rgba(0, 0, 0, 0.2);
         }
 
-        * {
+        /* Basic body styling for font, background, and flex layout */
+        body {
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--secondary);
-            color: var(--text);
-            min-height: 100vh;
+            background-color: var(--light-gray);
+            color: var(--text-color);
             display: flex;
             flex-direction: column;
+            min-height: 100vh; /* Ensures the body takes at least full viewport height */
+            box-sizing: border-box; /* Includes padding and border in element's total width and height */
         }
 
+        /* Header styling */
+        .header {
+            background-color: var(--dark-red);
+            color: var(--white);
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 8px var(--shadow-color); /* Subtle shadow for depth */
+        }
+
+        .header-title {
+            margin: 0;
+            font-weight: 700;
+            font-size: 2.5em;
+        }
+
+        /* Main container for the app content */
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            flex: 1;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        header h1 {
-            color: var(--primary);
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        header p {
-            color: var(--text);
-            opacity: 0.8;
-        }
-
-        .upload-area {
-            margin-bottom: 2rem;
-        }
-
-        .upload-box {
-            border: 2px dashed var(--border);
-            border-radius: 10px;
-            padding: 3rem 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background-color: var(--card-bg);
-        }
-
-        .upload-box:hover {
-            border-color: var(--accent);
-            background-color: rgba(165, 42, 42, 0.1);
-        }
-
-        .upload-box i {
-            font-size: 3rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-
-        .upload-box h3 {
-            margin-bottom: 0.5rem;
-        }
-
-        .upload-box p {
-            margin: 0.5rem 0;
-            color: var(--text);
-            opacity: 0.7;
-        }
-
-        .file-info {
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            color: var(--accent);
-        }
-
-        .options-section {
-            margin-bottom: 2rem;
-        }
-
-        .options-section h2 {
-            margin-bottom: 1rem;
-            color: var(--primary);
-            font-size: 1.5rem;
-        }
-
-        .format-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .format-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.5rem 1rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .format-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent);
-            box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
-        }
-
-        .format-card i {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .format-card span {
-            font-weight: 500;
-        }
-
-        .format-card.active {
-            background-color: var(--accent);
-            border-color: var(--primary);
-        }
-
-        .settings-section {
-            margin-bottom: 2rem;
-        }
-
-        .settings-section h2 {
-            margin-bottom: 1rem;
-            color: var(--primary);
-            font-size: 1.5rem;
-        }
-
-        .settings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-            background-color: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-
-        .setting-item {
+            flex-grow: 1; /* Allows the container to grow and fill available space */
             display: flex;
             flex-direction: column;
+            align-items: center; /* Center horizontally */
+            justify-content: center; /* Center vertically */
+            padding: 20px;
+            gap: 20px; /* Space between cards */
+            width: 100%;
+            max-width: 900px; /* Max width for larger screens */
+            margin: 20px auto; /* Center the container itself */
         }
 
-        .setting-item label {
-            margin-bottom: 0.5rem;
-            font-weight: 500;
+        /* Styling for individual content cards */
+        .converter-card {
+            background-color: var(--white);
+            border-radius: 12px; /* Rounded corners */
+            box-shadow: 0 8px 16px var(--shadow-color); /* Prominent shadow */
+            padding: 30px;
+            text-align: center;
+            width: 100%;
+            max-width: 600px; /* Max width for cards */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for hover effects */
+            border: 1px solid var(--border-color); /* Subtle border */
         }
 
-        .setting-item select, 
-        .setting-item input {
-            padding: 0.5rem;
-            border-radius: 5px;
-            border: 1px solid var(--border);
-            background-color: var(--secondary);
-            color: var(--text);
+        .converter-card:hover {
+            transform: translateY(-5px); /* Lift effect on hover */
+            box-shadow: 0 12px 24px var(--hover-shadow); /* Enhanced shadow on hover */
         }
 
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
+        /* Utility class to hide elements */
+        .hidden {
+            display: none;
         }
 
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 5px;
-            font-weight: 600;
+        /* Upload Section Specific Styling */
+        .upload-area {
+            border: 3px dashed var(--border-color); /* Dashed border for drop zone */
+            border-radius: 10px;
+            padding: 40px 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            min-height: 200px; /* Minimum height for the drop area */
         }
 
-        .btn i {
-            font-size: 1rem;
+        .upload-area:hover,
+        .upload-area.drag-over {
+            border-color: var(--light-red); /* Highlight on hover/drag */
+            background-color: var(--light-gray);
+        }
+
+        .upload-icon {
+            font-size: 4em;
+            color: var(--dark-red);
+            margin-bottom: 15px;
+        }
+
+        .upload-area p {
+            margin: 5px 0;
+            font-size: 1.1em;
+            color: var(--dark-gray);
+        }
+
+        .file-name {
+            margin-top: 15px;
+            font-weight: bold;
+            color: var(--dark-red);
+        }
+
+        .file-error {
+            color: #FF0000; /* Red for error messages */
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .file-size-info {
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 15px;
+        }
+
+        /* Button Styling */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 20px; /* Consistent margin for buttons */
+            display: inline-block; /* For better spacing with multiple buttons */
         }
 
         .btn-primary {
-            background-color: var(--primary);
-            color: white;
+            background-color: var(--dark-red);
+            color: var(--white);
+            box-shadow: 0 4px 8px rgba(139, 0, 0, 0.3); /* Shadow for primary button */
         }
 
         .btn-primary:hover {
-            background-color: var(--hover);
+            background-color: var(--light-red);
+            transform: translateY(-2px); /* Lift effect on hover */
+            box-shadow: 0 6px 12px rgba(139, 0, 0, 0.4); /* Enhanced shadow */
         }
 
         .btn-secondary {
-            background-color: transparent;
-            color: var(--text);
-            border: 1px solid var(--border);
+            background-color: var(--white);
+            color: var(--dark-red);
+            border: 2px solid var(--dark-red);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .btn-secondary:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: var(--light-red);
+            color: var(--white);
+            border-color: var(--light-red);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
 
-        .btn-convert {
-            background-color: var(--primary);
-            color: white;
+        /* Conversion Options Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Responsive grid columns */
+            gap: 15px;
+            margin-top: 25px;
+            margin-bottom: 25px;
         }
 
-        .btn-convert:hover {
-            background-color: var(--hover);
-        }
-
-        .btn-convert:disabled {
-            background-color: #555;
-            cursor: not-allowed;
-        }
-
-        .btn-download {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .btn-download:hover {
-            background-color: #3e8e41;
-        }
-
-        .progress-container {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background-color: var(--border);
-            border-radius: 5px;
-            margin: 1rem 0;
-            overflow: hidden;
-        }
-
-        .progress {
-            height: 100%;
-            background-color: var(--primary);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .progress-text {
+        .option-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             font-weight: 500;
         }
 
-        .result-container {
-            text-align: center;
-            margin-bottom: 2rem;
+        .option-item:hover {
+            border-color: var(--light-red);
+            box-shadow: 0 4px 8px rgba(139, 0, 0, 0.1);
         }
 
-        .result-card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            padding: 2rem;
-            border: 1px solid var(--border);
+        /* Custom radio button styling */
+        .option-item input[type="radio"] {
+            display: none; /* Hide default radio button */
         }
 
-        .success-icon {
-            font-size: 4rem;
-            color: var(--success);
-            margin-bottom: 1rem;
+        .option-item input[type="radio"] + span {
+            position: relative;
+            padding-left: 25px; /* Space for custom radio button */
         }
 
-        .result-card p {
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
+        .option-item input[type="radio"] + span::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--dark-red);
+            border-radius: 50%;
+            background-color: var(--white);
+            transition: all 0.2s ease;
         }
 
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background-color: var(--card-bg);
-            color: var(--text);
-            opacity: 0.7;
-            font-size: 0.9rem;
+        .option-item input[type="radio"]:checked + span::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background-color: var(--dark-red);
+            border-radius: 50%;
+            transition: all 0.2s ease;
         }
 
-        /* Responsive Design */
+        .option-item input[type="radio"]:checked + span::before {
+            background-color: var(--white); /* Keep the background white */
+            border-color: var(--dark-red); /* Keep the border red */
+        }
+
+        /* Settings Panel Styling */
+        .settings-panel {
+            text-align: left; /* Align text within settings panel */
+        }
+
+        .setting-item {
+            margin-bottom: 15px;
+        }
+
+        .setting-item label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--dark-gray);
+        }
+
+        .setting-item input[type="text"],
+        .setting-item input[type="number"],
+        .setting-item input[type="range"] {
+            width: calc(100% - 20px); /* Full width minus padding */
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .setting-item input[type="text"]:focus,
+        .setting-item input[type="number"]:focus,
+        .setting-item input[type="range"]:focus {
+            outline: none;
+            border-color: var(--light-red);
+            box-shadow: 0 0 0 3px rgba(188, 31, 38, 0.2); /* Focus ring effect */
+        }
+
+        .setting-item input[type="range"] {
+            vertical-align: middle; /* Align range input with text */
+        }
+
+        #qualityValue {
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: bold;
+            color: var(--dark-red);
+        }
+
+        /* Conversion Progress (Loader) Styling */
+        .loader {
+            border: 8px solid var(--light-gray);
+            border-top: 8px solid var(--dark-red); /* Red top border for spinning effect */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite; /* Spinning animation */
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .conversion-progress p {
+            font-size: 1.2em;
+            font-weight: 500;
+            color: var(--dark-gray);
+        }
+
+        /* Download Section Styling */
+        .download-section h2 {
+            color: var(--dark-red);
+            margin-bottom: 15px;
+        }
+
+        .download-section p {
+            font-size: 1.1em;
+            color: var(--dark-gray);
+            margin-bottom: 25px;
+        }
+
+        .download-section .btn {
+            margin: 10px; /* Space between download and start over buttons */
+        }
+
+        /* Mobile Responsiveness */
         @media (max-width: 768px) {
+            .header-title {
+                font-size: 2em;
+            }
+
             .container {
-                padding: 1rem;
+                padding: 15px;
+                gap: 15px;
             }
 
-            header h1 {
-                font-size: 2rem;
+            .converter-card {
+                padding: 20px;
             }
 
-            .format-options {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            .upload-area {
+                padding: 30px 15px;
             }
 
-            .action-buttons {
-                flex-direction: column;
+            .upload-icon {
+                font-size: 3em;
+            }
+
+            .upload-area p {
+                font-size: 1em;
+            }
+
+            .options-grid {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Adjust grid for smaller screens */
+                gap: 10px;
+            }
+
+            .option-item {
+                padding: 10px 5px;
+                font-size: 0.9em;
             }
 
             .btn {
-                width: 100%;
-                justify-content: center;
+                padding: 10px 20px;
+                font-size: 1em;
             }
         }
 
-        /* Custom icon for CAD/DWG */
-        .fa-file-dwg:before {
-            content: "CAD";
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: bold;
-            font-size: 1.2rem;
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1.8em;
+            }
+
+            .converter-card {
+                padding: 15px;
+            }
+
+            .upload-area {
+                padding: 25px 10px;
+                min-height: 150px;
+            }
+
+            .upload-icon {
+                font-size: 2.5em;
+            }
+
+            .upload-area p {
+                font-size: 0.9em;
+            }
+
+            .options-grid {
+                grid-template-columns: repeat(2, 1fr); /* Two columns on very small screens */
+            }
+
+            .setting-item label {
+                font-size: 0.9em;
+            }
+
+            .setting-item input {
+                font-size: 0.9em;
+            }
+
+            .download-section .btn {
+                display: block; /* Stack buttons vertically */
+                width: calc(100% - 20px); /* Full width minus margins */
+                margin: 10px auto;
+            }
+        }
+
+        /* Accessibility (Focus States) for keyboard navigation */
+        button:focus,
+        .upload-area:focus-within,
+        input[type="file"]:focus-visible + #selectFileBtn, /* For keyboard navigation to file input button */
+        input[type="radio"]:focus-visible + span::before, /* Focus for custom radio buttons */
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="range"]:focus {
+            outline: 2px solid var(--light-red); /* Visible outline on focus */
+            outline-offset: 3px; /* Offset to prevent overlapping with element border */
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-file-pdf"></i> PDF Converter</h1>
-            <p>Convert your PDF files to various formats quickly and easily</p>
-        </header>
+    <header class="header">
+        <h1 class="header-title">PDF Converter</h1>
+    </header>
 
-        <main>
-            <div class="upload-area" id="uploadArea">
-                <div class="upload-box" id="dropArea">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <h3>Drag & Drop PDF File Here</h3>
-                    <p>or</p>
-                    <input type="file" id="fileInput" accept=".pdf" hidden>
-                    <button class="btn" id="browseBtn">Browse Files</button>
-                    <p class="file-info" id="fileInfo">No file selected</p>
-                </div>
+    <main class="container">
+        <div class="converter-card upload-section" id="uploadSection">
+            <div class="upload-area" id="dropArea">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <p>Drag & Drop your file here</p>
+                <p>- OR -</p>
+                <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.rtf,.ppt,.pptx,.jpeg,.png,.jfif,.xls,.xlsx,.txt,.html" hidden>
+                <button class="btn btn-primary" id="selectFileBtn">Click to Upload</button>
+                <p class="file-size-info">Max PDF: 100MB | Others: 25MB</p>
             </div>
-
-            <div class="options-section">
-                <h2>Convert To:</h2>
-                <div class="format-options">
-                    <div class="format-card" data-format="jpg">
-                        <i class="fas fa-file-image"></i>
-                        <span>JPG</span>
-                    </div>
-                    <div class="format-card" data-format="word">
-                        <i class="fas fa-file-word"></i>
-                        <span>Word</span>
-                    </div>
-                    <div class="format-card" data-format="text">
-                        <i class="fas fa-file-alt"></i>
-                        <span>Text</span>
-                    </div>
-                    <div class="format-card" data-format="excel">
-                        <i class="fas fa-file-excel"></i>
-                        <span>Excel</span>
-                    </div>
-                    <div class="format-card" data-format="html">
-                        <i class="fas fa-file-code"></i>
-                        <span>HTML</span>
-                    </div>
-                    <div class="format-card" data-format="powerpoint">
-                        <i class="fas fa-file-powerpoint"></i>
-                        <span>PowerPoint</span>
-                    </div>
-                    <div class="format-card" data-format="cad">
-                        <i class="fas fa-file-dwg"></i>
-                        <span>CAD-DWG</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="settings-section">
-                <h2>Conversion Settings</h2>
-                <div class="settings-grid">
-                    <div class="setting-item">
-                        <label for="quality">Quality:</label>
-                        <select id="quality">
-                            <option value="high">High</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="low">Low</option>
-                        </select>
-                    </div>
-                    <div class="setting-item">
-                        <label for="pages">Pages:</label>
-                        <select id="pages">
-                            <option value="all">All Pages</option>
-                            <option value="custom">Custom Range</option>
-                        </select>
-                        <input type="text" id="pageRange" placeholder="e.g. 1-5,7,9" style="display: none;">
-                    </div>
-                    <div class="setting-item">
-                        <label for="output-name">Output Name:</label>
-                        <input type="text" id="output-name" placeholder="Custom file name">
-                    </div>
-                </div>
-            </div>
-
-            <div class="action-buttons">
-                <button class="btn btn-convert" id="convertBtn" disabled>
-                    <i class="fas fa-exchange-alt"></i> Convert Now
-                </button>
-                <button class="btn btn-secondary" id="resetBtn">
-                    <i class="fas fa-redo"></i> Reset
-                </button>
-            </div>
-        </main>
-
-        <div class="progress-container" id="progressContainer" style="display: none;">
-            <h3>Converting your file...</h3>
-            <div class="progress-bar">
-                <div class="progress" id="progressBar"></div>
-            </div>
-            <p class="progress-text" id="progressText">0%</p>
+            <div id="fileName" class="file-name"></div>
+            <div id="fileError" class="file-error"></div>
         </div>
 
-        <div class="result-container" id="resultContainer" style="display: none;">
+        <div class="converter-card conversion-options hidden" id="conversionOptions">
+            <h2>Convert To:</h2>
+            <div class="options-grid">
+                <label class="option-item">
+                    <input type="radio" name="convertFormat" value="pdf" checked>
+                    <span>PDF</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="convertFormat" value="doc">
+                    <span>DOC</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="convertFormat" value="docx">
+                    <span>DOCX</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="convertFormat" value="rtf">
+                    <span>RTF</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="convertFormat" value="ppt">
+                    <span>PPT</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="convertFormat" value="pptx">
+                    <span>PPTX</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="convertFormat" value="jpeg">
+                    <span>JPEG</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="convertFormat" value="png">
+                    <span>PNG</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="convertFormat" value="jfif">
+                    <span>JFIF</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="convertFormat" value="xls">
+                    <span>XLS</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="convertFormat" value="xlsx">
+                    <span>XLSX</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="convertFormat" value="txt">
+                    <span>TXT</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="convertFormat" value="html">
+                    <span>HTML</span>
+                </label>
+            </div>
+            <button class="btn btn-primary convert-btn" id="convertBtn">Convert</button>
+        </div>
+
+        <div class="converter-card settings-panel hidden" id="settingsPanel">
+            <h2>Optional Settings</h2>
+            <div class="setting-item">
+                <label for="pageRange">Page Range:</label>
+                <input type="text" id="pageRange" placeholder="e.g., 1-5, 8">
+            </div>
+            <div class="setting-item">
+                <label for="dpi">DPI (for image conversion):</label>
+                <input type="number" id="dpi" value="300" min="50" max="1200">
+            </div>
+            <div class="setting-item">
+                <label for="quality">Quality (for image conversion):</label>
+                <input type="range" id="quality" min="1" max="100" value="90">
+                <span id="qualityValue">90</span>%
+            </div>
+            <button class="btn btn-secondary" id="applySettingsBtn">Apply Settings</button>
+        </div>
+
+        <div class="converter-card conversion-progress hidden" id="conversionProgress">
+            <div class="loader"></div>
+            <p>Converting your file...</p>
+        </div>
+
+        <div class="converter-card download-section hidden" id="downloadSection">
             <h2>Conversion Complete!</h2>
-            <div class="result-card">
-                <i class="fas fa-check-circle success-icon"></i>
-                <p id="resultMessage">Your file has been successfully converted.</p>
-                <button class="btn btn-download" id="downloadBtn">
-                    <i class="fas fa-download"></i> Download File
-                </button>
-                <button class="btn btn-secondary" id="newConversionBtn">
-                    <i class="fas fa-plus"></i> New Conversion
-                </button>
-            </div>
+            <p>Your file is ready.</p>
+            <button class="btn btn-primary" id="downloadBtn">Download Converted File</button>
+            <button class="btn btn-secondary" id="startOverBtn">Convert Another File</button>
         </div>
-    </div>
-
-    <footer>
-        <p>&copy; 2025 Tools Bazar. All rights reserved.</p>
-    </footer>
+    </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // DOM Elements
-            const fileInput = document.getElementById('fileInput');
-            const browseBtn = document.getElementById('browseBtn');
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get references to DOM elements
             const dropArea = document.getElementById('dropArea');
-            const fileInfo = document.getElementById('fileInfo');
+            const fileInput = document.getElementById('fileInput');
+            const selectFileBtn = document.getElementById('selectFileBtn');
+            const fileNameDisplay = document.getElementById('fileName');
+            const fileErrorDisplay = document.getElementById('fileError');
+
+            const uploadSection = document.getElementById('uploadSection');
+            const conversionOptionsSection = document.getElementById('conversionOptions');
+            const settingsPanel = document.getElementById('settingsPanel');
+            const conversionProgress = document.getElementById('conversionProgress');
+            const downloadSection = document.getElementById('downloadSection');
+
             const convertBtn = document.getElementById('convertBtn');
-            const resetBtn = document.getElementById('resetBtn');
             const downloadBtn = document.getElementById('downloadBtn');
-            const newConversionBtn = document.getElementById('newConversionBtn');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const resultContainer = document.getElementById('resultContainer');
-            const resultMessage = document.getElementById('resultMessage');
-            const pagesSelect = document.getElementById('pages');
-            const pageRange = document.getElementById('pageRange');
-            const formatCards = document.querySelectorAll('.format-card');
-            
-            // Variables
-            let selectedFile = null;
-            let selectedFormat = null;
-            let downloadUrl = null;
-            
-            // Event Listeners
-            browseBtn.addEventListener('click', () => fileInput.click());
-            
-            fileInput.addEventListener('change', handleFileSelect);
-            
-            dropArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                dropArea.style.borderColor = 'var(--accent)';
-                dropArea.style.backgroundColor = 'rgba(165, 42, 42, 0.2)';
+            const startOverBtn = document.getElementById('startOverBtn');
+            const applySettingsBtn = document.getElementById('applySettingsBtn');
+
+            const pageRangeInput = document.getElementById('pageRange');
+            const dpiInput = document.getElementById('dpi');
+            const qualityInput = document.getElementById('quality');
+            const qualityValueDisplay = document.getElementById('qualityValue');
+
+            // State variables
+            let uploadedFile = null;
+            let selectedFormat = 'pdf'; // Default conversion format
+            let conversionSettings = {
+                pageRange: '',
+                dpi: 300,
+                quality: 90
+            };
+
+            /**
+             * Helper function to show a specific section and hide others.
+             * @param {HTMLElement} section - The section to display.
+             */
+            const showSection = (section) => {
+                const sections = [uploadSection, conversionOptionsSection, settingsPanel, conversionProgress, downloadSection];
+                sections.forEach(s => s.classList.add('hidden')); // Hide all sections
+                section.classList.remove('hidden'); // Show the target section
+            };
+
+            // --- File Upload Area Functionality (Drag & Drop) ---
+            // Prevent default drag behaviors to allow custom drop handling
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
             });
-            
-            dropArea.addEventListener('dragleave', () => {
-                dropArea.style.borderColor = 'var(--border)';
-                dropArea.style.backgroundColor = 'var(--card-bg)';
-            });
-            
-            dropArea.addEventListener('drop', (e) => {
+
+            function preventDefaults(e) {
                 e.preventDefault();
-                dropArea.style.borderColor = 'var(--border)';
-                dropArea.style.backgroundColor = 'var(--card-bg)';
-                
-                if (e.dataTransfer.files.length) {
-                    fileInput.files = e.dataTransfer.files;
-                    handleFileSelect({ target: fileInput });
+                e.stopPropagation();
+            }
+
+            // Add/remove 'drag-over' class for visual feedback during drag
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, () => dropArea.classList.add('drag-over'), false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, () => dropArea.classList.remove('drag-over'), false);
+            });
+
+            // Handle file drop event
+            dropArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files); // Process the dropped files
+            }
+
+            // Trigger file input click when "Click to Upload" button is pressed
+            selectFileBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // Handle file selection via input change
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files); // Process the selected files
+            });
+
+            /**
+             * Processes the selected/dropped files, performs client-side validation.
+             * @param {FileList} files - The FileList object from input or drag-and-drop.
+             */
+            function handleFiles(files) {
+                fileErrorDisplay.textContent = ''; // Clear previous errors
+                if (files.length === 0) {
+                    fileNameDisplay.textContent = '';
+                    uploadedFile = null;
+                    return;
                 }
-            });
-            
-            formatCards.forEach(card => {
-                card.addEventListener('click', () => {
-                    formatCards.forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
-                    selectedFormat = card.getAttribute('data-format');
-                    updateConvertButtonState();
+
+                const file = files[0];
+                const fileSize = file.size / (1024 * 1024); // Convert bytes to MB
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+                let isValidFile = true;
+
+                // Clear the file input value to allow selecting the same file again if needed
+                fileInput.value = '';
+
+                // Client-side file type and size validation
+                if (fileExtension === 'pdf') {
+                    if (fileSize > 100) {
+                        fileErrorDisplay.textContent = 'PDF file exceeds 100MB limit.';
+                        isValidFile = false;
+                    }
+                } else if (['doc', 'docx', 'rtf', 'ppt', 'pptx', 'jpeg', 'png', 'jfif', 'xls', 'xlsx', 'txt', 'html'].includes(fileExtension)) {
+                    if (fileSize > 25) {
+                        fileErrorDisplay.textContent = `File type '${fileExtension}' exceeds 25MB limit.`;
+                        isValidFile = false;
+                    }
+                } else {
+                    fileErrorDisplay.textContent = 'Unsupported file type. Please upload PDF, DOC, DOCX, RTF, PPT, PPTX, JPEG, PNG, JFIF, XLS, XLSX, TXT, or HTML.';
+                    isValidFile = false;
+                }
+
+                if (isValidFile) {
+                    uploadedFile = file;
+                    fileNameDisplay.textContent = `Selected: ${file.name}`;
+                    showSection(conversionOptionsSection); // Move to conversion options
+                } else {
+                    uploadedFile = null;
+                    fileNameDisplay.textContent = '';
+                }
+            }
+
+            // --- Conversion Options (Radio Buttons) ---
+            document.querySelectorAll('input[name="convertFormat"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    selectedFormat = e.target.value;
+                    // Show/hide settings panel based on selected format (DPI/Quality relevant for images)
+                    if (['jpeg', 'png', 'jfif'].includes(selectedFormat)) {
+                        settingsPanel.classList.remove('hidden');
+                    } else {
+                        settingsPanel.classList.add('hidden');
+                    }
                 });
             });
-            
-            convertBtn.addEventListener('click', convertFile);
-            
-            resetBtn.addEventListener('click', resetConverter);
-            
+
+            // --- Settings Panel Functionality ---
+            // Update quality value display as range input changes
+            qualityInput.addEventListener('input', () => {
+                qualityValueDisplay.textContent = qualityInput.value;
+            });
+
+            // Apply settings button click handler
+            applySettingsBtn.addEventListener('click', () => {
+                conversionSettings.pageRange = pageRangeInput.value.trim();
+                conversionSettings.dpi = parseInt(dpiInput.value, 10);
+                conversionSettings.quality = parseInt(qualityInput.value, 10);
+                // In a real application, these settings would be sent to the backend.
+                // Using alert for simulation, but ideally, a custom modal would be used.
+                alert('Settings applied! (This is a simulation)');
+            });
+
+            // --- Convert Button ---
+            convertBtn.addEventListener('click', () => {
+                if (!uploadedFile) {
+                    alert('Please upload a file first!');
+                    return;
+                }
+
+                showSection(conversionProgress); // Show the loading animation
+
+                // Simulate conversion process with a delay
+                setTimeout(() => {
+                    // --- Backend Integration Point ---
+                    // In a real application, you would use Fetch API to send:
+                    // - uploadedFile (FormData)
+                    // - selectedFormat
+                    // - conversionSettings (pageRange, dpi, quality)
+                    // to your Python backend.
+                    // Example (conceptual, requires backend endpoint):
+                    /*
+                    const formData = new FormData();
+                    formData.append('file', uploadedFile);
+                    formData.append('convertFormat', selectedFormat);
+                    formData.append('pageRange', conversionSettings.pageRange);
+                    formData.append('dpi', conversionSettings.dpi);
+                    formData.append('quality', conversionSettings.quality);
+
+                    fetch('/upload-and-convert', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.download_url) {
+                            // Store download URL for the download button
+                            downloadBtn.dataset.downloadUrl = data.download_url;
+                            showSection(downloadSection);
+                        } else {
+                            alert('Conversion failed: ' + data.error);
+                            showSection(uploadSection); // Go back to upload on error
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error during conversion:', error);
+                        alert('An error occurred during conversion. Please try again.');
+                        showSection(uploadSection); // Go back to upload on network error
+                    });
+                    */
+
+                    console.log('Simulating conversion...');
+                    console.log('File:', uploadedFile.name);
+                    console.log('Convert to:', selectedFormat);
+                    console.log('Settings:', conversionSettings);
+
+                    // Once simulation is "complete", show download section
+                    showSection(downloadSection);
+                }, 3000); // Simulate 3 seconds conversion time
+            });
+
+            // --- Download Button ---
             downloadBtn.addEventListener('click', () => {
-                if (downloadUrl) {
-                    const a = document.createElement('a');
-                    a.href = downloadUrl;
-                    a.download = `converted_file.${selectedFormat}`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                }
+                // In a real app, this would use the download_url received from the backend.
+                // const downloadUrl = downloadBtn.dataset.downloadUrl;
+                // if (downloadUrl) {
+                //     window.location.href = downloadUrl;
+                // } else {
+                //     alert('No download URL available. Please convert a file first.');
+                // }
+                // Using alert for simulation.
+                alert('Downloading converted file! (This is a simulation)');
             });
-            
-            newConversionBtn.addEventListener('click', resetConverter);
-            
-            pagesSelect.addEventListener('change', () => {
-                pageRange.style.display = pagesSelect.value === 'custom' ? 'block' : 'none';
+
+            // --- Start Over Button ---
+            startOverBtn.addEventListener('click', () => {
+                // Reset all state and UI elements to initial upload state
+                uploadedFile = null;
+                fileNameDisplay.textContent = '';
+                fileErrorDisplay.textContent = '';
+                fileInput.value = ''; // Clear the file input's selected file
+
+                // Reset radio buttons to default (PDF)
+                document.querySelector('input[name="convertFormat"][value="pdf"]').checked = true;
+                selectedFormat = 'pdf'; // Reset selected format
+
+                settingsPanel.classList.add('hidden'); // Hide settings panel
+
+                // Reset settings input values
+                pageRangeInput.value = '';
+                dpiInput.value = 300;
+                qualityInput.value = 90;
+                qualityValueDisplay.textContent = 90;
+
+                showSection(uploadSection); // Go back to the upload section
             });
-            
-            // Functions
-            function handleFileSelect(e) {
-                const file = e.target.files[0];
-                
-                if (file && file.type === 'application/pdf') {
-                    selectedFile = file;
-                    fileInfo.textContent = `Selected: ${file.name}`;
-                    fileInfo.style.color = 'var(--primary)';
-                    updateConvertButtonState();
-                } else {
-                    fileInfo.textContent = 'Please select a PDF file';
-                    fileInfo.style.color = 'var(--accent)';
-                    selectedFile = null;
-                    convertBtn.disabled = true;
-                }
-            }
-            
-            function updateConvertButtonState() {
-                convertBtn.disabled = !(selectedFile && selectedFormat);
-            }
-            
-            function convertFile() {
-                if (!selectedFile || !selectedFormat) return;
-                
-                // Show progress container
-                progressContainer.style.display = 'block';
-                
-                // Simulate conversion progress
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += Math.random() * 10;
-                    if (progress > 100) progress = 100;
-                    
-                    progressBar.style.width = `${progress}%`;
-                    progressText.textContent = `${Math.round(progress)}%`;
-                    
-                    if (progress === 100) {
-                        clearInterval(interval);
-                        setTimeout(showResult, 500);
-                    }
-                }, 300);
-                
-                // In a real app, you would upload the file to a server for conversion
-                // This is just a simulation
-            }
-            
-            function showResult() {
-                progressContainer.style.display = 'none';
-                resultContainer.style.display = 'block';
-                
-                // Generate a dummy download URL for demonstration
-                downloadUrl = URL.createObjectURL(new Blob(['This is a simulated converted file.'], { type: 'text/plain' }));
-                
-                resultMessage.textContent = `Your PDF has been successfully converted to ${selectedFormat.toUpperCase()}.`;
-            }
-            
-            function resetConverter() {
-                // Reset file input
-                fileInput.value = '';
-                selectedFile = null;
-                fileInfo.textContent = 'No file selected';
-                fileInfo.style.color = 'var(--accent)';
-                
-                // Reset format selection
-                formatCards.forEach(c => c.classList.remove('active'));
-                selectedFormat = null;
-                
-                // Reset settings
-                pagesSelect.value = 'all';
-                pageRange.style.display = 'none';
-                pageRange.value = '';
-                document.getElementById('output-name').value = '';
-                document.getElementById('quality').value = 'medium';
-                
-                // Reset buttons
-                convertBtn.disabled = true;
-                
-                // Hide result and progress
-                progressContainer.style.display = 'none';
-                resultContainer.style.display = 'none';
-                progressBar.style.width = '0%';
-                progressText.textContent = '0%';
-                
-                // Revoke object URL if exists
-                if (downloadUrl) {
-                    URL.revokeObjectURL(downloadUrl);
-                    downloadUrl = null;
-                }
-            }
+
+            // Initialize the app by showing the upload section
+            showSection(uploadSection);
         });
     </script>
 </body>
