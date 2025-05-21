@@ -1,104 +1,58 @@
-### 📁 File: app.py
-from flask import Flask, request, render_template, send_file, jsonify
-from werkzeug.utils import secure_filename
-from zipfile import ZipFile
-import tempfile
-import os
-
-# Import converter functions (ensure these exist in your converters/ folder)
-from converters.pdf_to_docx import convert_pdf_to_docx
-from converters.pdf_to_txt import convert_pdf_to_txt
-from converters.pdf_to_image import convert_pdf_to_jpg
-from converters.docx_to_pdf import convert_docx_to_pdf
-from converters.pptx_to_pdf import convert_pptx_to_pdf
-from converters.xlsx_to_pdf import convert_xlsx_to_pdf
-from converters.html_to_pdf import convert_html_to_pdf
-from converters.txt_to_pdf import convert_txt_to_pdf
-from converters.jpg_to_pdf import convert_jpg_to_pdf
-
-app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads'
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/convert', methods=['POST'])
-def convert():
-    files = request.files.getlist('file')
-    target_format = request.form.get('format')
-    page_size = request.form.get('page_size', 'A4')
-    filename_prefix = request.form.get('filename_prefix', 'converted_')
-    dpi = request.form.get('dpi', '150')
-    compression = request.form.get('compression', 'medium')
-
-    if not files or not target_format:
-        return "Missing files or conversion format.", 400
-
-    output_files = []
-    with tempfile.TemporaryDirectory() as tmpdir:
-        for file in files:
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(tmpdir, filename)
-            file.save(filepath)
-
-            # Dispatch to converter
-            ext = filename.split('.')[-1].lower()
-            try:
-                if target_format == "pdf-to-docx" and ext == "pdf":
-                    output_path = convert_pdf_to_docx(filepath)
-                elif target_format == "pdf-to-txt" and ext == "pdf":
-                    output_path = convert_pdf_to_txt(filepath)
-                elif target_format == "pdf-to-jpg" and ext == "pdf":
-                    output_path = convert_pdf_to_jpg(filepath, dpi=dpi)
-                elif target_format == "docx-to-pdf" and ext == "docx":
-                    output_path = convert_docx_to_pdf(filepath, page_size)
-                elif target_format == "pptx-to-pdf" and ext == "pptx":
-                    output_path = convert_pptx_to_pdf(filepath)
-                elif target_format == "xlsx-to-pdf" and ext == "xlsx":
-                    output_path = convert_xlsx_to_pdf(filepath)
-                elif target_format == "html-to-pdf" and ext == "html":
-                    output_path = convert_html_to_pdf(filepath)
-                elif target_format == "txt-to-pdf" and ext == "txt":
-                    output_path = convert_txt_to_pdf(filepath)
-                elif target_format == "jpg-to-pdf" and ext == "jpg":
-                    output_path = convert_jpg_to_pdf(filepath)
-                elif target_format == "pdf-to-pdf" and ext == "pdf":
-                    output_path = filepath  # No conversion
-                else:
-                    continue  # skip unsupported
-            except Exception as e:
-                print(f"Conversion failed for {filename}: {e}")
-                continue
-
-            base_name = os.path.splitext(filename)[0]
-            converted_name = f"{filename_prefix}{base_name}.{output_path.split('.')[-1]}"
-            final_output = os.path.join(tmpdir, converted_name)
-            os.rename(output_path, final_output)
-            output_files.append(final_output)
-
-        if len(output_files) == 1:
-            return send_file(output_files[0], as_attachment=True)
-
-        zip_path = os.path.join(tmpdir, f"{filename_prefix}batch.zip")
-        with ZipFile(zip_path, 'w') as zipf:
-            for file in output_files:
-                zipf.write(file, os.path.basename(file))
-        return send_file(zip_path, as_attachment=True)
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
-
-### 📁 File: templates/index.html
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>PDF Converter</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+    [data-theme="dark"] {
+      background: #121212;
+      color: #f1f1f1;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      text-align: center;
+    }
+    select, input, button {
+      padding: 0.5rem;
+      margin: 0.5rem;
+      width: 90%;
+      max-width: 400px;
+    }
+    .dropzone {
+      border: 2px dashed #ccc;
+      padding: 2rem;
+      margin: 1rem auto;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+    }
+    .modal-content {
+      background: #fff;
+      margin: 5% auto;
+      padding: 1rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+    }
+    [data-theme="dark"] .modal-content {
+      background: #222;
+      color: white;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -152,134 +106,75 @@ if __name__ == '__main__':
     </div>
   </div>
 
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
+    function toggleDarkMode() {
+      const theme = document.documentElement.getAttribute('data-theme');
+      document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'light' : 'dark');
+    }
+
+    function openSettings() {
+      document.getElementById('settingsModal').style.display = 'block';
+    }
+
+    function closeSettings() {
+      document.getElementById('settingsModal').style.display = 'none';
+    }
+
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file');
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropzone.style.borderColor = 'green';
+    });
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.style.borderColor = '#ccc';
+    });
+    dropzone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropzone.style.borderColor = '#ccc';
+      fileInput.files = e.dataTransfer.files;
+    });
+
+    function convertFiles() {
+      const format = document.getElementById('format').value;
+      const files = fileInput.files;
+
+      if (!format || files.length === 0) {
+        alert('Please select a format and upload at least one file.');
+        return;
+      }
+
+      const formData = new FormData();
+      for (let file of files) formData.append('file', file);
+      formData.append('format', format);
+      formData.append('filename_prefix', document.getElementById('filename_prefix').value);
+      formData.append('page_size', document.getElementById('page_size').value);
+      formData.append('dpi', document.getElementById('dpi').value);
+      formData.append('compression', document.getElementById('compression').value);
+
+      document.getElementById('status').textContent = 'Converting...';
+
+      fetch('/convert', {
+        method: 'POST',
+        body: formData
+      }).then(res => {
+        if (!res.ok) throw new Error('Conversion failed.');
+        return res.blob();
+      }).then(blob => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'output.zip';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        document.getElementById('status').textContent = 'Download started.';
+      }).catch(err => {
+        console.error(err);
+        document.getElementById('status').textContent = 'Error during conversion.';
+      });
+    }
+  </script>
 </body>
 </html>
-
-
-### 📁 File: static/styles.css
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  transition: background 0.3s, color 0.3s;
-}
-
-[data-theme="dark"] {
-  background: #121212;
-  color: #f1f1f1;
-}
-
-.container {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 1rem;
-  text-align: center;
-}
-
-select, input, button {
-  padding: 0.5rem;
-  margin: 0.5rem;
-  width: 90%;
-  max-width: 400px;
-}
-
-.dropzone {
-  border: 2px dashed #ccc;
-  padding: 2rem;
-  margin: 1rem auto;
-  cursor: pointer;
-  border-radius: 10px;
-}
-
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-}
-
-.modal-content {
-  background: #fff;
-  margin: 5% auto;
-  padding: 1rem;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 400px;
-}
-
-[data-theme="dark"] .modal-content {
-  background: #222;
-  color: white;
-}
-
-
-### 📁 File: static/script.js
-function toggleDarkMode() {
-  const theme = document.documentElement.getAttribute('data-theme');
-  document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'light' : 'dark');
-}
-
-function openSettings() {
-  document.getElementById('settingsModal').style.display = 'block';
-}
-
-function closeSettings() {
-  document.getElementById('settingsModal').style.display = 'none';
-}
-
-const dropzone = document.getElementById('dropzone');
-const fileInput = document.getElementById('file');
-
-dropzone.addEventListener('click', () => fileInput.click());
-dropzone.addEventListener('dragover', e => {
-  e.preventDefault();
-  dropzone.style.borderColor = 'green';
-});
-dropzone.addEventListener('dragleave', () => {
-  dropzone.style.borderColor = '#ccc';
-});
-dropzone.addEventListener('drop', e => {
-  e.preventDefault();
-  dropzone.style.borderColor = '#ccc';
-  fileInput.files = e.dataTransfer.files;
-});
-
-function convertFiles() {
-  const format = document.getElementById('format').value;
-  const files = fileInput.files;
-
-  if (!format || files.length === 0) {
-    alert('Please select a format and upload at least one file.');
-    return;
-  }
-
-  const formData = new FormData();
-  for (let file of files) formData.append('file', file);
-  formData.append('format', format);
-  formData.append('filename_prefix', document.getElementById('filename_prefix').value);
-  formData.append('page_size', document.getElementById('page_size').value);
-  formData.append('dpi', document.getElementById('dpi').value);
-  formData.append('compression', document.getElementById('compression').value);
-
-  document.getElementById('status').textContent = 'Converting...';
-
-  fetch('/convert', {
-    method: 'POST',
-    body: formData
-  }).then(res => {
-    if (!res.ok) throw new Error('Conversion failed.');
-    return res.blob();
-  }).then(blob => {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'output.zip';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    document.getElementById('status').textContent = 'Download started.';
-  }).catch(err => {
-    console.error(err);
-    document.getElementById('status').textContent = 'Error during conversion.';
-  });
-}
