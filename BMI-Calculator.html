@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMI Calculator - Tools Bazar</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    :root {
+      --primary: #8B0000; /* Dark red */
+
+        --secondary: #1f1d1d; /* Dark black */
+
+            --accent: #A52A2A; /* Lighter red */
+
+                --text: #F5F5F5;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--secondary);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    /* Header */
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      background-color: var(--primary);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: var(--secondary);
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+
+    nav ul li {
+      margin-left: 20px;
+    }
+
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    nav ul li a:hover {
+      color: var(--accent);
+    }
+
+    .contact-link {
+      background-color: var(--accent);
+      padding: 8px 15px;
+      border-radius: 5px;
+    }
+
+    /* BMI Calculator */
+    .bmi-calculator-section {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 0;
+    }
+
+    .bmi-calculator {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      color: var(--text);
+    }
+
+    .bmi-calculator h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      text-align: center;
+      color: var(--primary);
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid var(--primary);
+      border-radius: 5px;
+      background-color: var(--secondary);
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .error {
+      color: #dc3545; /* Red for errors */
+      font-size: 0.9rem;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .results {
+      background-color: var(--primary);
+      color: #fff;
+      padding: 15px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .results p {
+      margin: 10px 0;
+      font-size: 1rem;
+    }
+
+    .results .category {
+      font-weight: bold;
+      color: var(--secondary);
+    }
+
+    /* Footer */
+    .footer {
+      background-color: var(--primary);
+      padding: 60px 0 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-logo {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: block;
+      color: #fff;
+    }
+
+    .footer-logo span {
+      color: var(--secondary);
+    }
+
+    .footer-tagline {
+      opacity: 0.7;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .footer-contact {
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .footer-links h3 {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: var(--secondary);
+    }
+
+    .footer-links ul {
+      list-style: none;
+    }
+
+    .footer-links ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links ul li a {
+      color: #fff;
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+
+    .footer-links ul li a:hover {
+      opacity: 1;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      opacity: 0.7;
+      font-size: 0.9rem;
+      color: #fff;
+    }
+
+    .footer-bottom a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      nav {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 80%;
+        height: calc(100vh - 70px);
+        background-color: var(--primary);
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 20px;
+        transition: left 0.3s;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      nav.active {
+        left: 0;
+      }
+
+      nav ul {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      nav ul li {
+        margin: 15px 0;
+        text-align: center;
+      }
+
+      .bmi-calculator {
+        padding: 10px;
+      }
+
+      .bmi-calculator h2 {
+        font-size: 1.3rem;
+      }
+
+      .results p {
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container header-content">
+      <a href="index.html" class="logo">Tools <span>Bazar</span></a>
+      <div class="menu-toggle" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#tools">Tools</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#social">Social Media</a></li>
+          <li><a href="mailto:toolsbazar002@gmail.com" class="contact-link">toolsbazar002@gmail.com</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- BMI Calculator Section -->
+  <section class="bmi-calculator-section">
+    <div class="bmi-calculator">
+      <h2>BMI Calculator</h2>
+      <div class="input-group">
+        <label for="unit">Unit System:</label>
+        <select id="unit" onchange="updateUnits()">
+          <option value="metric">Metric (kg, cm)</option>
+          <option value="imperial">Imperial (lbs, in)</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="weight">Weight:</label>
+        <input type="number" id="weight" placeholder="Enter weight" min="0" step="0.1" required>
+        <span class="error" id="weight-error">Please enter a valid weight</span>
+      </div>
+      <div class="input-group">
+        <label for="height">Height:</label>
+        <input type="number" id="height" placeholder="Enter height" min="0" step="0.1" required>
+        <span class="error" id="height-error">Please enter a valid height</span>
+      </div>
+      <div class="results" id="results">
+        <p>BMI: <span id="bmi">0</span></p>
+        <p>Category: <span class="category" id="category">None</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div>
+        <a href="index.html" class="footer-logo">Tools <span>Bazar</span></a>
+        <p class="footer-tagline">Your Daily Tools, All in One Place</p>
+        <div class="footer-contact">
+          <p>Email: <a href="mailto:toolsbazar002@gmail.com">toolsbazar002@gmail.com</a></p>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#tools">Tools</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#social">Social Media</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+     <a href="#privacy">Privacy Policy</a> 
+     <a href="#terms">Terms of Service</a></p>
+        <p>© 2025 Tools Bazar. All rights reserved. 
+    </div>
+  </footer>
+
+  <script>
+    const unitSelect = document.getElementById('unit');
+    const weightInput = document.getElementById('weight');
+    const heightInput = document.getElementById('height');
+    const weightError = document.getElementById('weight-error');
+    const heightError = document.getElementById('height-error');
+    const bmiSpan = document.getElementById('bmi');
+    const categorySpan = document.getElementById('category');
+
+    function updateUnits() {
+      const unit = unitSelect.value;
+      weightInput.placeholder = unit === 'metric' ? 'Enter weight (kg)' : 'Enter weight (lbs)';
+      heightInput.placeholder = unit === 'metric' ? 'Enter height (cm)' : 'Enter height (in)';
+      calculateBMI();
+    }
+
+    function validateInputs() {
+      let isValid = true;
+      weightError.style.display = 'none';
+      heightError.style.display = 'none';
+
+      const weight = parseFloat(weightInput.value);
+      const height = parseFloat(heightInput.value);
+
+      if (!weight || weight <= 0) {
+        weightError.style.display = 'block';
+        isValid = false;
+      }
+      if (!height || height <= 0) {
+        heightError.style.display = 'block';
+        isValid = false;
+      }
+      return isValid;
+    }
+
+    function calculateBMI() {
+      if (!validateInputs()) {
+        bmiSpan.textContent = '0';
+        categorySpan.textContent = 'None';
+        return;
+      }
+
+      const weight = parseFloat(weightInput.value);
+      const height = parseFloat(heightInput.value);
+      const unit = unitSelect.value;
+
+      let bmi;
+      if (unit === 'metric') {
+        bmi = weight / ((height / 100) ** 2); // kg / (m^2)
+      } else {
+        bmi = (weight / (height ** 2)) * 703; // lbs / (in^2) * 703
+      }
+
+      bmiSpan.textContent = bmi.toFixed(1);
+      categorySpan.textContent = getBMICategory(bmi);
+    }
+
+    function getBMICategory(bmi) {
+      if (bmi < 18.5) return 'Underweight';
+      if (bmi < 25) return 'Normal';
+      if (bmi < 30) return 'Overweight';
+      return 'Obese';
+    }
+
+    function toggleMenu() {
+      document.querySelector('nav').classList.toggle('active');
+    }
+
+    weightInput.addEventListener('input', calculateBMI);
+    heightInput.addEventListener('input', calculateBMI);
+    unitSelect.addEventListener('change', updateUnits);
+  </script>
+</body>
+</html>
