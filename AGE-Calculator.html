@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Age Calculator - Tools Bazar</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    :root {
+      --primary: #8B0000;
+      --secondary: #121212;
+      --text: #fff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--secondary);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    /* Header */
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+
+    nav ul li {
+      margin-left: 20px;
+    }
+
+    nav ul li a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    nav ul li a:hover {
+      color: #aa3434;
+    }
+
+    .contact-link {
+      background-color: var(--primary);
+      padding: 8px 15px;
+      border-radius: 5px;
+    }
+
+    /* Age Calculator */
+    .age-calculator-section {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 0;
+    }
+
+    .age-calculator {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      color: var(--secondary);
+    }
+
+    .age-calculator h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid var(--primary);
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: #aa3434;
+    }
+
+    .results {
+      background-color: var(--secondary);
+      color: var(--text);
+      padding: 15px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .results p {
+      margin: 10px 0;
+      font-size: 1rem;
+    }
+
+    /* Footer */
+    .footer {
+      background-color: var(--secondary);
+      padding: 60px 0 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-logo {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: block;
+      color: var(--text);
+    }
+
+    .footer-logo span {
+      color: var(--primary);
+    }
+
+    .footer-tagline {
+      opacity: 0.7;
+      margin-bottom: 20px;
+    }
+
+    .footer-contact {
+      margin-bottom: 20px;
+    }
+
+    .footer-links h3 {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .footer-links ul {
+      list-style: none;
+    }
+
+    .footer-links ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links ul li a {
+      color: var(--text);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+
+    .footer-links ul li a:hover {
+      opacity: 1;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      opacity: 0.7;
+      font-size: 0.9rem;
+    }
+
+    .footer-bottom a {
+      color: var(--text);
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      nav {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 80%;
+        height: calc(100vh - 70px);
+        background-color: var(--secondary);
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 20px;
+        transition: left 0.3s;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      nav.active {
+        left: 0;
+      }
+
+      nav ul {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      nav ul li {
+        margin: 15px 0;
+        text-align: center;
+      }
+
+      .age-calculator {
+        padding: 10px;
+      }
+
+      .age-calculator h2 {
+        font-size: 1.3rem;
+      }
+
+      .results p {
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container header-content">
+      <a href="index.html" class="logo">Tools <span>Bazar</span></a>
+      <div class="menu-toggle" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#tools">Tools</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#social">Social Media</a></li>
+          <li><a href="mailto:toolsbazar002@gmail.com" class="contact-link">toolsbazar002@gmail.com</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Age Calculator Section -->
+  <section class="age-calculator-section">
+    <div class="age-calculator">
+      <h2>Age Calculator</h2>
+      <div class="input-group">
+        <label for="birthdate">Enter Your Birthdate:</label>
+        <input type="date" id="birthdate" required>
+      </div>
+      <div class="results" id="results">
+        <p>Years: <span id="years">0</span></p>
+        <p>Months: <span id="months">0</span></p>
+        <p>Days: <span id="days">0</span></p>
+        <p>Weeks: <span id="weeks">0</span></p>
+        <p>Hours: <span id="hours">0</span></p>
+        <p>Minutes: <span id="minutes">0</span></p>
+        <p>Seconds: <span id="seconds">0</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div>
+        <a href="index.html" class="footer-logo">Tools <span>Bazar</span></a>
+        <p class="footer-tagline">Your Daily Tools, All in One Place</p>
+        <div class="footer-contact">
+          <p>Email: <a href="mailto:toolsbazar002@gmail.com">toolsbazar002@gmail.com</a></p>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#tools">Tools</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#social">Social Media</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Tools Bazar. All rights reserved. <a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a></p>
+    </div>
+  </footer>
+
+  <script>
+    const birthdateInput = document.getElementById('birthdate');
+    const results = {
+      years: document.getElementById('years'),
+      months: document.getElementById('months'),
+      days: document.getElementById('days'),
+      weeks: document.getElementById('weeks'),
+      hours: document.getElementById('hours'),
+      minutes: document.getElementById('minutes'),
+      seconds: document.getElementById('seconds')
+    };
+
+    function calculateAge() {
+      const birthdate = new Date(birthdateInput.value);
+      const now = new Date();
+      if (!birthdateInput.value || birthdate > now) {
+        Object.values(results).forEach(span => span.textContent = '0');
+        return;
+      }
+
+      // Calculate differences
+      const diffTime = now - birthdate;
+      const years = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365.25));
+      const months = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 30.4375));
+      const days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      const weeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
+      const hours = Math.floor(diffTime / (1000 * 60 * 60));
+      const minutes = Math.floor(diffTime / (1000 * 60));
+      const seconds = Math.floor(diffTime / 1000);
+
+      // Update display
+      results.years.textContent = years;
+      results.months.textContent = months;
+      results.days.textContent = days;
+      results.weeks.textContent = weeks;
+      results.hours.textContent = hours.toLocaleString();
+      results.minutes.textContent = minutes.toLocaleString();
+      results.seconds.textContent = seconds.toLocaleString();
+    }
+
+    function updateAgeRealTime() {
+      calculateAge();
+      setInterval(calculateAge, 1000); // Update every second
+    }
+
+    birthdateInput.addEventListener('change', updateAgeRealTime);
+
+    function toggleMenu() {
+      document.querySelector('nav').classList.toggle('active');
+    }
+  </script>
+</body>
+</html>
