@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scientific Calculator - Tools Bazar</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    :root {
+      --primary: #8b0000;
+      --secondary: #4a1515;
+      --text: #fff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #2c0b0b;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    /* Header */
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: #fff;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+
+    nav ul li {
+      margin-left: 20px;
+    }
+
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    nav ul li a:hover {
+      color: #aa3434;
+    }
+
+    .contact-link {
+      background-color: #4a1515;
+      padding: 8px 15px;
+      border-radius: 5px;
+    }
+
+    /* Calculator */
+    .calculator-section {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 0;
+    }
+
+    .calculator {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .display {
+      background-color: #2c0b0b;
+      color: #fff;
+      font-size: 2rem;
+      padding: 15px;
+      border-radius: 5px;
+      text-align: right;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      background-color: #2c0b0b;
+      color: #fff;
+      border: none;
+      padding: 15px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #4a1515;
+    }
+
+    .operator {
+      background-color: #4a1515;
+    }
+
+    .operator:hover {
+      background-color: #6b2020;
+    }
+
+    .equals {
+      background-color: #6b2020;
+    }
+
+    .equals:hover {
+      background-color: #8b2a2a;
+    }
+
+    .clear {
+      background-color: #8b2a2a;
+    }
+
+    .clear:hover {
+      background-color: #aa3434;
+    }
+
+    /* Footer */
+    .footer {
+      background-color: var(--secondary);
+      padding: 60px 0 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-logo {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: block;
+      color: #fff;
+    }
+
+    .footer-logo span {
+      color: var(--primary);
+    }
+
+    .footer-tagline {
+ Ditto
+      opacity: 0.7;
+      margin-bottom: 20px;
+    }
+
+    .footer-contact {
+      margin-bottom: 20px;
+    }
+
+    .footer-links h3 {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .footer-links ul {
+      list-style: none;
+    }
+
+    .footer-links ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links ul li a {
+      color: var(--text);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+
+    .footer-links ul li a:hover {
+      opacity: 1;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      opacity: 0.7;
+      font-size: 0.9rem;
+    }
+
+    .footer-bottom a {
+      color: var(--text);
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      nav {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 80%;
+        height: calc(100vh - 70px);
+        background-color: var(--primry);
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 20px;
+        transition: left 0.3s;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      nav.active {
+        left: 0;
+      }
+
+      nav ul {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      nav ul li {
+        margin: 15px 0;
+        text-align: center;
+      }
+
+      .calculator {
+        padding: 10px;
+      }
+
+      .display {
+        font-size: 1.5rem;
+        padding: 10px;
+      }
+
+      button {
+        padding: 10px;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container header-content">
+      <a href="index.html" class="logo">Tools <span>Bazar</span></a>
+      <div class="menu-toggle" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#tools">Tools</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#social">Social Media</a></li>
+          <li><a href="mailto:toolsbazar002@gmail.com" class="contact-link">toolsbazar002@gmail.com</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Calculator Section -->
+  <section class="calculator-section">
+    <div class="calculator">
+      <div class="display" id="display">0</div>
+      <div class="buttons">
+        <button class="clear" onclick="clearDisplay()">C</button>
+        <button onclick="appendToDisplay('(')">(</button>
+        <button onclick="appendToDisplay(')')">)</button>
+        <button class="operator" onclick="appendToDisplay('/')">/</button>
+        <button onclick="appendToDisplay('7')">7</button>
+        <button onclick="appendToDisplay('8')">8</button>
+        <button onclick="appendToDisplay('9')">9</button>
+        <button class="operator" onclick="appendToDisplay('*')">×</button>
+        <button onclick="appendToDisplay('4')">4</button>
+        <button onclick="appendToDisplay('5')">5</button>
+        <button onclick="appendToDisplay('6')">6</button>
+        <button class="operator" onclick="appendToDisplay('-')">-</button>
+        <button onclick="appendToDisplay('1')">1</button>
+        <button onclick="appendToDisplay('2')">2</button>
+        <button onclick="appendToDisplay('3')">3</button>
+        <button class="operator" onclick="appendToDisplay('+')">+</button>
+        <button onclick="appendToDisplay('0')">0</button>
+        <button onclick="appendToDisplay('.')">.</button>
+        <button onclick="backspace()">←</button>
+        <button class="equals" onclick="calculate()">=</button>
+        <button onclick="appendToDisplay('Math.sin(')">sin</button>
+        <button onclick="appendToDisplay('Math.cos(')">cos</button>
+        <button onclick="appendToDisplay('Math.tan(')">tan</button>
+        <button onclick="appendToDisplay('Math.sqrt(')">√</button>
+        <button onclick="appendToDisplay('Math.log(')">log</button>
+        <button onclick="appendToDisplay('Math.exp(')">e^x</button>
+        <button onclick="appendToDisplay('**')">^</button>
+        <button onclick="appendToDisplay('Math.PI')">π</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div>
+        <a href="index.html" class="footer-logo">Tools <span>Bazar</span></a>
+        <p class="footer-tagline">Your Daily Tools, All in One Place</p>
+        <div class="footer-contact">
+          <p>Email: <a href="mailto:toolsbazar002@gmail.com">toolsbazar002@gmail.com</a></p>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#tools">Tools</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#social">Social Media</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Tools Bazar. All rights reserved. <a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a></p>
+    </div>
+  </footer>
+
+  <script>
+    let display = document.getElementById('display');
+
+    function appendToDisplay(value) {
+      if (display.innerText === '0' && value !== '.') {
+        display.innerText = value;
+      } else {
+        display.innerText += value;
+      }
+    }
+
+    function clearDisplay() {
+      display.innerText = '0';
+    }
+
+    function backspace() {
+      display.innerText = display.innerText.slice(0, -1) || '0';
+    }
+
+    function calculate() {
+      try {
+        let expression = display.innerText;
+        expression = expression.replace(/\^/g, '**');
+        let result = eval(expression);
+        display.innerText = Number.isFinite(result) ? result.toFixed(4) : 'Error';
+      } catch (e) {
+        display.innerText = 'Error';
+      }
+    }
+
+    function toggleMenu() {
+      document.querySelector('nav').classList.toggle('active');
+    }
+
+    document.addEventListener('keydown', (event) => {
+      const key = event.key;
+      if (/\d/.test(key)) appendToDisplay(key);
+      else if (key === '.') appendToDisplay('.');
+      else if (key === '+') appendToDisplay('+');
+      else if (key === '-') appendToDisplay('-');
+      else if (key === '*') appendToDisplay('*');
+      else if (key === '/') appendToDisplay('/');
+      else if (key === '(') appendToDisplay('(');
+      else if (key === ')') appendToDisplay(')');
+      else if (key === 'Enter') calculate();
+      else if (key === 'Backspace') backspace();
+      else if (key === 'Escape') clearDisplay();
+    });
+  </script>
+</body>
+</html>
