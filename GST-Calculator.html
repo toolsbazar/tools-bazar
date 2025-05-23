@@ -1,365 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GST Calculator | Tools Bazaar</title>
-  <style>
-    :root {
-      --primary-color: #8b0000;
-      --secondary-color: #4a1515;
-      --light-bg: #f9fafb;
-      --text-dark: #fff;
-      --text-light: #6b7280;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GST Calculator - Tools Bazar</title>
+    <style>
+        :root {
+            --primary: #8b0000;
+            --secondary: #4a1515;
+            --text: #fff;
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right bottom, #e0eafc, #cfdef3);
-      color: var(--text-dark);
-      line-height: 1.6;
-    }
+        body {
+            background-color: var(--secondary);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    header {
-      background-color: white;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      padding: 1rem 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
+        .calculator-container {
+            background-color: var(--primary);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
 
-    .container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 0 1rem;
-    }
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
 
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        .input-group {
+            margin-bottom: 1rem;
+        }
 
-    nav h1 {
-      font-size: 1.5rem;
-      color: var(--primary-color);
-    }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
 
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 1.5rem;
-    }
+        input, select {
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
 
-    nav ul li a {
-      text-decoration: none;
-      color: var(--text-dark);
-      font-weight: 500;
-    }
+        input[type="number"] {
+            background-color: var(--text);
+            color: var(--secondary);
+        }
 
-    .hero {
-      padding: 4rem 2rem;
-      text-align: center;
-    }
+        select {
+            background-color: var(--text);
+            color: var(--secondary);
+            cursor: pointer;
+        }
 
-    .hero h2 {
-      font-size: 2.5rem;
-      color: var(--primary-color);
-      margin-bottom: 1rem;
-    }
+        .calculation-type {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
 
-    .hero p {
-      font-size: 1.1rem;
-      color: var(--text-light);
-      max-width: 600px;
-      margin: 0 auto 2rem;
-    }
+        .calculation-type label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
 
-    .calculator-container {
-      display: flex;
-      flex-direction: column;
-      background: white;
-      border-radius: 1rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-      overflow: hidden;
-      margin: 0 auto 4rem;
-      max-width: 700px;
-      transition: transform 0.3s ease;
-    }
+        .result {
+            background-color: var(--text);
+            color: var(--secondary);
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
 
-    .calculator-container:hover {
-      transform: scale(1.01);
-    }
+        .result p {
+            margin: 0.5rem 0;
+        }
 
-    .calculator-left {
-      background-color: var(--primary-color);
-      color: white;
-      padding: 2rem;
-    }
+        .error {
+            color: #ff4d4d;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
 
-    .calculator-left h3 {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-    }
+        @media (max-width: 480px) {
+            .calculator-container {
+                padding: 1rem;
+            }
 
-    .calculator-left ul {
-      list-style-type: disc;
-      padding-left: 1.2rem;
-      font-size: 0.9rem;
-    }
+            h1 {
+                font-size: 1.5rem;
+            }
 
-    .calculator-right {
-      padding: 2rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.2rem;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-
-    input[type="number"], select {
-      width: 100%;
-      padding: 0.75rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 0.5rem;
-      outline: none;
-    }
-
-    input:focus, select:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-    }
-
-    .checkbox-group {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1.2rem;
-    }
-
-    .checkbox-group input {
-      margin-right: 0.5rem;
-    }
-
-    button {
-      width: 100%;
-      background-color: var(--primary-color);
-      color: white;
-      padding: 0.75rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: var(--secondary-color);
-    }
-
-    .result {
-      margin-top: 1.5rem;
-      padding: 1rem;
-      background-color: var(--light-bg);
-      border-radius: 0.5rem;
-      animation: fadeIn 0.3s ease-in-out;
-    }
-
-    .result div {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.5rem;
-    }
-
-    .footer {
-      font-size: 0.85rem;
-      color: var(--text-light);
-      margin-top: 2rem;
-      border-top: 1px solid #eee;
-      padding-top: 1rem;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    section {
-      padding: 4rem 2rem;
-      background-color: white;
-      margin-bottom: 2rem;
-    }
-
-    section h2 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      color: var(--primary-color);
-      text-align: center;
-    }
-
-    .faq {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .faq-item {
-      margin-bottom: 1rem;
-    }
-
-    .faq-question {
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-      color: var(--text-dark);
-    }
-
-    .faq-answer {
-      color: var(--text-light);
-    }
-
-    @media (min-width: 768px) {
-      .calculator-container {
-        flex-direction: row;
-      }
-
-      .calculator-left {
-        flex: 1;
-      }
-
-      .calculator-right {
-        flex: 1;
-      }
-    }
-  </style>
+            input, select {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <!-- Header -->
-  <header>
-    <div class="container">
-      <nav>
-        <h1>Tools Bazaar</h1>
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">tool</a></li>
-          <li><a href="#faq">social media</a></li>
-        </ul>
-      </nav>
+    <div class="calculator-container">
+        <h1>GST Calculator</h1>
+        <div class="input-group">
+            <label for="amount">Enter Amount</label>
+            <input type="number" id="amount" placeholder="Enter amount" min="0" step="0.01">
+            <div id="amount-error" class="error">Please enter a valid amount greater than 0</div>
+        </div>
+        <div class="input-group">
+            <label for="gst-rate">Select GST Rate</label>
+            <select id="gst-rate">
+                <option value="5">5%</option>
+                <option value="12">12%</option>
+                <option value="18">18%</option>
+                <option value="28">28%</option>
+            </select>
+        </div>
+        <div class="calculation-type">
+            <label><input type="radio" name="calc-type" value="exclusive" checked> Exclusive of GST</label>
+            <label><input type="radio" name="calc-type" value="inclusive"> Inclusive of GST</label>
+        </div>
+        <div class="result" id="result">
+            <p>GST Amount: <span id="gst-amount">0.00</span></p>
+            <p>Total Amount: <span id="total-amount">0.00</span></p>
+        </div>
     </div>
-  </header>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <h2>GST Calculator</h2>
-      <p>Quickly calculate Goods and Services Tax for business or personal use. Accurate, fast, and free!</p>
-    </div>
-  </section>
+    <script>
+        const amountInput = document.getElementById('amount');
+        const gstRateSelect = document.getElementById('gst-rate');
+        const calcTypeRadios = document.getElementsByName('calc-type');
+        const resultDiv = document.getElementById('result');
+        const gstAmountSpan = document.getElementById('gst-amount');
+        const totalAmountSpan = document.getElementById('total-amount');
+        const amountError = document.getElementById('amount-error');
 
-  <!-- Calculator Section -->
-  <div class="container calculator-container">
-    <div class="calculator-left">
-      <h3>Common GST Rates:</h3>
-      <ul>
-        <li>5% - Essential goods/services</li>
-        <li>12% - Basic services</li>
-        <li>18% - Most common rate</li>
-        <li>28% - Luxury items</li>
-      </ul>
-    </div>
-    <div class="calculator-right">
-      <div class="form">
-        <div class="form-group">
-          <label for="amount">Enter Amount</label>
-          <input type="number" id="amount" placeholder="Enter amount" />
-        </div>
+        function calculateGST() {
+            const amount = parseFloat(amountInput.value);
+            const gstRate = parseFloat(gstRateSelect.value);
+            const calcType = document.querySelector('input[name="calc-type"]:checked').value;
 
-        <div class="form-group">
-          <label for="gstRate">GST Rate (%)</label>
-          <select id="gstRate">
-            <option value="5">5%</option>
-            <option value="12">12%</option>
-            <option value="18" selected>18%</option>
-            <option value="28">28%</option>
-            <option value="custom">Custom</option>
-          </select>
-          <input type="number" id="customRate" placeholder="Enter custom rate" style="display:none; margin-top:0.5rem;" />
-        </div>
+            // Input validation
+            if (isNaN(amount) || amount <= 0) {
+                amountError.style.display = 'block';
+                resultDiv.style.display = 'none';
+                return;
+            } else {
+                amountError.style.display = 'none';
+                resultDiv.style.display = 'block';
+            }
 
-        <div class="checkbox-group">
-          <input type="checkbox" id="includeGST" />
-          <label for="includeGST">Entered amount includes GST</label>
-        </div>
+            let gstAmount, totalAmount;
 
-        <button onclick="calculateGST()">Calculate GST</button>
+            if (calcType === 'exclusive') {
+                gstAmount = amount * (gstRate / 100);
+                totalAmount = amount + gstAmount;
+            } else {
+                gstAmount = amount * (gstRate / (100 + gstRate));
+                totalAmount = amount;
+                amountInput.value = (totalAmount - gstAmount).toFixed(2);
+            }
 
-        <div id="resultBox" class="result" style="display:none;">
-          <div><span>GST Amount:</span><span id="gstAmount"></span></div>
-          <div><span id="totalLabel"></span><span id="total"></span></div>
-        </div>
-        
-  <!-- Footer -->
-  <footer style="text-align:center; padding:2rem; background:#f3f4f6; color:var(--text-light);">
-    &copy; 2025 Tools Bazaar. All rights reserved.
-  </footer>
+            gstAmountSpan.textContent = gstAmount.toFixed(2);
+            totalAmountSpan.textContent = totalAmount.toFixed(2);
+        }
 
-  <script>
-    const gstRateSelect = document.getElementById('gstRate');
-    const customRateInput = document.getElementById('customRate');
-    const resultBox = document.getElementById('resultBox');
+        // Real-time calculation
+        amountInput.addEventListener('input', calculateGST);
+        gstRateSelect.addEventListener('change', calculateGST);
+        calcTypeRadios.forEach(radio => radio.addEventListener('change', calculateGST));
 
-    gstRateSelect.addEventListener('change', () => {
-      if (gstRateSelect.value === 'custom') {
-        customRateInput.style.display = 'block';
-      } else {
-        customRateInput.style.display = 'none';
-      }
-    });
-
-    function calculateGST() {
-      const amount = parseFloat(document.getElementById('amount').value);
-      let gstRate = gstRateSelect.value === 'custom' 
-        ? parseFloat(customRateInput.value) 
-        : parseFloat(gstRateSelect.value);
-
-      const includeGST = document.getElementById('includeGST').checked;
-
-      if (isNaN(amount) || isNaN(gstRate) || gstRate <= 0) {
-        alert("Please enter valid values for both amount and GST rate.");
-        return;
-      }
-
-      let gstAmount, total;
-
-      if (includeGST) {
-        // GST included in amount
-        gstAmount = amount * (gstRate / (100 + gstRate));
-        total = amount - gstAmount;
-        document.getElementById('totalLabel').textContent = 'Pre-tax amount:';
-      } else {
-        // GST not included
-        gstAmount = amount * (gstRate / 100);
-        total = amount + gstAmount;
-        document.getElementById('totalLabel').textContent = 'Total with GST:';
-      }
-
-      document.getElementById('gstAmount').textContent = '₹' + gstAmount.toFixed(2);
-      document.getElementById('total').textContent = '₹' + total.toFixed(2);
-      resultBox.style.display = 'block';
-    }
-  </script>
-
+        // Initial calculation
+        calculateGST();
+    </script>
 </body>
 </html>
