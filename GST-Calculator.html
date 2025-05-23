@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GST Calculator - Tools Bazaar</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right bottom, #e0eafc, #cfdef3);
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .calculator {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      max-width: 600px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+    }
+
+    .calculator:hover {
+      transform: scale(1.01);
+    }
+
+    .left-panel {
+      background-color: #4f46e5;
+      color: white;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .left-panel h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .left-panel p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 1.5rem;
+    }
+
+    .gst-rates {
+      margin-top: auto;
+    }
+
+    .gst-rates ul {
+      list-style-type: disc;
+      padding-left: 1.2rem;
+      font-size: 0.85rem;
+    }
+
+    .right-panel {
+      padding: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #555;
+    }
+
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .checkbox-group input {
+      margin-right: 0.5rem;
+    }
+
+    button {
+      width: 100%;
+      background-color: #4f46e5;
+      color: white;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #3730a3;
+    }
+
+    .result {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .result div {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer {
+      font-size: 0.75rem;
+      color: #666;
+      margin-top: 2rem;
+      border-top: 1px solid #eee;
+      padding-top: 1rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (min-width: 768px) {
+      .calculator {
+        flex-direction: row;
+      }
+
+      .left-panel {
+        flex: 1 1 50%;
+      }
+
+      .right-panel {
+        flex: 1 1 50%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="left-panel">
+      <div>
+        <h2>GST Calculator</h2>
+        <p>Calculate Goods and Services Tax for business or personal use. This tool helps determine tax-inclusive or exclusive prices.</p>
+      </div>
+      <div class="gst-rates">
+        <strong>Common GST Rates:</strong>
+        <ul>
+          <li>5% - Essential goods/services</li>
+          <li>12% - Basic services</li>
+          <li>18% - Most common rate</li>
+          <li>28% - Luxury items</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="form">
+        <div class="form-group">
+          <label for="amount">Enter Amount</label>
+          <input type="number" id="amount" placeholder="Enter amount" />
+        </div>
+
+        <div class="form-group">
+          <label for="gstRate">GST Rate (%)</label>
+          <select id="gstRate">
+            <option value="5">5%</option>
+            <option value="12">12%</option>
+            <option value="18" selected>18%</option>
+            <option value="28">28%</option>
+            <option value="custom">Custom</option>
+          </select>
+          <input type="number" id="customRate" placeholder="Enter custom rate" style="display:none; margin-top:0.5rem;" />
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="includeGST" />
+          <label for="includeGST">Entered amount includes GST</label>
+        </div>
+
+        <button onclick="calculateGST()">Calculate GST</button>
+
+        <div id="resultBox" class="result" style="display:none;">
+          <div><span>GST Amount:</span><span id="gstAmount"></span></div>
+          <div><span id="totalLabel"></span><span id="total"></span></div>
+        </div>
+
+        <div class="footer">
+          <strong>How it works:</strong>
+          <p>If "includes GST" is checked, the calculator shows the pre-tax amount and GST portion. Otherwise, it adds GST to the entered amount.</p>
+          <p>Use this tool for quick calculations, but always consult official guidelines for actual tax filings.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const gstRateSelect = document.getElementById('gstRate');
+    const customRateInput = document.getElementById('customRate');
+    const resultBox = document.getElementById('resultBox');
+    const includeGSTCheckbox = document.getElementById('includeGST');
+
+    gstRateSelect.addEventListener('change', () => {
+      if (gstRateSelect.value === 'custom') {
+        customRateInput.style.display = 'block';
+      } else {
+        customRateInput.style.display = 'none';
+      }
+    });
+
+    function calculateGST() {
+      const amount = parseFloat(document.getElementById('amount').value);
+      let gstRate = gstRateSelect.value === 'custom' 
+        ? parseFloat(customRateInput.value) 
+        : parseFloat(gstRateSelect.value);
+
+      const includeGST = document.getElementById('includeGST').checked;
+
+      if (isNaN(amount) || isNaN(gstRate) || gstRate <= 0) {
+        alert("Please enter valid values for both amount and GST rate.");
+        return;
+      }
+
+      let gstAmount, total;
+
+      if (includeGST) {
+        // GST included in amount
+        gstAmount = amount * (gstRate / (100 + gstRate));
+        total = amount - gstAmount;
+        document.getElementById('totalLabel').textContent = 'Pre-tax amount:';
+      } else {
+        // GST not included
+        gstAmount = amount * (gstRate / 100);
+        total = amount + gstAmount;
+        document.getElementById('totalLabel').textContent = 'Total with GST:';
+      }
+
+      document.getElementById('gstAmount').textContent = '₹' + gstAmount.toFixed(2);
+      document.getElementById('total').textContent = '₹' + total.toFixed(2);
+      resultBox.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
