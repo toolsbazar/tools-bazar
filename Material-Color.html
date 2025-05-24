@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Color Tool</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #D32F2F;
+            --primary-dark: #B71C1C;
+            --primary-light: #FFCDD2;
+            --background: #121212;
+            --surface: #1E1E1E;
+            --on-background: #FFFFFF;
+            --on-surface: #E0E0E0;
+            --on-primary: #FFFFFF;
+            --error: #CF6679;
+            --success: #4CAF50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--on-background);
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--surface);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-weight: 500;
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            color: var(--on-background);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .icon-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .color-picker-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background-color: var(--surface);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-display {
+            width: 100%;
+            height: 150px;
+            background-color: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-value {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+
+        .color-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .input-group label {
+            font-size: 0.9rem;
+            color: var(--on-surface);
+        }
+
+        .input-group input {
+            padding: 0.8rem;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background-color: #2a2a2a;
+            color: var(--on-background);
+            font-family: monospace;
+        }
+
+        input[type="color"] {
+            width: 60px;
+            height: 60px;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 50%;
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .palette-section {
+            background-color: var(--surface);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .palette-section h2 {
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .palette-color {
+            height: 100px;
+            border-radius: 4px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 0.5rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: white;
+            text-shadow: 0 0 2px black;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .palette-color:hover {
+            transform: scale(1.03);
+        }
+
+        .color-info-section {
+            background-color: var(--surface);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-info-section h2 {
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background-color: #2a2a2a;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .info-card h3 {
+            margin-bottom: 1rem;
+            font-weight: 500;
+            color: var(--primary-light);
+        }
+
+        .contrast-display {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .contrast-value {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .contrast-rating {
+            padding: 0.3rem 0.8rem;
+            background-color: var(--success);
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .contrast-example {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .text-example {
+            padding: 0.8rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .dark-text {
+            background-color: #000;
+            color: var(--on-background);
+        }
+
+        .light-text {
+            background-color: #FFF;
+            color: #000;
+        }
+
+        .suggested-colors {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem;
+        }
+
+        .suggested-color {
+            height: 50px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .suggested-color:hover {
+            transform: scale(1.05);
+        }
+
+        .app-footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--surface);
+            color: var(--on-surface);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .app-header {
+                padding: 1rem;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .color-picker-section,
+            .palette-section,
+            .color-info-section {
+                padding: 1.5rem;
+            }
+            
+            .color-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .input-group {
+                width: 100%;
+            }
+            
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .palette-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .suggested-colors {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <span class="material-icons">palette</span>
+                <h1>Material Color Tool</h1>
+            </div>
+            <button id="theme-toggle" class="icon-button">
+                <span class="material-icons">brightness_4</span>
+            </button>
+        </header>
+
+        <main class="main-content">
+            <div class="color-picker-section">
+                <div class="color-display" id="selected-color">
+                    <div class="color-value">#D32F2F</div>
+                </div>
+                
+                <div class="color-controls">
+                    <input type="color" id="color-input" value="#D32F2F">
+                    <div class="input-group">
+                        <label for="hex-input">HEX</label>
+                        <input type="text" id="hex-input" value="#D32F2F">
+                    </div>
+                    <div class="input-group">
+                        <label for="rgb-input">RGB</label>
+                        <input type="text" id="rgb-input" value="rgb(211, 47, 47)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="palette-section">
+                <h2>Color Palette</h2>
+                <div class="palette-grid" id="palette-grid">
+                    <!-- Generated palette will appear here -->
+                </div>
+            </div>
+
+            <div class="color-info-section">
+                <h2>Color Information</h2>
+                <div class="info-cards">
+                    <div class="info-card">
+                        <h3>Contrast Ratio</h3>
+                        <div class="contrast-display">
+                            <div class="contrast-value">4.5:1</div>
+                            <div class="contrast-rating">Good</div>
+                        </div>
+                        <div class="contrast-example">
+                            <div class="text-example dark-text">Sample Text</div>
+                            <div class="text-example light-text">Sample Text</div>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <h3>Suggested Colors</h3>
+                        <div class="suggested-colors">
+                            <div class="suggested-color" style="background-color: #FFCDD2;"></div>
+                            <div class="suggested-color" style="background-color: #E57373;"></div>
+                            <div class="suggested-color" style="background-color: #F44336;"></div>
+                            <div class="suggested-color" style="background-color: #B71C1C;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>© 2023 Material Color Tool | Made with ❤️ for designers</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const colorInput = document.getElementById('color-input');
+            const hexInput = document.getElementById('hex-input');
+            const rgbInput = document.getElementById('rgb-input');
+            const selectedColorDisplay = document.getElementById('selected-color');
+            const paletteGrid = document.getElementById('palette-grid');
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            // Initial color - dark red (Material Design Red 700)
+            let currentColor = '#D32F2F';
+            
+            // Initialize the app
+            init();
+            
+            function init() {
+                // Set initial color
+                updateColor(currentColor);
+                generatePalette(currentColor);
+                
+                // Event listeners
+                colorInput.addEventListener('input', function() {
+                    currentColor = this.value;
+                    updateColor(currentColor);
+                    generatePalette(currentColor);
+                });
+                
+                hexInput.addEventListener('change', function() {
+                    if (isValidHex(this.value)) {
+                        currentColor = this.value.startsWith('#') ? this.value : `#${this.value}`;
+                        updateColor(currentColor);
+                        generatePalette(currentColor);
+                    } else {
+                        this.value = currentColor;
+                    }
+                });
+                
+                themeToggle.addEventListener('click', toggleTheme);
+            }
+        
+            function updateColor(color) {
+                // Update color display
+                selectedColorDisplay.style.backgroundColor = color;
+                
+                // Update input values
+                colorInput.value = color;
+                hexInput.value = color.toUpperCase();
+                
+                // Convert to RGB
+                const rgb = hexToRgb(color);
+                rgbInput.value = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                
+                // Update color value text
+                const colorValue = selectedColorDisplay.querySelector('.color-value');
+                colorValue.textContent = color.toUpperCase();
+                
+                // Update text color based on brightness
+                const brightness = calculateBrightness(rgb.r, rgb.g, rgb.b);
+                colorValue.style.color = brightness > 130 ? '#000' : '#FFF';
+                colorValue.style.backgroundColor = brightness > 130 ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)';
+            }
+            
+            function generatePalette(baseColor) {
+                paletteGrid.innerHTML = '';
+                
+                const baseRgb = hexToRgb(baseColor);
+                const hsl = rgbToHsl(baseRgb.r, baseRgb.g, baseRgb.b);
+                
+                // Generate tints and shades
+                const paletteColors = [
+                    // Tints (lighter versions)
+                    hslToHex(hsl.h, hsl.s, Math.min(95, hsl.l + 60)),
+                    hslToHex(hsl.h, hsl.s, Math.min(90, hsl.l + 45)),
+                    hslToHex(hsl.h, hsl.s, Math.min(85, hsl.l + 30)),
+                    hslToHex(hsl.h, hsl.s, Math.min(80, hsl.l + 15)),
+                    
+                    // Base color
+                    baseColor,
+                    
+                    // Shades (darker versions)
+                    hslToHex(hsl.h, hsl.s, Math.max(20, hsl.l - 15)),
+                    hslToHex(hsl.h, hsl.s, Math.max(10, hsl.l - 30)),
+                    hslToHex(hsl.h, hsl.s, Math.max(5, hsl.l - 45)),
+                    hslToHex(hsl.h, hsl.s, Math.max(0, hsl.l - 60)),
+                ];
+                
+                // Create palette items
+                paletteColors.forEach((color, index) => {
+                    const paletteItem = document.createElement('div');
+                    paletteItem.className = 'palette-color';
+                    paletteItem.style.backgroundColor = color;
+                    paletteItem.textContent = color.toUpperCase();
+                    
+                    // Adjust text color based on brightness
+                    const rgb = hexToRgb(color);
+                    const brightness = calculateBrightness(rgb.r, rgb.g, rgb.b);
+                    paletteItem.style.color = brightness > 130 ? '#000' : '#FFF';
+                    
+                    paletteItem.addEventListener('click', () => {
+                        currentColor = color;
+                        updateColor(color);
+                    });
+                    
+                    paletteGrid.appendChild(paletteItem);
+                });
+            }
+            
+            function toggleTheme() {
+                document.body.classList.toggle('light-theme');
+                
+                if (document.body.classList.contains('light-theme')) {
+                    themeToggle.innerHTML = '<span class="material-icons">brightness_2</span>';
+                    // Update CSS variables for light theme
+                    document.documentElement.style.setProperty('--background', '#FAFAFA');
+                    document.documentElement.style.setProperty('--surface', '#FFFFFF');
+                    document.documentElement.style.setProperty('--on-background', '#000000');
+                    document.documentElement.style.setProperty('--on-surface', '#212121');
+                } else {
+                    themeToggle.innerHTML = '<span class="material-icons">brightness_4</span>';
+                    // Revert to dark theme
+                    document.documentElement.style.setProperty('--background', '#121212');
+                    document.documentElement.style.setProperty('--surface', '#1E1E1E');
+                    document.documentElement.style.setProperty('--on-background', '#FFFFFF');
+                    document.documentElement.style.setProperty('--on-surface', '#E0E0E0');
+                }
+            }
+            
+            // Helper functions
+            function isValidHex(color) {
+                return /^#?([0-9A-F]{3}){1,2}$/i.test(color);
+            }
+            
+            function hexToRgb(hex) {
+                // Remove # if present
+                hex = hex.replace('#', '');
+                
+                // Parse r, g, b values
+                const bigint = parseInt(hex, 16);
+                const r = (bigint >> 16) & 255;
+                const g = (bigint >> 8) & 255;
+                const b = bigint & 255;
+                
+                return { r, g, b };
+            }
+            
+            function rgbToHsl(r, g, b) {
+                r /= 255, g /= 255, b /= 255;
+                
+                const max = Math.max(r, g, b), min = Math.min(r, g, b);
+                let h, s, l = (max + min) / 2;
+                
+                if (max === min) {
+                    h = s = 0; // achromatic
+                } else {
+                    const d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    
+                    switch (max) {
+                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                    }
+                    
+                    h /= 6;
+                }
+                
+                return {
+                    h: Math.round(h * 360),
+                    s: Math.round(s * 100),
+                    l: Math.round(l * 100)
+                };
+            }
+            
+            function hslToHex(h, s, l) {
+                l /= 100;
+                const a = s * Math.min(l, 1 - l) / 100;
+                const f = n => {
+                    const k = (n + h / 30) % 12;
+                    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+                    return Math.round(255 * color).toString(16).padStart(2, '0');
+                };
+                return `#${f(0)}${f(8)}${f(4)}`;
+            }
+            
+            function calculateBrightness(r, g, b) {
+                // Formula for perceived brightness
+                return Math.sqrt(
+                    (r * r * 0.299) +
+                    (g * g * 0.587) +
+                    (b * b * 0.114)
+                );
+            }
+        });
+    </script>
+</body>
+</html>
