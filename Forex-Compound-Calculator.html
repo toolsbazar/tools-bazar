@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tools Bazar - Forex Compound Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        header {
+            background-color: #8b0000;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ff4040;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ff4040;
+            border-radius: 4px;
+            background-color: #333;
+            color: #fff;
+        }
+        button {
+            background-color: #ff4040;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #cc0000;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        #results p {
+            font-size: 1.1em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ff4040;
+            padding: 10px;
+            text-align: right;
+        }
+        th {
+            background-color: #ff4040;
+            color: #fff;
+        }
+        td {
+            background-color: #333;
+        }
+        canvas {
+            margin-top: 20px;
+            background-color: #333;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        footer {
+            background-color: #8b0000;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tools Bazar</h1>
+        <p>Forex Compound Calculator</p>
+    </header>
+    <div class="container">
+        <div class="form-group">
+            <label for="startBalance">Start Balance ($)</label>
+            <input type="number" id="startBalance" placeholder="Enter starting balance" step="0.01" required>
+        </div>
+        <div class="form-group">
+            <label for="periods">Periods</label>
+            <input type="number" id="periods" placeholder="Enter number of periods" required>
+        </div>
+        <div class="form-group">
+            <label for="gainPerPeriod">Gain per Period (%)</label>
+            <input type="number" id="gainPerPeriod" placeholder="Enter gain per period" step="0.01" required>
+        </div>
+        <button onclick="calculateCompound()">Calculate</button>
+        <div id="results">
+            <p><strong>End Balance:</strong> <span id="endBalance">0.00</span></p>
+            <p><strong>Total Gain:</strong> <span id="totalGain">0.00%</span></p>
+        </div>
+        <table id="resultsTable">
+            <thead>
+                <tr>
+                    <th>Period</th>
+                    <th>Starting Balance ($)</th>
+                    <th>Ending Balance ($)</th>
+                    <th>Profit ($)</th>
+                    <th>Total Profit ($)</th>
+                    <th>Total Gain (%)</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+        <canvas id="compoundChart"></canvas>
+    </div>
+    <footer>
+        <p>© 2025 Tools Bazar. All rights reserved.</p>
+    </footer>
+    <script>
+        let chart;
+
+        function calculateCompound() {
+            const startBalance = parseFloat(document.getElementById('startBalance').value);
+            const periods = parseInt(document.getElementById('periods').value);
+            const gainPerPeriod = parseFloat(document.getElementById('gainPerPeriod').value) / 100;
+
+            if (isNaN(startBalance) || isNaN(periods) || isNaN(gainPerPeriod)) {
+                alert('Please fill in all fields with valid numbers.');
+                return;
+            }
+
+            let balance = startBalance;
+            const balances = [startBalance];
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            for (let i = 0; i < periods; i++) {
+                const startPeriodBalance = balance;
+                balance = balance * (1 + gainPerPeriod);
+                const profit = balance - startPeriodBalance;
+                const totalProfit = balance - startBalance;
+                const totalGain = ((balance - startBalance) / startBalance) * 100;
+
+                balances.push(balance);
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>${startPeriodBalance.toFixed(2)}</td>
+                    <td>${balance.toFixed(2)}</td>
+                    <td>${profit.toFixed(2)}</td>
+                    <td>${totalProfit.toFixed(2)}</td>
+                    <td>${totalGain.toFixed(2)}%</td>
+                `;
+                tableBody.appendChild(row);
+            }
+
+            const endBalance = balance.toFixed(2);
+            const totalGain = (((balance - startBalance) / startBalance) * 100).toFixed(2);
+
+            document.getElementById('endBalance').textContent = endBalance;
+            document.getElementById('totalGain').textContent = totalGain + '%';
+
+            updateChart(balances, periods);
+        }
+
+        function updateChart(balances, periods) {
+            const ctx = document.getElementById('compoundChart').getContext('2d');
+            const labels = Array.from({ length: periods + 1 }, (_, i) => `Period ${i}`);
+
+            if (chart) {
+                chart.destroy();
+            }
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Balance ($)',
+                        data: balances,
+                        borderColor: '#ff4040',
+                        backgroundColor: 'rgba(255, 64, 64, 0.2)',
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Periods', color: '#fff' },
+                            ticks: { color: '#fff' }
+                        },
+                        y: {
+                            title: { display: true, text: 'Balance ($)', color: '#fff' },
+                            ticks: { color: '#fff' },
+                            beginAtZero: false
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#fff' } },
+                        title: { display: true, text: 'Forex Compounding Effect', color: '#fff' }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
