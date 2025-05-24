@@ -37,7 +37,7 @@
             margin-bottom: 5px;
             color: #ff4040;
         }
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ff4040;
@@ -106,7 +106,14 @@
     </header>
     <div class="container">
         <div class="form-group">
-            <label for="startBalance">Start Balance ($)</label>
+            <label for="currency">Currency</label>
+            <select id="currency" onchange="updateCurrencyLabel()">
+                <option value="USD">USD ($)</option>
+                <option value="INR">INR (₹)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="startBalance">Start Balance <span id="currencySymbol">$</span></label>
             <input type="number" id="startBalance" placeholder="Enter starting balance" step="0.01" required>
         </div>
         <div class="form-group">
@@ -119,17 +126,17 @@
         </div>
         <button onclick="calculateCompound()">Calculate</button>
         <div id="results">
-            <p><strong>End Balance:</strong> <span id="endBalance">0.00</span></p>
+            <p><strong>End Balance:</strong> <span id="endBalance">0.00</span> <span id="resultCurrency">$</span></p>
             <p><strong>Total Gain:</strong> <span id="totalGain">0.00%</span></p>
         </div>
         <table id="resultsTable">
             <thead>
                 <tr>
                     <th>Period</th>
-                    <th>Starting Balance ($)</th>
-                    <th>Ending Balance ($)</th>
-                    <th>Profit ($)</th>
-                    <th>Total Profit ($)</th>
+                    <th>Starting Balance (<span id="tableCurrency">$</span>)</th>
+                    <th>Ending Balance (<span id="tableCurrencyEnd">$</span>)</th>
+                    <th>Profit (<span id="tableCurrencyProfit">$</span>)</th>
+                    <th>Total Profit (<span id="tableCurrencyTotalProfit">$</span>)</th>
                     <th>Total Gain (%)</th>
                 </tr>
             </thead>
@@ -143,10 +150,30 @@
     <script>
         let chart;
 
+        function updateCurrencyLabel() {
+            const currency = document.getElementById('currency').value;
+            const currencySymbol = currency === 'USD' ? '$' : '₹';
+            const currencySymbolElement = document.getElementById('currencySymbol');
+            const resultCurrencyElement = document.getElementById('resultCurrency');
+            const tableCurrencyElement = document.getElementById('tableCurrency');
+            const tableCurrencyEndElement = document.getElementById('tableCurrencyEnd');
+            const tableCurrencyProfitElement = document.getElementById('tableCurrencyProfit');
+            const tableCurrencyTotalProfitElement = document.getElementById('tableCurrencyTotalProfit');
+
+            if (currencySymbolElement) currencySymbolElement.textContent = currencySymbol;
+            if (resultCurrencyElement) resultCurrencyElement.textContent = currencySymbol;
+            if (tableCurrencyElement) tableCurrencyElement.textContent = currencySymbol;
+            if (tableCurrencyEndElement) tableCurrencyEndElement.textContent = currencySymbol;
+            if (tableCurrencyProfitElement) tableCurrencyProfitElement.textContent = currencySymbol;
+            if (tableCurrencyTotalProfitElement) tableCurrencyTotalProfitElement.textContent = currencySymbol;
+        }
+
         function calculateCompound() {
             const startBalance = parseFloat(document.getElementById('startBalance').value);
             const periods = parseInt(document.getElementById('periods').value);
             const gainPerPeriod = parseFloat(document.getElementById('gainPerPeriod').value) / 100;
+            const currency = document.getElementById('currency').value;
+            const currencySymbol = currency === 'USD' ? '$' : '₹';
 
             if (isNaN(startBalance) || isNaN(periods) || isNaN(gainPerPeriod)) {
                 alert('Please fill in all fields with valid numbers.');
@@ -184,11 +211,12 @@
 
             document.getElementById('endBalance').textContent = endBalance;
             document.getElementById('totalGain').textContent = totalGain + '%';
+            document.getElementById('resultCurrency').textContent = currencySymbol;
 
-            updateChart(balances, periods);
+            updateChart(balances, periods, currencySymbol);
         }
 
-        function updateChart(balances, periods) {
+        function updateChart(balances, periods, currencySymbol) {
             const ctx = document.getElementById('compoundChart').getContext('2d');
             const labels = Array.from({ length: periods + 1 }, (_, i) => `Period ${i}`);
 
@@ -201,7 +229,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Balance ($)',
+                        label: `Balance (${currencySymbol})`,
                         data: balances,
                         borderColor: '#ff4040',
                         backgroundColor: 'rgba(255, 64, 64, 0.2)',
@@ -216,7 +244,7 @@
                             ticks: { color: '#fff' }
                         },
                         y: {
-                            title: { display: true, text: 'Balance ($)', color: '#fff' },
+                            title: { display: true, text: `Balance (${currencySymbol})`, color: '#fff' },
                             ticks: { color: '#fff' },
                             beginAtZero: false
                         }
@@ -228,6 +256,9 @@
                 }
             });
         }
+
+        // Initialize currency labels on page load
+        document.addEventListener('DOMContentLoaded', updateCurrencyLabel);
     </script>
 </body>
 </html>
