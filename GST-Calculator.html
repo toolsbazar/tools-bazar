@@ -3,14 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GST Calculator - Tools Bazar</title>
+    <title>Tools Bazar - GST Calculator</title>
     <style>
-        :root {
-            --primary: #8b0000;
-            --secondary: #4a1515;
-            --text: #fff;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -19,116 +13,284 @@
         }
 
         body {
-            background-color: var(--secondary);
-            color: var(--text);
+            background-color: #1a1a1a;
+            color: #ffffff;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
+        }
+
+        header {
+            background-color: #2b0c0c;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            DISPLAY: FLEX;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 36px;
+            height: 36px;
+            margin-right: 8px;
+            background-color: #ff3333;
+            border-radius: 50%;
+        }
+
+        .logo h1 {
+            color: #ff3333;
+            font-size: 20px;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-menu a, .dropdown-toggle {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 8px 12px;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover, .dropdown-toggle:hover {
+            color: #ff3333;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #2b0c0c;
+            min-width: 160px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            z-index: 1;
+            right: 0;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 10px;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #ffffff;
         }
 
         .calculator-container {
-            background-color: var(--primary);
-            padding: 2rem;
+            background-color: #2b0c0c;
+            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin: 20px auto;
+            flex: 1;
         }
 
-        h1 {
+        .calculator-container h2 {
+            color: #ff3333;
             text-align: center;
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-size: 18px;
         }
 
         .input-group {
-            margin-bottom: 1rem;
+            margin-bottom: 15px;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
+            margin-bottom: 5px;
+            color: #ff6666;
+            font-size: 14px;
         }
 
         input, select {
             width: 100%;
-            padding: 0.5rem;
+            padding: 8px;
             border: none;
             border-radius: 5px;
-            font-size: 1rem;
+            background-color: #3d1a1a;
+            color: #ffffff;
+            font-size: 14px;
         }
 
-        input[type="number"] {
-            background-color: var(--text);
-            color: var(--secondary);
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 5px #ff3333;
         }
 
-        select {
-            background-color: var(--text);
-            color: var(--secondary);
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #ff3333;
+            border: none;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 14px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        .calculation-type {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .calculation-type label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
+        button:hover {
+            background-color: #cc2929;
         }
 
         .result {
-            background-color: var(--text);
-            color: var(--secondary);
-            padding: 1rem;
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #3d1a1a;
             border-radius: 5px;
-            margin-top: 1rem;
+            font-size: 14px;
         }
 
         .result p {
-            margin: 0.5rem 0;
+            margin-bottom: 8px;
         }
 
         .error {
-            color: #ff4d4d;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-            display: none;
+            color: #ff9999;
+            font-size: 12px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #2b0c0c;
+            padding: 10px 20px;
+            text-align: center;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        footer p {
+            color: #ff6666;
+            font-size: 12px;
+        }
+
+        footer a {
+            color: #ff3333;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #cc2929;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background-color: #2b0c0c;
+                flex-direction: column;
+                padding: 10px 0;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .dropdown-content {
+                position: static;
+                width: 100%;
+                background-color: #3d1a1a;
+            }
+
+            .dropdown-content a {
+                padding: 10px 20px;
+            }
         }
 
         @media (max-width: 480px) {
+            .logo h1 {
+                font-size: 18px;
+            }
+
             .calculator-container {
-                padding: 1rem;
+                padding: 15px;
+                margin: 15px auto;
             }
 
-            h1 {
-                font-size: 1.5rem;
+            .calculator-container h2 {
+                font-size: 16px;
             }
 
-            input, select {
-                font-size: 0.9rem;
+            input, select, button {
+                font-size: 13px;
+                padding: 7px;
+            }
+
+            footer p {
+                font-size: 11px;
             }
         }
     </style>
 </head>
 <body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="#" alt="Tools Bazar Logo">
+                <h1>Tools Bazar</h1>
+            </div>
+            <span class="hamburger" onclick="toggleMenu()">☰</span>
+            <nav class="nav-menu" id="nav-menu">
+                <a href="/">Home</a>
+                <div class="dropdown">
+                    <span class="dropdown-toggle">Tools</span>
+                    <div class="dropdown-content">
+                        <a href="/gst-calculator">GST Calculator</a>
+                        <a href="/tax-calculator">Tax Calculator</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
     <div class="calculator-container">
-        <h1>GST Calculator</h1>
+        <h2>GST Calculator</h2>
         <div class="input-group">
-            <label for="amount">Enter Amount</label>
-            <input type="number" id="amount" placeholder="Enter amount" min="0" step="0.01">
-            <div id="amount-error" class="error">Please enter a valid amount greater than 0</div>
+            <label for="amount">Enter Amount (₹)</label>
+            <input type="number" id="amount" placeholder="Enter amount" step="0.01">
         </div>
         <div class="input-group">
-            <label for="gst-rate">Select GST Rate</label>
+            <label for="gst-rate">Select GST Rate (%)</label>
             <select id="gst-rate">
                 <option value="5">5%</option>
                 <option value="12">12%</option>
@@ -136,62 +298,47 @@
                 <option value="28">28%</option>
             </select>
         </div>
-        <div class="calculation-type">
-            <label><input type="radio" name="calc-type" value="exclusive" checked> Exclusive of GST</label>
-            <label><input type="radio" name="calc-type" value="inclusive"> Inclusive of GST</label>
+        <button onclick="calculateGST()">Calculate GST</button>
+        <div class="result" id="result" style="display: none;">
+            <p>GST Amount: ₹<span id="gst-amount">0.00</span></p>
+            <p>Total Amount (with GST): ₹<span id="total-amount">0.00</span></p>
         </div>
-        <div class="result" id="result">
-            <p>GST Amount: <span id="gst-amount">0.00</span></p>
-            <p>Total Amount: <span id="total-amount">0.00</span></p>
-        </div>
+        <div class="error" id="error" style="display: none;"></div>
     </div>
 
+    <footer>
+        <p>© 2025 Tools Bazar. All rights reserved. | <a href="mailto:support@toolsbazar.com">Contact Us</a></p>
+    </footer>
+
     <script>
-        const amountInput = document.getElementById('amount');
-        const gstRateSelect = document.getElementById('gst-rate');
-        const calcTypeRadios = document.getElementsByName('calc-type');
-        const resultDiv = document.getElementById('result');
-        const gstAmountSpan = document.getElementById('gst-amount');
-        const totalAmountSpan = document.getElementById('total-amount');
-        const amountError = document.getElementById('amount-error');
-
         function calculateGST() {
-            const amount = parseFloat(amountInput.value);
-            const gstRate = parseFloat(gstRateSelect.value);
-            const calcType = document.querySelector('input[name="calc-type"]:checked').value;
+            const amountInput = document.getElementById('amount').value;
+            const gstRate = parseFloat(document.getElementById('gst-rate').value);
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
 
-            // Input validation
-            if (isNaN(amount) || amount <= 0) {
-                amountError.style.display = 'block';
-                resultDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+            resultDiv.style.display = 'none';
+
+            if (!amountInput || isNaN(amountInput) || amountInput <= 0) {
+                errorDiv.textContent = 'Please enter a valid amount greater than 0.';
+                errorDiv.style.display = 'block';
                 return;
-            } else {
-                amountError.style.display = 'none';
-                resultDiv.style.display = 'block';
             }
 
-            let gstAmount, totalAmount;
+            const amount = parseFloat(amountInput);
+            const gstAmount = (amount * gstRate) / 100;
+            const totalAmount = amount + gstAmount;
 
-            if (calcType === 'exclusive') {
-                gstAmount = amount * (gstRate / 100);
-                totalAmount = amount + gstAmount;
-            } else {
-                gstAmount = amount * (gstRate / (100 + gstRate));
-                totalAmount = amount;
-                amountInput.value = (totalAmount - gstAmount).toFixed(2);
-            }
-
-            gstAmountSpan.textContent = gstAmount.toFixed(2);
-            totalAmountSpan.textContent = totalAmount.toFixed(2);
+            document.getElementById('gst-amount').textContent = gstAmount.toFixed(2);
+            document.getElementById('total-amount').textContent = totalAmount.toFixed(2);
+            resultDiv.style.display = 'block';
         }
 
-        // Real-time calculation
-        amountInput.addEventListener('input', calculateGST);
-        gstRateSelect.addEventListener('change', calculateGST);
-        calcTypeRadios.forEach(radio => radio.addEventListener('change', calculateGST));
-
-        // Initial calculation
-        calculateGST();
+        function toggleMenu() {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.classList.toggle('active');
+        }
     </script>
 </body>
 </html>
