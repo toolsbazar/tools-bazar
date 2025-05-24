@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tools Bazaar - Brand Colors</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .brand-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .brand-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(139, 0, 0, 0.5);
+        }
+        .search-bar {
+            background-color: #1a1a1a;
+            border: 2px solid #8B0000;
+        }
+        .search-bar:focus {
+            outline: none;
+            border-color: #ff4040;
+        }
+        .category-select {
+            background-color: #1a1a1a;
+            border: 2px solid #8B0000;
+            color: #ffffff;
+        }
+        .category-select:focus {
+            outline: none;
+            border-color: #ff4040;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="bg-[#8B0000] p-4 flex justify-between items-center">
+        <h1 class="text-2xl md:text-3xl font-bold">Tools Bazaar</h1>
+        <input type="text" id="searchInput" class="search-bar p-2 rounded-md w-1/2 md:w-1/3" placeholder="Search brands...">
+    </header>
+    <main class="flex-grow p-4 md:p-8">
+        <div class="mb-6">
+            <label for="categoryFilter" class="text-lg font-semibold mr-2">Filter by Category:</label>
+            <select id="categoryFilter" class="category-select p-2 rounded-md">
+                <option value="all">All Categories</option>
+                <option value="Technology">Technology</option>
+                <option value="Retail">Retail</option>
+                <option value="Social Media">Social Media</option>
+                <option value="Automotive">Automotive</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Aerospace">Aerospace</option>
+                <option value="Logistics">Logistics</option>
+                <option value="Finance">Finance</option>
+                <option value="Food & Beverage">Food & Beverage</option>
+            </select>
+        </div>
+        <h2 class="text-xl md:text-2xl font-semibold mb-4">Top 150 Brands</h2>
+        <div id="brandGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Brand cards will be populated by JavaScript -->
+        </div>
+    </main>
+    <footer class="bg-[#8B0000] p-4 text-center">
+        <p>© 2025 Tools Bazaar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const brands = [
+            { name: "About.me", hex: "#003366", category: "Social Media" },
+            { name: "Adidas", hex: "#000000", category: "Retail" },
+            { name: "Adobe", hex: "#FF0000", category: "Technology" },
+            { name: "Airbnb", hex: "#FF5A5F", category: "Technology" },
+            { name: "Airbus", hex: "#005566", category: "Aerospace" },
+            { name: "Alibaba", hex: "#FF6A00", category: "Retail" },
+            { name: "Amazon", hex: "#FF9900", category: "Retail" },
+            { name: "American Express", hex: "#002663", category: "Finance" },
+            { name: "Android", hex: "#A4C639", category: "Technology" },
+            { name: "AngularJS", hex: "#DD0031", category: "Technology" },
+            { name: "Asana", hex: "#1F8A70", category: "Technology" },
+            { name: "Atlassian", hex: "#003366", category: "Technology" },
+            { name: "Audi", hex: "#BB0A30", category: "Automotive" },
+            { name: "Baidu", hex: "#2932E1", category: "Technology" },
+            { name: "Beats by Dre", hex: "#E01A22", category: "Technology" },
+            { name: "Behance", hex: "#1769FF", category: "Social Media" },
+            { name: "Boeing", hex: "#003087", category: "Aerospace" },
+            { name: "Canva", hex: "#00C4B4", category: "Technology" },
+            { name: "Coca-Cola", hex: "#F40009", category: "Food & Beverage" },
+            { name: "Dell", hex: "#0085C3", category: "Technology" },
+            { name: "DHL", hex: "#FFCC00", category: "Logistics" },
+            { name: "Docker", hex: "#0DB7ED", category: "Technology" },
+            { name: "Dribbble", hex: "#EA4C89", category: "Social Media" },
+            { name: "Dropbox", hex: "#0061FF", category: "Technology" },
+            { name: "eBay", hex: "#E53238", category: "Retail" },
+            { name: "Etsy", hex: "#F45800", category: "Retail" },
+            { name: "Facebook", hex: "#3B5998", category: "Social Media" },
+            { name: "Ferrari", hex: "#D40000", category: "Automotive" },
+            { name: "Fiverr", hex: "#1DBF73", category: "Technology" },
+            { name: "Flickr", hex: "#FF0084", category: "Social Media" },
+            { name: "Ford", hex: "#003087", category: "Automotive" },
+            { name: "GitHub", hex: "#181717", category: "Technology" },
+            { name: "Google+", hex: "#DD4B39", category: "Social Media" },
+            { name: "IBM", hex: "#052FAD", category: "Technology" },
+            { name: "IKEA", hex: "#003087", category: "Retail" },
+            { name: "Intel", hex: "#0071C5", category: "Technology" },
+            { name: "Joomla!", hex: "#5091CD", category: "Technology" },
+            { name: "Kickstarter", hex: "#2BDE73", category: "Technology" },
+            { name: "Lamborghini", hex: "#D9B611", category: "Automotive" },
+            { name: "LEGO", hex: "#D11013", category: "Entertainment" },
+            { name: "Magento", hex: "#EE672F", category: "Technology" },
+            { name: "Mastercard", hex: "#CC0000", category: "Finance" },
+            { name: "McDonald’s", hex: "#FFC107", category: "Food & Beverage" },
+            { name: "Medium", hex: "#00AB6C", category: "Social Media" },
+            { name: "Microsoft", hex: "#737373", category: "Technology" },
+            { name: "Mozilla", hex: "#000000", category: "Technology" },
+            { name: "NASA", hex: "#0B3D91", category: "Aerospace" },
+            { name: "Nest", hex: "#00AFD8", category: "Technology" },
+            { name: "Netflix", hex: "#E50914", category: "Entertainment" },
+            { name: "Nike", hex: "#111111", category: "Retail" },
+            { name: "PayPal", hex: "#003087", category: "Finance" },
+            { name: "Pepsi", hex: "#004B93", category: "Food & Beverage" },
+            { name: "Philips", hex: "#005566", category: "Technology" },
+            { name: "Pinterest", hex: "#BD081C", category: "Social Media" },
+            { name: "PlayStation", hex: "#003791", category: "Entertainment" },
+            { name: "Puma", hex: "#000000", category: "Retail" },
+            { name: "Reddit", hex: "#FF4500", category: "Social Media" },
+            { name: "Shopify", hex: "#96BF48", category: "Technology" },
+            { name: "Skype", hex: "#00AFF0", category: "Technology" },
+            { name: "Slack", hex: "#4A154B", category: "Technology" },
+            { name: "Sony", hex: "#000000", category: "Technology" },
+            { name: "Starbucks", hex: "#00704A", category: "Food & Beverage" },
+            { name: "Tesla", hex: "#CC0000", category: "Automotive" },
+            { name: "Tumblr", hex: "#36465D", category: "Social Media" },
+            { name: "Twitter", hex: "#1DA1F2", category: "Social Media" },
+            { name: "Uber", hex: "#000000", category: "Technology" },
+            { name: "Unity", hex: "#000000", category: "Technology" },
+            { name: "Adyen", hex: "#0ABF53", category: "Finance" },
+            { name: "Aetna", hex: "#D20962", category: "Healthcare" },
+            { name: "AIESEC", hex: "#037EF3", category: "Non-Profit" },
+            { name: "Akamai", hex: "#0099CC", category: "Technology" },
+            { name: "Algolia", hex: "#003DFF", category: "Technology" },
+            { name: "Alienware", hex: "#0A1C3A", category: "Technology" },
+            { name: "Alphabet", hex: "#000000", category: "Technology" },
+            { name: "AOL", hex: "#00C4FF", category: "Technology" },
+            { name: "Arch Linux", hex: "#1793D1", category: "Technology" },
+            { name: "Ars Technica", hex: "#FF4E00", category: "Media" },
+            { name: "AT&T", hex: "#00A8E0", category: "Telecommunications" },
+            { name: "Avast", hex: "#FF7800", category: "Technology" },
+            { name: "Bandcamp", hex: "#629AA9", category: "Entertainment" },
+            { name: "Barclays", hex: "#00AEEF", category: "Finance" },
+            { name: "Basecamp", hex: "#1D2D44", category: "Technology" },
+            { name: "Best Buy", hex: "#003087", category: "Retail" },
+            { name: "Bing", hex: "#008373", category: "Technology" },
+            { name: "Bitbucket", hex: "#0052CC", category: "Technology" },
+            { name: "Blackberry", hex: "#000000", category: "Technology" },
+            { name: "Blockchain", hex: "#123456", category: "Technology" },
+            { name: "Blogger", hex: "#F28F38", category: "Social Media" },
+            { name: "Booking.com", hex: "#003580", category: "Travel" },
+            { name: "British Airways", hex: "#075AAA", category: "Travel" },
+            { name: "BT", hex: "#6400AA", category: "Telecommunications" },
+            { name: "Buffer", hex: "#168EEA", category: "Social Media" },
+            { name: "Burger King", hex: "#EC1C24", category: "Food & Beverage" },
+            { name: "BuzzFeed", hex: "#EE3322", category: "Media" },
+            { name: "Canon", hex: "#CC0000", category: "Technology" },
+            { name: "Capital One", hex: "#004977", category: "Finance" },
+            { name: "Carrefour", hex: "#003087", category: "Retail" },
+            { name: "Cartoon Network", hex: "#00A7E1", category: "Entertainment" },
+            { name: "Change.org", hex: "#F0532D", category: "Non-Profit" },
+            { name: "Cloudflare", hex: "#F38020", category: "Technology" },
+            { name: "CNBC", hex: "#005566", category: "Media" },
+            { name: "CNN", hex: "#CC0000", category: "Media" },
+            { name: "CodePen", hex: "#000000", category: "Technology" },
+            { name: "Creative Commons", hex: "#B62B6E", category: "Non-Profit" },
+            { name: "Dailymotion", hex: "#0066DC", category: "Entertainment" },
+            { name: "Daimler", hex: "#000000", category: "Automotive" },
+            { name: "Debian", hex: "#A80030", category: "Technology" },
+            { name: "Deezer", hex: "#FF0000", category: "Entertainment" },
+            { name: "Delta Airlines", hex: "#003087", category: "Travel" },
+            { name: "DeviantArt", hex: "#05CC47", category: "Social Media" },
+            { name: "Discord", hex: "#5865F2", category: "Social Media" },
+            { name: "Domino’s", hex: "#0B3D91", category: "Food & Beverage" },
+            { name: "Drupal", hex: "#0678BE", category: "Technology" },
+            { name: "DuckDuckGo", hex: "#DE5833", category: "Technology" },
+            { name: "Easy Jet", hex: "#FF6600", category: "Travel" },
+            { name: "El Al", hex: "#003087", category: "Travel" },
+            { name: "Engadget", hex: "#D11149", category: "Media" },
+            { name: "Envato", hex: "#82B541", category: "Technology" },
+            { name: "ESPN", hex: "#FF0000", category: "Media" },
+            { name: "Eventbrite", hex: "#F05537", category: "Technology" },
+            { name: "Evernote", hex: "#2DBE60", category: "Technology" },
+            { name: "Fancy", hex: "#3098D6", category: "Social Media" },
+            { name: "Fedex", hex: "#4D148C", category: "Logistics" },
+            { name: "Fendi", hex: "#000000", category: "Retail" },
+            { name: "Fiat", hex: "#960015", category: "Automotive" },
+            { name: "Firefox", hex: "#FF7139", category: "Technology" },
+            { name: "Fitbit", hex: "#00B0B9", category: "Technology" },
+            { name: "Five Guys", hex: "#ED174F", category: "Food & Beverage" },
+            { name: "Flipboard", hex: "#E12828", category: "Social Media" },
+            { name: "FontAwesome", hex: "#228AE6", category: "Technology" },
+            { name: "Foursquare", hex: "#F94877", category: "Social Media" },
+            { name: "FreeCodeCamp", hex: "#006400", category: "Technology" },
+            { name: "Garmin", hex: "#007CC3", category: "Technology" },
+            { name: "GitLab", hex: "#FCA121", category: "Technology" },
+            { name: "GoDaddy", hex: "#1BDBDB", category: "Technology" },
+            { name: "Goodreads", hex: "#553B08", category: "Social Media" },
+            { name: "Google", hex: "#4285F4", category: "Technology" },
+            { name: "Groupon", hex: "#82B548", category: "Retail" },
+            { name: "Gucci", hex: "#000000", category: "Retail" },
+            { name: "Hacker News", hex: "#FF6600", category: "Social Media" },
+            { name: "Heineken", hex: "#008200", category: "Food & Beverage" },
+            { name: "Heroku", hex: "#6762A6", category: "Technology" },
+            { name: "Home Depot", hex: "#F96302", category: "Retail" },
+            { name: "HootSuite", hex: "#003366", category: "Social Media" },
+            { name: "HP", hex: "#0096D6", category: "Technology" },
+            { name: "HSBC", hex: "#DB0011", category: "Finance" },
+            { name: "HTML5", hex: "#E34F26", category: "Technology" },
+            { name: "Hulu", hex: "#1CE783", category: "Entertainment" },
+            { name: "Hyatt", hex: "#6A2C3E", category: "Travel" },
+            { name: "iHeartRadio", hex: "#C6002B", category: "Entertainment" },
+            { name: "IMDb", hex: "#F5C518", category: "Entertainment" },
+            { name: "Imgur", hex: "#1BB76E", category: "Social Media" },
+            { name: "Indeed", hex: "#2164F3", category: "Technology" },
+            { name: "Indiegogo", hex: "#EB1478", category: "Technology" },
+            { name: "InVision", hex: "#FF3366", category: "Technology" },
+            { name: "iOS", hex: "#000000", category: "Technology" },
+            { name: "jQuery", hex: "#0769AD", category: "Technology" },
+            { name: "Kaspersky Lab", hex: "#006D57", category: "Technology" },
+            { name: "Khan Academy", hex: "#14BF96", category: "Education" },
+            { name: "Kia", hex: "#C21A2D", category: "Automotive" },
+            { name: "Kiva", hex: "#33CC33", category: "Non-Profit" },
+            { name: "KLM", hex: "#00A1E4", category: "Travel" },
+            { name: "LastFM", hex: "#D51007", category: "Entertainment" },
+            { name: "Line", hex: "#00C300", category: "Social Media" },
+            { name: "Livestream", hex: "#CF202E", category: "Entertainment" },
+            { name: "MailChimp", hex: "#FFE01B", category: "Technology" },
+            { name: "Mastodon", hex: "#3088D4", category: "Social Media" },
+            { name: "Meetup", hex: "#F64060", category: "Social Media" },
+            { name: "Mixcloud", hex: "#314359", category: "Entertainment" },
+            { name: "Motorola", hex: "#5C2E78", category: "Technology" },
+            { name: "MySpace", hex: "#030303", category: "Social Media" },
+            { name: "MySQL", hex: "#00758F", category: "Technology" },
+            { name: "NBC", hex: "#E50914", category: "Media" },
+            { name: "New Balance", hex: "#CE2724", category: "Retail" },
+            { name: "Nintendo", hex: "#E60012", category: "Entertainment" },
+            { name: "Node.js", hex: "#339933", category: "Technology" },
+            { name: "Nokia", hex: "#124191", category: "Technology" },
+            { name: "NVIDIA", hex: "#76B900", category: "Technology" },
+            { name: "Oracle", hex: "#F80000", category: "Technology" },
+            { name: "Pandora", hex: "#005483", category: "Entertainment" },
+            { name: "Patreon", hex: "#F96854", category: "Technology" },
+            { name: "Paymo", hex: "#00C7B7", category: "Technology" },
+            { name: "Pearson", hex: "#ED6B06", category: "Education" },
+            { name: "Periscope", hex: "#40A4C4", category: "Social Media" },
+            { name: "Pfizer", hex: "#0093D0", category: "Healthcare" },
+            { name: "Photobucket", hex: "#0EA0DB", category: "Social Media" },
+            { name: "PHP", hex: "#777BB4", category: "Technology" },
+            { name: "Pizza Hut", hex: "#EE3124", category: "Food & Beverage" },
+            { name: "Priceline", hex: "#1885BF", category: "Travel" },
+            { name: "Product Hunt", hex: "#DA552F", category: "Technology" },
+            { name: "ProtonMail", hex: "#8B89CC", category: "Technology" },
+            { name: "Python", hex: "#3776AB", category: "Technology" },
+            { name: "Qantas Airways", hex: "#E0001B", category: "Travel" },
+            { name: "Quora", hex: "#B92B27", category: "Social Media" },
+            { name: "Raspberry Pi", hex: "#C51A4A", category: "Technology" },
+            { name: "Razer", hex: "#00FF00", category: "Technology" },
+            { name: "React", hex: "#61DAFB", category: "Technology" },
+            { name: "Red Hat", hex: "#EE0000", category: "Technology" },
+            { name: "RE/MAX", hex: "#B8282F", category: "Real Estate" },
+            { name: "Ruby", hex: "#CC342D", category: "Technology" },
+            { name: "Ruby on Rails", hex: "#CC0000", category: "Technology" },
+            { name: "Salesforce", hex: "#1798C1", category: "Technology" },
+            { name: "Samsung", hex: "#1428A0", category: "Technology" },
+            { name: "SAP", hex: "#008FD3", category: "Technology" },
+            { name: "Scribd", hex: "#1A7BBA", category: "Technology" },
+            { name: "Shazam", hex: "#0088FF", category: "Entertainment" },
+            { name: "Sherwin-Williams", hex: "#004474", category: "Retail" },
+            { name: "Siemens", hex: "#009999", category: "Technology" },
+            { name: "Skillshare", hex: "#F26B6B", category: "Education" },
+            { name: "Skoda", hex: "#00800D", category: "Automotive" },
+            { name: "Snapchat", hex: "#FFFC00", category: "Social Media" },
+            { name: "SoundCloud", hex: "#FF5500", category: "Entertainment" },
+            { name: "Sprint", hex: "#FFDC00", category: "Telecommunications" },
+            { name: "Squarespace", hex: "#000000", category: "Technology" },
+            { name: "Stack Overflow", hex: "#F48024", category: "Technology" },
+            { name: "Staples", hex: "#CC0000", category: "Retail" },
+            { name: "State Farm", hex: "#ED1C24", category: "Finance" },
+            { name: "Steam", hex: "#171A21", category: "Entertainment" },
+            { name: "Strava", hex: "#FC4C02", category: "Technology" },
+            { name: "Stripe", hex: "#6772E5", category: "Finance" },
+            { name: "Subway", hex: "#008938", category: "Food & Beverage" },
+            { name: "T-Mobile", hex: "#E20074", category: "Telecommunications" },
+            { name: "Target", hex: "#CC0000", category: "Retail" },
+            { name: "TeamSpeak", hex: "#2580C3", category: "Technology" },
+            { name: "TED", hex: "#E62B1E", category: "Media" },
+            { name: "Telegram", hex: "#0088CC", category: "Social Media" },
+            { name: "Tesco", hex: "#005566", category: "Retail" },
+            { name: "The Next Web", hex: "#FF3C1F", category: "Media" },
+            { name: "Thomson Reuters", hex: "#FF8000", category: "Media" },
+            { name: "Trello", hex: "#0079BF", category: "Technology" },
+            { name: "TripAdvisor", hex: "#00AF87", category: "Travel" },
+            { name: "Trulia", hex: "#5FAD41", category: "Real Estate" },
+            { name: "Trustpilot", hex: "#00B67A", category: "Technology" },
+            { name: "Twitch", hex: "#9146FF", category: "Entertainment" },
+            { name: "TypeScript", hex: "#3178C6", category: "Technology" },
+            { name: "TYPO3", hex: "#FF8700", category: "Technology" },
+            { name: "United Way", hex: "#10167F", category: "Non-Profit" },
+            { name: "Vimeo", hex: "#1AB7EA", category: "Social Media" },
+            { name: "VISA", hex: "#142787", category: "Finance" },
+            { name: "Volkswagen", hex: "#001E50", category: "Automotive" },
+            { name: "Walmart", hex: "#0071CE", category: "Retail" },
+            { name: "WeChat", hex: "#7BB32E", category: "Social Media" },
+            { name: "Wendy's", hex: "#E71D36", category: "Food & Beverage" },
+            { name: "WhatsApp", hex: "#25D366", category: "Social Media" },
+            { name: "Wikipedia", hex: "#000000", category: "Non-Profit" },
+            { name: "WordPress", hex: "#21759B", category: "Technology" },
+            { name: "Xerox", hex: "#D2232A", category: "Technology" },
+            { name: "Yelp", hex: "#D32323", category: "Technology" },
+            { name: "YouTube", hex: "#FF0000", category: "Social Media" },
+            { name: "Zappos", hex: "#0099CC", category: "Retail" },
+            { name: "Zendesk", hex: "#03363D", category: "Technology" },
+            { name: "Zillow", hex: "#006AFF", category: "Real Estate" },
+            { name: "Zoho", hex: "#D81B1B", category: "Technology" },
+            { name: "Zoom", hex: "#2D8CFF", category: "Technology" }
+        ];
+
+        const brandGrid = document.getElementById('brandGrid');
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+
+        function displayBrands(filteredBrands) {
+            brandGrid.innerHTML = '';
+            filteredBrands.forEach(brand => {
+                const card = document.createElement('div');
+                card.className = 'brand-card bg-[#1a1a1a] p-4 rounded-md text-center';
+                card.innerHTML = `
+                    <div class="w-full h-32 bg-[${brand.hex}] rounded-md mb-2"></div>
+                    <h3 class="text-lg font-semibold">${brand.name}</h3>
+                    <p class="text-sm">Hex: ${brand.hex}</p>
+                    <p class="text-sm">Category: ${brand.category}</p>
+                `;
+                brandGrid.appendChild(card);
+            });
+        }
+
+        function filterBrands() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedCategory = categoryFilter.value;
+
+            const filteredBrands = brands.filter(brand => {
+                const matchesSearch = brand.name.toLowerCase().includes(searchTerm);
+                const matchesCategory = selectedCategory === 'all' || brand.category === selectedCategory;
+                return matchesSearch && matchesCategory;
+            });
+
+            displayBrands(filteredBrands);
+        }
+
+        searchInput.addEventListener('input', filterBrands);
+        categoryFilter.addEventListener('change', filterBrands);
+
+        // Initial display
+        displayBrands(brands);
+    </script>
+</body>
+</html>
