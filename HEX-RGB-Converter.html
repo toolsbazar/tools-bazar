@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEX to RGB Converter | Tools Bazar</title>
+    <style>
+        :root {
+            --primary-color: #8B0000; /* Dark red */
+            --secondary-color: #222;
+            --text-color: #EEE;
+            --accent-color: #FF4500;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #111;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--accent-color);
+        }
+        
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .converter-container {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .converter-description {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #AAA;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #444;
+            border-radius: 4px;
+            background-color: #333;
+            color: white;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        
+        button:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .result-container {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #333;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .result-container.show {
+            display: block;
+        }
+        
+        .color-preview {
+            width: 100%;
+            height: 60px;
+            border-radius: 4px;
+            margin-top: 1rem;
+            border: 1px solid #555;
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-color);
+            margin: 0 1rem;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .copyright {
+            color: #AAA;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">Tools Bazar</a>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Tools</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <div class="converter-container">
+            <h1>HEX to RGB Converter</h1>
+            <p class="converter-description">
+                Converts the given HEX color value to its equivalent RGB value. 
+                Input the HEX color value preceded by a hashtag.
+            </p>
+            
+            <div class="input-group">
+                <label for="hex-input">Input Hex</label>
+                <input type="text" id="hex-input" placeholder="#ff0000" value="#ff0000">
+            </div>
+            
+            <button id="convert-btn">Convert</button>
+            
+            <div class="result-container" id="result-container">
+                <label>Output RGB</label>
+                <input type="text" id="rgb-output" readonly>
+                <div class="color-preview" id="color-preview"></div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">FAQ</a>
+            </div>
+            <p class="copyright">© 2023 Tools Bazar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hexInput = document.getElementById('hex-input');
+            const convertBtn = document.getElementById('convert-btn');
+            const rgbOutput = document.getElementById('rgb-output');
+            const resultContainer = document.getElementById('result-container');
+            const colorPreview = document.getElementById('color-preview');
+            
+            convertBtn.addEventListener('click', convertHexToRgb);
+            hexInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    convertHexToRgb();
+                }
+            });
+            
+            function convertHexToRgb() {
+                let hex = hexInput.value.trim();
+                
+                // Validate hex format
+                if (!/^#([0-9A-F]{3}){1,2}$/i.test(hex)) {
+                    alert('Please enter a valid HEX color (e.g., #ff0000 or #f00)');
+                    return;
+                }
+                
+                // Remove # if present
+                hex = hex.replace('#', '');
+                
+                // Convert 3-digit hex to 6-digit
+                if (hex.length === 3) {
+                    hex = hex.split('').map(char => char + char).join('');
+                }
+                
+                // Convert to RGB
+                const r = parseInt(hex.substring(0, 2), 16);
+                const g = parseInt(hex.substring(2, 4), 16);
+                const b = parseInt(hex.substring(4, 6), 16);
+                
+                // Display result
+                rgbOutput.value = `rgb(${r}, ${g}, ${b})`;
+                resultContainer.classList.add('show');
+                
+                // Update color preview
+                colorPreview.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+            }
+            
+            // Convert the default value on page load
+            convertHexToRgb();
+        });
+    </script>
+</body>
+</html>
