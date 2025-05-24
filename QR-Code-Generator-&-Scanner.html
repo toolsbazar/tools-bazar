@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Tool | Tools Bazar</title>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <style>
+        :root {
+            --primary-dark: #1a1a1a;
+            --primary-red: #8B0000;
+            --primary-light: #2a2a2a;
+            --text-primary: #f0f0f0;
+            --text-secondary: #cccccc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-light);
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-red);
+        }
+
+        h1 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--primary-red);
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            background-color: var(--primary-light);
+            color: var(--text-secondary);
+            border: none;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background-color: var(--primary-red);
+            color: white;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 1.5rem;
+            background-color: var(--primary-light);
+            border-radius: 0 0 5px 5px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-dark);
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        button:hover {
+            background-color: #a00;
+        }
+
+        button.secondary {
+            background-color: #444;
+        }
+
+        button.secondary:hover {
+            background-color: #555;
+        }
+
+        .qr-result {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        #qrcode {
+            display: inline-block;
+            background: white;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+
+        .download-options {
+            margin-top: 1rem;
+        }
+
+        .download-options button {
+            margin: 0.25rem;
+        }
+
+        .scanner-container {
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        #scanner {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            display: block;
+            border: 2px solid var(--primary-red);
+            border-radius: 5px;
+        }
+
+        #scan-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--primary-dark);
+            border-radius: 5px;
+            word-break: break-all;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .scan-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .scan-method {
+            background-color: var(--primary-dark);
+            padding: 1rem;
+            border-radius: 5px;
+            border: 1px solid #444;
+        }
+
+        .scan-method h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .scan-method p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+        footer {
+            background-color: var(--primary-light);
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: auto;
+            border-top: 2px solid var(--primary-red);
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .button-group {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tools Bazar</h1>
+        <h1>QR Code Tool</h1>
+        <p class="subtitle">Generate and scan QR codes instantly</p>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="openTab('generate')">Generate QR Code</button>
+            <button class="tab" onclick="openTab('scan')">Scan QR Code</button>
+        </div>
+
+        <div id="generate" class="tab-content active">
+            <!-- Generate tab content remains the same as before -->
+            <div class="input-group">
+                <label for="qr-content">Enter text or URL:</label>
+                <textarea id="qr-content" placeholder="Type your text or paste a URL here..."></textarea>
+            </div>
+
+            <div class="input-group">
+                <label for="qr-size">QR Code Size:</label>
+                <select id="qr-size">
+                    <option value="100">Small (100x100)</option>
+                    <option value="200" selected>Medium (200x200)</option>
+                    <option value="300">Large (300x300)</option>
+                    <option value="400">Extra Large (400x400)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="qr-error-correction">Error Correction Level:</label>
+                <select id="qr-error-correction">
+                    <option value="L">Low (7%)</option>
+                    <option value="M" selected>Medium (15%)</option>
+                    <option value="Q">Quartile (25%)</option>
+                    <option value="H">High (30%)</option>
+                </select>
+            </div>
+
+            <button onclick="generateQR()">Generate QR Code</button>
+
+            <div class="qr-result" id="qr-result">
+                <div id="qrcode"></div>
+                <div class="download-options hidden" id="download-options">
+                    <p>Download as:</p>
+                    <button onclick="downloadQR('png')">PNG</button>
+                    <button onclick="downloadQR('jpeg')">JPEG</button>
+                    <button onclick="downloadQR('svg')">SVG</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="scan" class="tab-content">
+            <div class="scan-options">
+                <div class="scan-method">
+                    <h3>Upload QR Code Image</h3>
+                    <p>Select an image file containing a QR code to scan</p>
+                    <div class="file-input-wrapper">
+                        <button class="secondary">Choose File</button>
+                        <input type="file" id="file-input" accept="image/*" onchange="handleFileUpload()">
+                    </div>
+                    <span id="file-name" style="margin-left: 1rem; color: var(--text-secondary);"></span>
+                </div>
+
+                <div class="scan-method">
+                    <h3>Use Camera Scanner</h3>
+                    <p>Scan a QR code using your device's camera</p>
+                    <button id="start-scan" onclick="startScanner()">Start Camera Scanner</button>
+                    <button id="stop-scan" class="secondary hidden" onclick="stopScanner()">Stop Scanner</button>
+                </div>
+            </div>
+
+            <div class="scanner-container">
+                <video id="scanner" playsinline class="hidden"></video>
+                <canvas id="qr-canvas" class="hidden"></canvas>
+                <img id="uploaded-image" class="hidden" style="max-width: 100%; display: block; margin: 0 auto; border: 2px solid var(--primary-red); border-radius: 5px;">
+            </div>
+
+            <div id="scan-result-container" class="hidden">
+                <h3>Scan Result:</h3>
+                <div id="scan-result"></div>
+                <button onclick="copyResult()">Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Tools Bazar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Tab functionality
+        function openTab(tabName) {
+            const tabs = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+
+            const tabButtons = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('active');
+            }
+
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            // Stop scanner when switching tabs
+            if (tabName !== 'scan') {
+                stopScanner();
+                resetFileInput();
+            }
+        }
+
+        // QR Code Generation
+        let currentQRCode = null;
+
+        function generateQR() {
+            const content = document.getElementById('qr-content').value.trim();
+            if (!content) {
+                alert('Please enter some text or a URL to generate a QR code.');
+                return;
+            }
+
+            const size = parseInt(document.getElementById('qr-size').value);
+            const errorCorrection = document.getElementById('qr-error-correction').value;
+
+            // Clear previous QR code
+            const qrElement = document.getElementById('qrcode');
+            qrElement.innerHTML = '';
+
+            // Generate new QR code
+            currentQRCode = new QRCode(qrElement, {
+                text: content,
+                width: size,
+                height: size,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel[errorCorrection]
+            });
+
+            // Show download options
+            document.getElementById('download-options').classList.remove('hidden');
+        }
+
+        function downloadQR(format) {
+            if (!currentQRCode) {
+                alert('Please generate a QR code first.');
+                return;
+            }
+
+            const qrElement = document.getElementById('qrcode');
+            const imgElement = qrElement.getElementsByTagName('img')[0];
+            const canvasElement = qrElement.getElementsByTagName('canvas')[0];
+            const svgElement = qrElement.getElementsByTagName('svg')[0];
+
+            let dataUrl, fileName = 'qrcode';
+
+            if (format === 'png' && canvasElement) {
+                dataUrl = canvasElement.toDataURL('image/png');
+                fileName += '.png';
+            } else if (format === 'jpeg' && canvasElement) {
+                dataUrl = canvasElement.toDataURL('image/jpeg');
+                fileName += '.jpg';
+            } else if (format === 'svg' && svgElement) {
+                const serializer = new XMLSerializer();
+                let svgStr = serializer.serializeToString(svgElement);
+                svgStr = svgStr.replace(/\n/g, '').replace(/\t/g, '');
+                dataUrl = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgStr)));
+                fileName += '.svg';
+            } else if (imgElement) {
+                // Fallback to img element if canvas/svg not available
+                dataUrl = imgElement.src;
+                fileName += '.' + (format === 'svg' ? 'svg' : format);
+            } else {
+                alert('Download format not supported for this QR code.');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // QR Code Scanning
+        let scannerInterval = null;
+        const videoElement = document.getElementById('scanner');
+        const canvasElement = document.getElementById('qr-canvas');
+        const canvasContext = canvasElement.getContext('2d');
+        const uploadedImage = document.getElementById('uploaded-image');
+
+        function startScanner() {
+            // Reset file input if active
+            resetFileInput();
+            
+            document.getElementById('start-scan').classList.add('hidden');
+            document.getElementById('stop-scan').classList.remove('hidden');
+            document.getElementById('scan-result-container').classList.add('hidden');
+            
+            videoElement.classList.remove('hidden');
+            uploadedImage.classList.add('hidden');
+
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                .then(function(stream) {
+                    videoElement.srcObject = stream;
+                    videoElement.play();
+                    scanQRCode();
+                })
+                .catch(function(err) {
+                    console.error("Error accessing camera: ", err);
+                    alert("Could not access the camera. Please ensure you've granted camera permissions.");
+                    stopScanner();
+                });
+        }
+
+        function stopScanner() {
+            document.getElementById('start-scan').classList.remove('hidden');
+            document.getElementById('stop-scan').classList.add('hidden');
+            videoElement.classList.add('hidden');
+
+            if (videoElement.srcObject) {
+                videoElement.srcObject.getTracks().forEach(track => track.stop());
+                videoElement.srcObject = null;
+            }
+
+            if (scannerInterval) {
+                clearInterval(scannerInterval);
+                scannerInterval = null;
+            }
+        }
+
+        function scanQRCode() {
+            scannerInterval = setInterval(function() {
+                if (videoElement.readyState === videoElement.HAVE_ENOUGH_DATA) {
+                    canvasElement.height = videoElement.videoHeight;
+                    canvasElement.width = videoElement.videoWidth;
+                    canvasContext.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+                    
+                    const imageData = canvasContext.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: 'dontInvert',
+                    });
+
+                    if (code) {
+                        document.getElementById('scan-result').textContent = code.data;
+                        document.getElementById('scan-result-container').classList.remove('hidden');
+                        stopScanner();
+                    }
+                }
+            }, 100);
+        }
+
+        function handleFileUpload() {
+            const fileInput = document.getElementById('file-input');
+            const fileNameDisplay = document.getElementById('file-name');
+            
+            if (fileInput.files && fileInput.files[0]) {
+                // Stop camera scanner if active
+                stopScanner();
+                
+                const file = fileInput.files[0];
+                fileNameDisplay.textContent = file.name;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImage.src = e.target.result;
+                    uploadedImage.classList.remove('hidden');
+                    videoElement.classList.add('hidden');
+                    
+                    // Process the image after it's loaded
+                    uploadedImage.onload = function() {
+                        processUploadedImage();
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function processUploadedImage() {
+            canvasElement.height = uploadedImage.naturalHeight;
+            canvasElement.width = uploadedImage.naturalWidth;
+            canvasContext.drawImage(uploadedImage, 0, 0, canvasElement.width, canvasElement.height);
+            
+            const imageData = canvasContext.getImageData(0, 0, canvasElement.width, canvasElement.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                inversionAttempts: 'dontInvert',
+            });
+
+            if (code) {
+                document.getElementById('scan-result').textContent = code.data;
+                document.getElementById('scan-result-container').classList.remove('hidden');
+            } else {
+                alert('No QR code found in the uploaded image. Please try another image.');
+                resetFileInput();
+            }
+        }
+
+        function resetFileInput() {
+            const fileInput = document.getElementById('file-input');
+            fileInput.value = '';
+            document.getElementById('file-name').textContent = '';
+            uploadedImage.src = '';
+            uploadedImage.classList.add('hidden');
+        }
+
+        function copyResult() {
+            const resultText = document.getElementById('scan-result').textContent;
+            navigator.clipboard.writeText(resultText)
+                .then(() => alert('Copied to clipboard!'))
+                .catch(err => console.error('Could not copy text: ', err));
+        }
+
+        // Clean up when leaving the page
+        window.addEventListener('beforeunload', function() {
+            stopScanner();
+        });
+    </script>
+</body>
+</html>
