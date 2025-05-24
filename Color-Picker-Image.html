@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tools Bazar - Image Color Picker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        header {
+            background-color: #8b0000;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ff4040;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ff4040;
+            border-radius: 4px;
+            background-color: #333;
+            color: #fff;
+        }
+        #imageUpload, #imageUrl {
+            display: block;
+            margin-bottom: 10px;
+        }
+        #imageCanvas {
+            max-width: 100%;
+            border: 2px solid #ff4040;
+            border-radius: 8px;
+            cursor: crosshair;
+        }
+        .palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .color-swatch {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #ff4040;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        .color-swatch span {
+            background-color: #333;
+            padding: 2px 5px;
+            border-radius: 2px;
+            font-size: 0.9em;
+        }
+        #colorInfo {
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+        #config {
+            margin-top: 20px;
+        }
+        button {
+            background-color: #ff4040;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #cc0000;
+        }
+        footer {
+            background-color: #8b0000;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tools Bazar</h1>
+        <p>Image Color Picker</p>
+    </header>
+    <div class="container">
+        <div class="form-group">
+            <label for="imageUpload">Upload Image or Drag & Drop</label>
+            <input type="file" id="imageUpload" accept="image/*">
+            <input type="text" id="imageUrl" placeholder="Or enter image URL">
+            <button onclick="loadImageFromUrl()">Load URL</button>
+        </div>
+        <canvas id="imageCanvas"></canvas>
+        <div id="colorInfo">
+            <p><strong>Selected Color:</strong> <span id="colorPreview" style="display: inline-block; width: 20px; height: 20px;"></span></p>
+            <p><strong>HEX:</strong> <span id="hexCode">N/A</span></p>
+            <p><strong>RGB:</strong> <span id="rgbCode">N/A</span></p>
+            <p><strong>HSL:</strong> <span id="hslCode">N/A</span></p>
+            <p><strong>CMYK:</strong> <span id="cmykCode">N/A</span></p>
+            <p><strong>Name:</strong> <span id="colorName">N/A</span></p>
+        </div>
+        <div class="palette" id="palette"></div>
+        <div id="config" class="form-group">
+            <label for="colorFormat">Display Format</label>
+            <select id="colorFormat">
+                <option value="HEX">HEX</option>
+                <option value="RGB">RGB</option>
+                <option value="HSL">HSL</option>
+                <option value="CMYK">CMYK</option>
+            </select>
+            <label for="zoomLevel">Zoom Level</label>
+            <input type="range" id="zoomLevel" min="1" max="5" value="1">
+            <label for="pixelate">Pixelate Image</label>
+            <input type="range" id="pixelate" min="1" max="10" value="1">
+        </div>
+    </div>
+    <footer>
+        <p>© 2025 Tools Bazar. All rights reserved.</p>
+    </footer>
+    <script>
+        const canvas = document.getElementById('imageCanvas');
+        const ctx = canvas.getContext('2d');
+        let image = new Image();
+        let zoom = 1;
+        let pixelate = 1;
+        const paletteColors = [
+            { hex: '#a3a167', name: 'Always Apple' },
+            { hex: '#b3a444', name: 'Brass' },
+            { hex: '#f3e47c', name: 'Lemon Verbena' },
+            { hex: '#868333', name: 'Old Moss Green' },
+            { hex: '#63739c', name: 'Colony Blue' },
+            { hex: '#a1b8cc', name: 'Blue Garter' }
+        ];
+
+        document.getElementById('imageUpload').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    image.src = e.target.result;
+                    image.onload = drawImage;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('imageUrl').addEventListener('change', loadImageFromUrl);
+        function loadImageFromUrl() {
+            const url = document.getElementById('imageUrl').value;
+            if (url) {
+                image.src = url;
+                image.crossOrigin = 'Anonymous';
+                image.onload = drawImage;
+                image.onerror = () => alert('Failed to load image from URL. Please try another URL or upload an image.');
+            }
+        }
+
+        canvas.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        canvas.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    image.src = e.target.result;
+                    image.onload = drawImage;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function drawImage() {
+            canvas.width = image.width;
+            canvas.height = image.height;
+            ctx.drawImage(image, 0, 0);
+            applyPixelation();
+            generatePalette();
+        }
+
+        function applyPixelation() {
+            if (pixelate > 1) {
+                const tempCanvas = document.createElement('canvas');
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCanvas.width = canvas.width / pixelate;
+                tempCanvas.height = canvas.height / pixelate;
+                tempCtx.drawImage(image, 0, 0, tempCanvas.width, tempCanvas.height);
+                ctx.drawImage(tempCanvas, 0, 0, tempCanvas.width, tempCanvas.height, 0, 0, canvas.width, canvas.height);
+            } else {
+                ctx.drawImage(image, 0, 0);
+            }
+        }
+
+        async function copyToClipboard(text) {
+            try {
+                if (typeof text === 'string' && text.trim() !== '') {
+                    await navigator.clipboard.write(text);
+                } else {
+                    console.warn('Clipboard write failed: Invalid or empty text');
+                }
+            } catch (err) {
+                console.error('Clipboard write error:', err);
+                alert('Failed to copy to clipboard. Please try again.');
+            }
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / zoom;
+            const y = (e.clientY - rect.top) / zoom;
+            const pixelData = ctx.getImageData(x, y, 1, 1).data;
+            const rgb = `rgb(${pixelData[0]}, ${pixelData[1]}, ${pixelData[2]})`;
+            const hex = rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
+            const hsl = rgbToHsl(pixelData[0], pixelData[1], pixelData[2]);
+            const cmyk = rgbToCmyk(pixelData[0], pixelData[1], pixelData[2]);
+            const colorName = getColorName(hex);
+
+            document.getElementById('colorPreview').style.backgroundColor = rgb;
+            document.getElementById('hexCode').textContent = hex;
+            document.getElementById('rgbCode').textContent = rgb;
+            document.getElementById('hslCode').textContent = `hsl(${hsl.h.toFixed(0)}, ${hsl.s.toFixed(0)}%, ${hsl.l.toFixed(0)}%)`;
+            document.getElementById('cmykCode').textContent = `cmyk(${cmyk.c.toFixed(0)}%, ${cmyk.m.toFixed(0)}%, ${cmyk.y.toFixed(0)}%, ${cmyk.k.toFixed(0)}%)`;
+            document.getElementById('colorName').textContent = colorName;
+
+            const format = document.getElementById('colorFormat').value;
+            const colorValue = format === 'HEX' ? hex :
+                              format === 'RGB' ? rgb :
+                              format === 'HSL' ? `hsl(${hsl.h.toFixed(0)}, ${hsl.s.toFixed(0)}%, ${hsl.l.toFixed(0)}%)` :
+                              `cmyk(${cmyk.c.toFixed(0)}%, ${cmyk.m.toFixed(0)}%, ${cmyk.y.toFixed(0)}%, ${cmyk.k.toFixed(0)}%)`;
+            copyToClipboard(colorValue);
+        });
+
+        function rgbToHex(r, g, b) {
+            return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            return { h: h * 360, s: s * 100, l: l * 100 };
+        }
+
+        function rgbToCmyk(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            const k = 1 - Math.max(r, g, b);
+            if (k === 1) return { c: 0, m: 0, y: 0, k: 100 };
+            const c = (1 - r - k) / (1 - k);
+            const m = (1 - g - k) / (1 - k);
+            const y = (1 - b - k) / (1 - k);
+            return { c: c * 100, m: m * 100, y: y * 100, k: k * 100 };
+        }
+
+        function getColorName(hex) {
+            const distances = paletteColors.map(color => {
+                const r1 = parseInt(hex.slice(1, 3), 16);
+                const g1 = parseInt(hex.slice(3, 5), 16);
+                const b1 = parseInt(hex.slice(5, 7), 16);
+                const r2 = parseInt(color.hex.slice(1, 3), 16);
+                const g2 = parseInt(color.hex.slice(3, 5), 16);
+                const b2 = parseInt(color.hex.slice(5, 7), 16);
+                return Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
+            });
+            const closest = paletteColors[distances.indexOf(Math.min(...distances))];
+            return closest.name;
+        }
+
+        function generatePalette() {
+            const palette = document.getElementById('palette');
+            palette.innerHTML = '';
+            paletteColors.forEach(color => {
+                const swatch = document.createElement('div');
+                swatch.className = 'color-swatch';
+                swatch.style.backgroundColor = color.hex;
+                swatch.innerHTML = `<span>${color.name}</span><span>${color.hex}</span>`;
+                swatch.addEventListener('click', () => {
+                    document.getElementById('colorPreview').style.backgroundColor = color.hex;
+                    document.getElementById('hexCode').textContent = color.hex;
+                    document.getElementById('rgbCode').textContent = hexToRgb(color.hex);
+                    document.getElementById('hslCode').textContent = hexToHsl(color.hex);
+                    document.getElementById('cmykCode').textContent = hexToCmyk(color.hex);
+                    document.getElementById('colorName').textContent = color.name;
+
+                    const format = document.getElementById('colorFormat').value;
+                    const colorValue = format === 'HEX' ? color.hex :
+                                      format === 'RGB' ? hexToRgb(color.hex) :
+                                      format === 'HSL' ? hexToHsl(color.hex) :
+                                      hexToCmyk(color.hex);
+                    copyToClipboard(colorValue);
+                });
+                palette.appendChild(swatch);
+            });
+        }
+
+        function hexToRgb(hex) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        function hexToHsl(hex) {
+            const r = parseInt(hex.slice(1, 3), 16) / 255;
+            const g = parseInt(hex.slice(3, 5), 16) / 255;
+            const b = parseInt(hex.slice(5, 7), 16) / 255;
+            const hsl = rgbToHsl(r * 255, g * 255, b * 255);
+            return `hsl(${hsl.h.toFixed(0)}, ${hsl.s.toFixed(0)}%, ${hsl.l.toFixed(0)}%)`;
+        }
+
+        function hexToCmyk(hex) {
+            const r = parseInt(hex.slice(1, 3), 16) / 255;
+            const g = parseInt(hex.slice(3, 5), 16) / 255;
+            const b = parseInt(hex.slice(5, 7), 16) / 255;
+            const cmyk = rgbToCmyk(r * 255, g * 255, b * 255);
+            return `cmyk(${cmyk.c.toFixed(0)}%, ${cmyk.m.toFixed(0)}%, ${cmyk.y.toFixed(0)}%, ${cmyk.k.toFixed(0)}%)`;
+        }
+
+        document.getElementById('zoomLevel').addEventListener('input', (e) => {
+            zoom = e.target.value;
+            canvas.style.transform = `scale(${zoom})`;
+        });
+
+        document.getElementById('pixelate').addEventListener('input', (e) => {
+            pixelate = e.target.value;
+            drawImage();
+        });
+
+        document.getElementById('colorFormat').addEventListener('change', () => {
+            const hex = document.getElementById('hexCode').textContent;
+            if (hex !== 'N/A') {
+                const format = document.getElementById('colorFormat').value;
+                const rgb = document.getElementById('rgbCode').textContent;
+                const hsl = document.getElementById('hslCode').textContent;
+                const cmyk = document.getElementById('cmykCode').textContent;
+                const colorValue = format === 'HEX' ? hex :
+                                  format === 'RGB' ? rgb :
+                                  format === 'HSL' ? hsl :
+                                  cmyk;
+                copyToClipboard(colorValue);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', generatePalette);
+    </script>
+</body>
+</html>
