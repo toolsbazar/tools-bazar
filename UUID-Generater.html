@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UUID Generator - Tools Bazar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Define CSS variables for consistent theming */
+        :root {
+            --primary-color: #8B0000; /* Dark Red for primary actions */
+            --primary-hover-color: #A52A2A; /* Brown/Reddish Brown for primary hover */
+            --secondary-color: #121212; /* Very Dark Gray for secondary actions */
+            --secondary-hover-color: #000000; /* Even darker for secondary hover */
+            --background-color: #222222; /* Dark Gray for overall background */
+            --card-background: #333333; /* Darker Gray for sections/cards */
+            --text-color: #F5F5F5; /* Light Gray/Off-white for text */
+            --border-color: #A52A2A; /* Accent color for borders */
+            --success-color: #28a745; /* Green for copy feedback (kept for clarity) */
+            --font-family: 'Roboto', sans-serif;
+        }
+
+        /* Basic reset and body styling */
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+        }
+
+        /* Container for content centering and max-width */
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%; /* Ensure container takes full width on small screens */
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+
+        /* Header styling */
+        header {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Darker shadow for dark theme */
+            border-bottom-left-radius: 8px; /* Rounded corners for theme consistency */
+            border-bottom-right-radius: 8px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        /* Main content area styling */
+        main {
+            flex-grow: 1; /* Allow main content to take available space */
+            padding: 40px 0;
+            display: flex;
+            flex-direction: column; /* Stack sections vertically */
+            justify-content: center;
+            align-items: center; /* Center content horizontally */
+            gap: 30px; /* Space between sections */
+        }
+
+        /* UUID Generator section styling (the main card) */
+        .uuid-generator-section {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Darker shadow for dark theme */
+            padding: 30px;
+            text-align: center;
+            width: 100%; /* Ensure it takes full container width */
+            max-width: 500px; /* Limit max width for better readability */
+            box-sizing: border-box;
+        }
+
+        .uuid-generator-section h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.6em;
+        }
+
+        /* Area where the UUID is displayed */
+        .uuid-display-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Space out UUID and copy button */
+            background-color: var(--background-color); /* Use background color for display area */
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap; /* Allows wrapping on smaller screens */
+            gap: 10px; /* Space between items if they wrap */
+        }
+
+        /* Styling for the UUID output text */
+        #uuid-output {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--text-color);
+            word-break: break-all; /* Ensures long UUIDs wrap */
+            flex-grow: 1; /* Allows it to take available space */
+            text-align: left;
+            min-width: 0; /* Allow text to shrink */
+        }
+
+        /* Placeholder styling for the UUID output before generation */
+        .uuid-placeholder {
+            color: var(--text-color); /* Use text color for placeholder on dark background */
+            opacity: 0.7; /* Make it slightly transparent */
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        /* Styling for the copy icon button */
+        .icon-button {
+            background: none;
+            border: none;
+            color: var(--primary-color); /* Use primary color for icon */
+            cursor: pointer;
+            font-size: 1.3em;
+            padding: 5px;
+            transition: color 0.2s ease-in-out;
+            border-radius: 4px; /* Slightly rounded corners */
+        }
+
+        .icon-button:hover {
+            color: var(--primary-hover-color); /* Use primary hover color for icon hover */
+            background-color: rgba(165, 42, 42, 0.1); /* Subtle hover background with accent color */
+        }
+
+        /* Container for the Generate and Clear buttons */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px; /* Space between buttons */
+            flex-wrap: wrap; /* Allows buttons to wrap */
+        }
+
+        /* General button styling */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Darker shadow for dark theme */
+        }
+
+        /* Primary button styling (Generate) */
+        .btn.primary {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .btn.primary:hover {
+            background-color: var(--primary-hover-color);
+            transform: translateY(-2px); /* Lift effect on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Secondary button styling (Clear) */
+        .btn.secondary {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .btn.secondary:hover {
+            background-color: var(--secondary-hover-color);
+            transform: translateY(-2px); /* Lift effect on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Styling for copy feedback message */
+        .copy-feedback {
+            margin-top: 15px;
+            color: var(--success-color);
+            font-weight: bold;
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.3s ease-in-out;
+            min-height: 20px; /* Prevent layout shift when message appears/disappears */
+        }
+
+        .copy-feedback.show {
+            opacity: 1; /* Show when 'show' class is added */
+        }
+
+        /* Bulk generation specific styles */
+        .bulk-controls {
+            display: flex;
+            flex-direction: column; /* Stack label, input, and button vertically */
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .bulk-controls label {
+            font-size: 1.1em;
+            color: var(--text-color);
+        }
+
+        .number-input {
+            width: 100px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1em;
+            text-align: center;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .bulk-feedback {
+            margin-top: 15px;
+            color: var(--success-color);
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            min-height: 20px;
+        }
+
+        .bulk-feedback.show {
+            opacity: 1;
+        }
+
+        /* Footer styling */
+        footer {
+            background-color: var(--secondary-color); /* Use secondary color for footer */
+            color: var(--text-color);
+            text-align: center;
+            padding: 15px 0;
+            margin-top: auto; /* Push footer to the bottom */
+            font-size: 0.9em;
+            border-top-left-radius: 8px; /* Rounded corners for theme consistency */
+            border-top-right-radius: 8px;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            .uuid-generator-section {
+                padding: 20px;
+            }
+
+            .uuid-generator-section h2 {
+                font-size: 1.4em;
+            }
+
+            #uuid-output {
+                font-size: 1em;
+            }
+
+            .uuid-display-area {
+                flex-direction: column; /* Stack UUID and copy button vertically */
+                gap: 10px; /* Space between stacked items */
+                padding: 10px;
+                align-items: flex-start; /* Align text to the left */
+            }
+
+            .icon-button {
+                font-size: 1.2em;
+                margin-top: 5px;
+                align-self: flex-end; /* Align copy button to the right when stacked */
+            }
+
+            .controls {
+                flex-direction: column; /* Stack buttons vertically */
+                gap: 10px;
+            }
+
+            .btn {
+                width: 100%; /* Full width buttons on small screens */
+                padding: 10px 15px;
+            }
+
+            .bulk-controls {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .number-input {
+                width: calc(100% - 20px); /* Adjust width for padding */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Tools Bazar - UUID Generator</h1>
+        </div>
+    </header>
+
+    <main>
+        <section class="uuid-generator-section">
+            <div class="container">
+                <h2>Generate Single UUID</h2>
+                <div class="uuid-display-area">
+                    <span id="uuid-output" class="uuid-placeholder">Click 'Generate' to create a UUID</span>
+                    <button id="copy-uuid" class="icon-button" title="Copy to Clipboard">
+                        <i class="fas fa-copy"></i> </button>
+                </div>
+                <div class="controls">
+                    <button id="generate-single-uuid" class="btn primary">Generate UUID</button>
+                    <button id="clear-uuid" class="btn secondary">Clear</button>
+                </div>
+                <p class="copy-feedback" id="copy-feedback"></p>
+            </div>
+        </section>
+
+        <section class="bulk-uuid-section uuid-generator-section">
+            <div class="container">
+                <h2>Bulk UUID Generation</h2>
+                <div class="bulk-controls">
+                    <label for="uuid-count">How Many?</label>
+                    <input type="number" id="uuid-count" min="1" value="10" class="number-input">
+                    <button id="generate-bulk-uuid" class="btn primary">Generate & Download</button>
+                </div>
+                <p class="bulk-feedback" id="bulk-feedback"></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Tools Bazar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get references to DOM elements for single UUID generation
+            const generateSingleUuidBtn = document.getElementById('generate-single-uuid');
+            const clearUuidBtn = document.getElementById('clear-uuid');
+            const copyUuidBtn = document.getElementById('copy-uuid');
+            const uuidOutput = document.getElementById('uuid-output');
+            const copyFeedback = document.getElementById('copy-feedback');
+
+            // Get references to DOM elements for bulk UUID generation
+            const uuidCountInput = document.getElementById('uuid-count');
+            const generateBulkUuidBtn = document.getElementById('generate-bulk-uuid');
+            const bulkFeedback = document.getElementById('bulk-feedback');
+
+            /**
+             * Generates a UUID (version 4) according to RFC 4122.
+             * This method creates a UUID based on random numbers.
+             * @returns {string} A new UUID string.
+             */
+            function generateUUID() {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    const r = Math.random() * 16 | 0; // Generate a random number between 0 and 15
+                    // 'x' characters are replaced with random hex digits
+                    // 'y' characters are replaced with a random hex digit from 8, 9, A, or B
+                    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16); // Convert to hexadecimal string
+                });
+            }
+
+            /**
+             * Generates a specified number of UUIDs.
+             * @param {number} count - The number of UUIDs to generate.
+             * @returns {string[]} An array of generated UUID strings.
+             */
+            function generateBulkUUIDs(count) {
+                const uuids = [];
+                for (let i = 0; i < count; i++) {
+                    uuids.push(generateUUID());
+                }
+                return uuids;
+            }
+
+            /**
+             * Downloads an array of strings as a text file.
+             * @param {string[]} data - An array of strings to write to the file.
+             * @param {string} filename - The name of the file to download.
+             */
+            function downloadToFile(data, filename) {
+                const blob = new Blob([data.join('\n')], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a); // Required for Firefox
+                a.click();
+                document.body.removeChild(a); // Clean up
+                URL.revokeObjectURL(url); // Release the object URL
+            }
+
+            // Event listener for the 'Generate UUID' button click (single)
+            generateSingleUuidBtn.addEventListener('click', () => {
+                const newUuid = generateUUID(); // Generate a new UUID
+                uuidOutput.textContent = newUuid; // Display the new UUID
+                uuidOutput.classList.remove('uuid-placeholder'); // Remove placeholder styling
+                copyFeedback.classList.remove('show'); // Hide any previous copy feedback
+            });
+
+            // Event listener for the 'Clear' button click
+            clearUuidBtn.addEventListener('click', () => {
+                uuidOutput.textContent = 'Click \'Generate\' to create a UUID'; // Reset to placeholder text
+                uuidOutput.classList.add('uuid-placeholder'); // Apply placeholder styling
+                copyFeedback.classList.remove('show'); // Hide copy feedback
+            });
+
+            // Event listener for the 'Copy to Clipboard' button click
+            copyUuidBtn.addEventListener('click', () => {
+                const textToCopy = uuidOutput.textContent; // Get the text content of the UUID display
+
+                // Check if a UUID has been generated (not the placeholder text) and if there's text to copy
+                if (!uuidOutput.classList.contains('uuid-placeholder') && textToCopy) {
+                    // Create a temporary textarea element
+                    const tempTextArea = document.createElement('textarea');
+                    tempTextArea.value = textToCopy;
+                    document.body.appendChild(tempTextArea); // Append to the document body
+
+                    // Select the text in the textarea
+                    tempTextArea.select();
+                    tempTextArea.setSelectionRange(0, 99999); // For mobile devices
+
+                    try {
+                        // Execute the copy command
+                        const successful = document.execCommand('copy');
+                        if (successful) {
+                            copyFeedback.textContent = 'UUID copied to clipboard!';
+                            copyFeedback.classList.add('show');
+                            setTimeout(() => {
+                                copyFeedback.classList.remove('show');
+                            }, 2000);
+                        } else {
+                            throw new Error('Copy command failed');
+                        }
+                    } catch (err) {
+                        console.error('Failed to copy: ', err);
+                        copyFeedback.textContent = 'Failed to copy UUID. Please try manually.';
+                        copyFeedback.classList.add('show');
+                        setTimeout(() => {
+                            copyFeedback.classList.remove('show');
+                        }, 3000);
+                    } finally {
+                        // Remove the temporary textarea
+                        document.body.removeChild(tempTextArea);
+                    }
+                } else {
+                    // If no UUID is generated, inform the user
+                    copyFeedback.textContent = 'No UUID to copy yet!';
+                    copyFeedback.classList.add('show');
+                    setTimeout(() => {
+                        copyFeedback.classList.remove('show');
+                    }, 2000);
+                }
+            });
+
+            // Event listener for the 'Generate & Download' button click (bulk)
+            generateBulkUuidBtn.addEventListener('click', () => {
+                const count = parseInt(uuidCountInput.value, 10);
+
+                if (isNaN(count) || count <= 0) {
+                    bulkFeedback.textContent = 'Please enter a valid number (greater than 0).';
+                    bulkFeedback.classList.add('show');
+                    setTimeout(() => {
+                        bulkFeedback.classList.remove('show');
+                    }, 3000);
+                    return;
+                }
+
+                bulkFeedback.textContent = `Generating ${count} UUIDs...`;
+                bulkFeedback.classList.add('show');
+
+                // Use a small delay to allow feedback to show before potentially long generation
+                setTimeout(() => {
+                    const uuids = generateBulkUUIDs(count);
+                    const filename = `uuids_${count}_${new Date().toISOString().slice(0, 10)}.txt`;
+                    downloadToFile(uuids, filename);
+
+                    bulkFeedback.textContent = `${count} UUIDs generated and downloaded!`;
+                    bulkFeedback.classList.add('show');
+                    setTimeout(() => {
+                        bulkFeedback.classList.remove('show');
+                    }, 2000);
+                }, 100); // Short delay
+            });
+        });
+    </script>
+</body>
+</html>
