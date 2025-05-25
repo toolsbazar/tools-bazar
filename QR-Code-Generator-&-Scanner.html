@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Generator & Scanner | Tools Bazaar</title>
+    <title>Advanced QR Generator | Tools Bazaar</title>
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -507,10 +507,10 @@
             <a href="#" class="logo">Tools <span>Bazaar</span></a>
             <nav>
                 <ul>
-                    <li><a href="#Home">Home</a></li>
-                    <li><a href="#Tools">Tools</a></li>
-                    <li><a href="#Social Media">Social Media</a></li>
-                    <li><a href="#Calculator Tools">Calculator Tool</a></li>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Tools</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -698,8 +698,7 @@
                     <div class="input-group">
                         <label for="video-url">Video URL:</label>
                         <input type="url" id="video-url" placeholder="https://example.com/video.mp4">
-                    <div class="input-group">
-                        <label>Upload File:</label>
+                    <label>Upload File:</label>
                         <label for="file-upload" class="file-upload-btn">Choose File</label>
                         <input type="file" id="file-upload" accept="*">
                     </div>
@@ -712,10 +711,6 @@
                     <div class="input-group">
                         <label for="audio-url">Audio URL:</label>
                         <input type="url" id="audio-url" placeholder="https://example.com/audio.mp3">
-                    <div class="input-group">
-                        <label>Upload File:</label>
-                        <label for="file-upload" class="file-upload-btn">Choose File</label>
-                        <input type="file" id="file-upload" accept="*">
                     </div>
                     <div class="info-box">
                         <p>Enter a direct URL to an audio file (MP3, WAV, etc.) or a music platform link (Spotify, SoundCloud, etc.).</p>
@@ -838,7 +833,6 @@
                     <div id="download-section" style="display: none;">
                         <div class="download-options">
                             <button id="download-png" class="btn download-btn">Download PNG</button>
-                            <button id="download-jpg" class="btn download-btn">Download JPG</button>
                             <button id="download-svg" class="btn download-btn">Download SVG</button>
                             <button id="download-pdf" class="btn download-btn">Download PDF</button>
                         </div>
@@ -874,8 +868,9 @@
         <div class="container footer-content">
             <div class="footer-links">
                 <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Condition</a>
-                <a href="#">Contact Us</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Calculator Tools</a>
+                <a href="#">Color Tools</a>
             </div>
             <p class="copyright">© 2025 Tools Bazaar. All rights reserved.</p>
         </div>
@@ -1231,7 +1226,7 @@
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.download = 'qrcode.svg';
-                link.href = url.toDataURL('image/svg+xml');
+                link.href = url;
                 link.click();
             } else if (format === 'pdf') {
                 const { jsPDF } = window.jspdf;
