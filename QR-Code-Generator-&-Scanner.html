@@ -527,6 +527,25 @@
         <div class="tab-container">
             <div class="tab active" data-tab="generator">QR Generator</div>
             <div class="tab" data-tab="scanner">QR Scanner</div>
+         <div class="tab-content" id="scanner">
+            <div class="tool-card">
+                <h2 class="tool-title">QR Code Scanner</h2>
+                
+                <div class="scanner-container">
+                    <video id="scanner" playsinline></video>
+                    <canvas id="qr-canvas"></canvas>
+                </div>
+                
+                <label for="file-input" class="file-upload-btn">Upload Image to Scan</label>
+                <input type="file" id="file-input" accept="image/*">
+                
+                <button id="start-scan" class="btn">Start Camera Scanner</button>
+                <button id="stop-scan" class="btn btn-secondary" style="display: none;">Stop Scanner</button>
+                
+                <div class="result-container">
+                    <h3>Scan Result:</h3>
+                    <div id="scanResult">No QR code scanned yet.</div>
+                </div>
         </div>
         
         <div class="tab-content active" id="generator">
