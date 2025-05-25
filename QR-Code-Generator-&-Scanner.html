@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Generator & Scanner | Tools Bazaar</title>
+    <title>QR Code Generator & Scanner | Tools Bazaar</title>
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -85,7 +85,7 @@
         .hero {
             text-align: center;
             padding: 60px 20px;
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7);
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
             background-position: center;
             margin-bottom: 40px;
@@ -507,10 +507,10 @@
             <a href="#" class="logo">Tools <span>Bazaar</span></a>
             <nav>
                 <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Tools</a></li>
-                    <li><a href="#">Social Media</a></li>
-                    <li><a href="#">QR Generater & Scanner</a></li>
+                    <li><a href="#Home">Home</a></li>
+                    <li><a href="#Tools">Tools</a></li>
+                    <li><a href="#Social Media">Social Media</a></li>
+                    <li><a href="#Calculator Tools">Calculator Tool</a></li>
                 </ul>
             </nav>
         </div>
@@ -518,7 +518,7 @@
     
     <section class="#">
         <div class="container">
-            <h1>QR Code Generator & Scanner</h1>
+            <h1>Advanced QR Code Generator</h1>
             <p>Create fully customized QR codes for various purposes with our professional tool</p>
         </div>
     </section>
@@ -526,7 +526,7 @@
     <div class="container">
         <div class="tab-container">
             <div class="tab active" data-tab="generator">QR Generator</div>
-            <div class="tab" data-tab=scanner">QR Scanner</div>
+            <div class="tab" data-tab="scanner">QR Scanner</div>
         </div>
         
         <div class="tab-content active" id="generator">
@@ -650,7 +650,7 @@
                 <div class="sms-content" style="display:none;">
                     <div class="input-group">
                         <label for="sms-number">Phone Number:</label>
-                        <input type="tel" id="sms-number" placeholder="+911234567890">
+                        <input type="tel" id="sms-number" placeholder="+1234567890">
                     </div>
                     <div class="input-group">
                         <label for="sms-message">Message:</label>
@@ -698,7 +698,7 @@
                     <div class="input-group">
                         <label for="video-url">Video URL:</label>
                         <input type="url" id="video-url" placeholder="https://example.com/video.mp4">
-                     <div class="input-group">    
+                    <div class="input-group">
                         <label>Upload File:</label>
                         <label for="file-upload" class="file-upload-btn">Choose File</label>
                         <input type="file" id="file-upload" accept="*">
@@ -712,7 +712,7 @@
                     <div class="input-group">
                         <label for="audio-url">Audio URL:</label>
                         <input type="url" id="audio-url" placeholder="https://example.com/audio.mp3">
-                    <div class="input-group">    
+                    <div class="input-group">
                         <label>Upload File:</label>
                         <label for="file-upload" class="file-upload-btn">Choose File</label>
                         <input type="file" id="file-upload" accept="*">
@@ -873,9 +873,9 @@
     <footer>
         <div class="container footer-content">
             <div class="footer-links">
-                <a href="Privacy Policy">Privacy Policy</a>
-                <a href="Terms of Conditions">Terms of Conditions</a>
-                <a href="#">Contact</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Condition</a>
+                <a href="#">Contact Us</a>
             </div>
             <p class="copyright">© 2025 Tools Bazaar. All rights reserved.</p>
         </div>
@@ -1231,7 +1231,7 @@
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.download = 'qrcode.svg';
-                link.href = url;
+                link.href = url.toDataURL('image/svg+xml');
                 link.click();
             } else if (format === 'pdf') {
                 const { jsPDF } = window.jspdf;
