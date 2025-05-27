@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate YouTube Content Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #8B0000;
+            --secondary-color: #1A1A1A;
+            --accent-color: #FF3333;
+            --text-color: #E0E0E0;
+            --bg-color: #121212;
+            --card-bg: #1E1E1E;
+            --border-color: #333;
+        }
+
+        /* Custom scrollbar for better aesthetics on dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
+
+        /* Custom font for Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        /* Header styles */
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--secondary-color);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .logo-icon {
+            margin-right: 0.5rem;
+            color: var(--accent-color);
+        }
+        .logo-text span {
+            color: var(--primary-color);
+        }
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background-color: var(--secondary-color);
+                padding: 1rem;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+        }
+
+        /* Footer styles */
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            background-color: var(--secondary-color);
+        }
+        .footer-column h3 {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .footer-column p {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+        .footer-column ul li {
+            margin-bottom: 0.5rem;
+        }
+        .footer-column ul li a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+        .footer-column ul li a:hover {
+            color: var(--accent-color);
+        }
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .social-links a {
+            color: var(--text-color);
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+        .social-links a:hover {
+            color: var(--accent-color);
+        }
+        .copyright {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-tools logo-icon"></i>
+                <span class="logo-text">Tools <span>Bazar</span></span>
+            </a>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav class="nav-links">
+                <a href="#"><i class="fas fa-home"></i> Home</a>
+                <a href="#"><i class="fas fa-calculator"></i> Tools</a>
+                <a href="#"><i class="fas fa-info-circle"></i> About</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto p-4 md:p-8 flex flex-col items-center">
+        <div class="bg-[var(--card-bg)] p-6 rounded-lg shadow-xl w-full max-w-3xl mb-8">
+            <label for="videoInput" class="block text-lg font-semibold mb-3 text-[var(--accent-color)]">
+                Enter your video topic, keywords, or main idea:
+            </label>
+            <textarea
+                id="videoInput"
+                rows="3"
+                placeholder="e.g., 'How to make a delicious vegan lasagna', 'Best gaming setup 2024', 'Travel guide to Kyoto Japan'"
+                class="w-full p-3 bg-[var(--secondary-color)] border border-[var(--border-color)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] text-[var(--text-color)] placeholder-gray-400 text-base"
+            ></textarea>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                    <label for="languageSelect" class="block text-base font-semibold mb-2 text-[var(--accent-color)]">
+                        Select Language:
+                    </label>
+                    <select
+                        id="languageSelect"
+                        class="w-full p-3 bg-[var(--secondary-color)] border border-[var(--border-color)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] text-[var(--text-color)]"
+                    >
+                    </select>
+                </div>
+                <div>
+                    <label for="numSuggestions" class="block text-base font-semibold mb-2 text-[var(--accent-color)]">
+                        Number of Suggestions:
+                    </label>
+                    <select
+                        id="numSuggestions"
+                        class="w-full p-3 bg-[var(--secondary-color)] border border-[var(--border-color)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] text-[var(--text-color)]"
+                    >
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                    </select>
+                </div>
+            </div>
+
+            <button
+                id="generateBtn"
+                class="mt-5 w-full bg-[var(--primary-color)] hover:bg-[var(--accent-color)] text-[var(--text-color)] font-bold py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:ring-offset-2 focus:ring-offset-[var(--secondary-color)]"
+            >
+                Generate Content
+            </button>
+            <div id="loadingIndicator" class="hidden mt-4 text-center text-[var(--accent-color)] font-medium">
+                Generating content... Please wait.
+            </div>
+        </div>
+
+        <div class="bg-[var(--card-bg)] p-6 rounded-lg shadow-xl w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-lg font-semibold mb-2 text-[var(--accent-color)]">Hashtags:</label>
+                <textarea id="hashtagsOutput" rows="3" readonly class="output-textarea"></textarea>
+                <button data-target="hashtagsOutput" class="copy-btn">Copy Hashtags</button>
+            </div>
+
+            <div>
+                <label class="block text-lg font-semibold mb-2 text-[var(--accent-color)]">Tags (Comma Separated):</label>
+                <textarea id="tagsOutput" rows="3" readonly class="output-textarea"></textarea>
+                <button data-target="tagsOutput" class="copy-btn">Copy Tags</button>
+            </div>
+
+            <div>
+                <label class="block text-lg font-semibold mb-2 text-[var(--accent-color)]">Video Titles:</label>
+                <textarea id="titlesOutput" rows="3" readonly class="output-textarea"></textarea>
+                <button data-target="titlesOutput" class="copy-btn">Copy Titles</button>
+            </div>
+
+            <div>
+                <label class="block text-lg font-semibold mb-2 text-[var(--accent-color)]">Video Captions/Descriptions:</label>
+                <textarea id="captionsOutput" rows="3" readonly class="output-textarea"></textarea>
+                <button data-target="captionsOutput" class="copy-btn">Copy Captions</button>
+            </div>
+
+            <div>
+                <label class="block text-lg font-semibold mb-2 text-[var(--accent-color)]">Keywords (for research):</label>
+                <textarea id="keywordsOutput" rows="3" readonly class="output-textarea"></textarea>
+                <button data-target="keywordsOutput" class="copy-btn">Copy Keywords</button>
+            </div>
+
+            <div>
+                <label class="block text-lg font-semibold mb-2 text-[var(--accent-color)]">Channel Bio Suggestion:</label>
+                <textarea id="bioOutput" rows="3" readonly class="output-textarea"></textarea>
+                <button data-target="bioOutput" class="copy-btn">Copy Bio</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Tools Bazar</h3>
+                <p>Your one-stop destination for all online tools and calculators. Fast, accurate, and easy to use.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> All Tools</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Popular Tools</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Password Generator</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Time Zone Converter</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Unit Converter</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Calculator</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Help Center</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> FAQs</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2025 Tools Bazar. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Tailwind CSS classes for output textareas and copy buttons
+        const outputTextareaClasses = "w-full p-3 bg-[var(--secondary-color)] border border-[var(--border-color)] rounded-md text-[var(--text-color)] text-base resize-y";
+        const copyBtnClasses = "mt-3 w-full bg-[var(--secondary-color)] hover:bg-[var(--border-color)] text-[var(--text-color)] font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:ring-offset-2 focus:ring-offset-[var(--secondary-color)]";
+
+        // Apply these classes to the elements
+        document.querySelectorAll('.output-textarea').forEach(el => el.className = outputTextareaClasses);
+        document.querySelectorAll('.copy-btn').forEach(el => el.className = copyBtnClasses);
+
+        // Get references to DOM elements
+        const videoInput = document.getElementById('videoInput');
+        const languageSelect = document.getElementById('languageSelect');
+        const numSuggestions = document.getElementById('numSuggestions');
+        const generateBtn = document.getElementById('generateBtn');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        const hashtagsOutput = document.getElementById('hashtagsOutput');
+        const tagsOutput = document.getElementById('tagsOutput');
+        const titlesOutput = document.getElementById('titlesOutput');
+        const captionsOutput = document.getElementById('captionsOutput');
+        const keywordsOutput = document.getElementById('keywordsOutput');
+        const bioOutput = document.getElementById('bioOutput');
+
+        // API Key is left empty as per instructions, Canvas will provide it at runtime.
+        const apiKey = "AIzaSyCqe3FG3DdmMkIDoeF4lJ-Nb4EMzR9pibM";
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+        // Language Options (50+ languages)
+        const languages = [
+            { code: "en", name: "English" },
+            { code: "es", name: "Spanish" },
+            { code: "fr", name: "French" },
+            { code: "de", name: "German" },
+            { code: "it", name: "Italian" },
+            { code: "pt", name: "Portuguese" },
+            { code: "ru", name: "Russian" },
+            { code: "zh", name: "Chinese (Simplified)" },
+            { code: "ja", name: "Japanese" },
+            { code: "ko", name: "Korean" },
+            { code: "ar", name: "Arabic" },
+            { code: "hi", name: "Hindi" },
+            { code: "bn", name: "Bengali" },
+            { code: "pa", name: "Punjabi" },
+            { code: "tr", name: "Turkish" },
+            { code: "nl", name: "Dutch" },
+            { code: "sv", name: "Swedish" },
+            { code: "no", name: "Norwegian" },
+            { code: "da", name: "Danish" },
+            { code: "fi", name: "Finnish" },
+            { code: "pl", name: "Polish" },
+            { code: "cs", name: "Czech" },
+            { code: "hu", name: "Hungarian" },
+            { code: "el", name: "Greek" },
+            { code: "th", name: "Thai" },
+            { code: "vi", name: "Vietnamese" },
+            { code: "id", name: "Indonesian" },
+            { code: "ms", name: "Malay" },
+            { code: "tl", name: "Filipino" },
+            { code: "uk", name: "Ukrainian" },
+            { code: "ro", name: "Romanian" },
+            { code: "fa", name: "Persian (Farsi)" },
+            { code: "he", name: "Hebrew" },
+            { code: "ur", name: "Urdu" },
+            { code: "sw", name: "Swahili" },
+            { code: "am", name: "Amharic" },
+            { code: "bg", name: "Bulgarian" },
+            { code: "hr", name: "Croatian" },
+            { code: "sk", name: "Slovak" },
+            { code: "sl", name: "Slovenian" },
+            { code: "sr", name: "Serbian" },
+            { code: "et", name: "Estonian" },
+            { code: "lv", name: "Latvian" },
+            { code: "lt", name: "Lithuanian" },
+            { code: "ka", name: "Georgian" },
+            { code: "az", name: "Azerbaijani" },
+            { code: "uz", name: "Uzbek" },
+            { code: "kk", name: "Kazakh" },
+            { code: "ky", name: "Kyrgyz" },
+            { code: "tg", name: "Tajik" },
+            { code: "tk", name: "Turkmen" }
+        ];
+
+        // Populate language dropdown
+        languages.forEach(lang => {
+            const option = document.createElement('option');
+            option.value = lang.code;
+            option.textContent = lang.name;
+            languageSelect.appendChild(option);
+        });
+
+        // Function to show a temporary "Copied!" message
+        function showMessage(button, originalText) {
+            button.textContent = 'Copied!';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 1500);
+        }
+
+        // Toggle mobile menu
+        document.querySelector('.menu-toggle').addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Event listener for the Generate button
+        generateBtn.addEventListener('click', async () => {
+            const topic = videoInput.value.trim();
+            const selectedLanguage = languageSelect.value;
+            const desiredNum = parseInt(numSuggestions.value, 10);
+
+            if (!topic) {
+                alert('Please enter your video topic or main idea.');
+                return;
+            }
+            if (isNaN(desiredNum) || desiredNum < 1 || desiredNum > 20) {
+                alert('Invalid number of suggestions selected. Please select a number between 1 and 20.');
+                return;
+            }
+
+            // Show loading indicator
+            loadingIndicator.classList.remove('hidden');
+            generateBtn.disabled = true;
+            // Clear previous results
+            hashtagsOutput.value = '';
+            tagsOutput.value = '';
+            titlesOutput.value = '';
+            captionsOutput.value = '';
+            keywordsOutput.value = '';
+            bioOutput.value = '';
+
+            try {
+                // Construct the prompt for the LLM
+                const prompt = `Generate the
+
+ following content for a YouTube video based on the topic: "${topic}".
+                Generate ${desiredNum} suggestions for hashtags, tags, titles, captions, and keywords.
+                Generate 1 suggestion for a concise channel bio.
+                Ensure all generated content is in ${languages.find(l => l.code === selectedLanguage).name} language.
+                Return the output as a JSON object with the following structure:
+                {
+                    "hashtags": ["#Hashtag1", "#Hashtag2", "..."],
+                    "tags": ["tag1", "tag2", "..."],
+                    "titles": ["Title Suggestion 1", "Title Suggestion 2", "..."],
+                    "captions": ["Caption suggestion 1...", "Caption suggestion 2...", "..."],
+                    "keywords": ["keyword phrase 1", "keyword phrase 2", "..."],
+                    "bio": "A concise and engaging channel bio for YouTube."
+                }`;
+
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                // Define the payload for the Gemini API call
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "hashtags": { "type": "ARRAY", "items": { "type": "STRING" } },
+                                "tags": { "type": "ARRAY", "items": { "type": "STRING" } },
+                                "titles": { "type": "ARRAY", "items": { "type": "STRING" } },
+                                "captions": { "type": "ARRAY", "items": { "type": "STRING" } },
+                                "keywords": { "type": "ARRAY", "items": { "type": "STRING" } },
+                                "bio": { "type": "STRING" }
+                            },
+                            "propertyOrdering": ["hashtags", "tags", "titles", "captions", "keywords", "bio"]
+                        }
+                    }
+                };
+
+                // Make the fetch call to the Gemini API
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                // Check for errors from the API itself
+                if (result.error) {
+                    throw new Error(`API Error: ${result.error.message}`);
+                }
+
+                // Check if the response structure is as expected from the LLM
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+
+                    const jsonString = result.candidates[0].content.parts[0].text;
+                    const parsedData = JSON.parse(jsonString);
+
+                    // Populate output fields
+                    hashtagsOutput.value = (parsedData.hashtags || []).join(' ');
+                    tagsOutput.value = (parsedData.tags || []).join(', ');
+                    titlesOutput.value = (parsedData.titles || []).join('\n');
+                    captionsOutput.value = (parsedData.captions || []).join('\n\n---\n\n');
+                    keywordsOutput.value = (parsedData.keywords || []).join(', ');
+                    bioOutput.value = parsedData.bio || '';
+
+                } else {
+                    console.error("Unexpected API response structure:", result);
+                    alert("Error: Could not generate content. Please try again or refine your input.");
+                }
+
+            } catch (error) {
+                console.error("Error generating content:", error);
+                alert(`An error occurred: ${error.message}. Please check your input or try again later.`);
+            } finally {
+                // Hide loading indicator and re-enable button
+                loadingIndicator.classList.add('hidden');
+                generateBtn.disabled = false;
+            }
+        });
+
+        // Add event listeners for all copy buttons
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const targetId = event.target.dataset.target;
+                const textarea = document.getElementById(targetId);
+                textarea.select();
+                document.execCommand('copy');
+                showMessage(event.target, event.target.textContent);
+            });
+        });
+    </script>
+</body>
+</html>
