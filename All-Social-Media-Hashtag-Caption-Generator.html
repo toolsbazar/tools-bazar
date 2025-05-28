@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Social Media Caption Generator | Tools Bazar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS variables for the theme */
+        :root {
+            --primary-color: #8B0000;
+            --secondary-color: #1A1A1A;
+            --accent-color: #FF3333;
+            --text-color: #E0E0E0;
+            --bg-color: #121212;
+            --card-bg: #1E1E1E;
+            --border-color: #333;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column; /* Changed to column to stack header, main, footer */
+            min-height: 100vh;
+            margin: 0; /* Remove default body margin */
+            box-sizing: border-box;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--secondary-color);
+            padding: 1rem 20px;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping for responsiveness */
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .logo:hover {
+            color: var(--accent-color);
+        }
+
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 1.5em;
+        }
+
+        .logo-text span {
+            color: var(--accent-color);
+        }
+
+        .menu-toggle {
+            display: none; /* Hidden by default, shown on small screens */
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 8px 0;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .nav-links a i {
+            margin-right: 8px;
+            font-size: 1.1em;
+        }
+
+        /* Main Content Styles */
+        main {
+            flex-grow: 1; /* Allows main content to take up available space */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .form-group textarea,
+        .form-group select,
+        .form-group input[type="number"],
+        .form-group input[type="file"] { /* Added file input styling */
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group textarea:focus,
+        .form-group select:focus,
+        .form-group input[type="number"]:focus,
+        .form-group input[type="file"]:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* Specific style for file input button */
+        .form-group input[type="file"]::file-selector-button {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .form-group input[type="file"]::file-selector-button:hover {
+            background-color: var(--primary-color);
+        }
+
+        .image-preview {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            object-fit: contain; /* Ensures the image fits within the bounds */
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        .caption-output-container {
+            position: relative;
+        }
+
+        .caption-output {
+            background-color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 100px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+
+        .loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .copy-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+            width: auto;
+            align-self: flex-end;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .copy-button:hover {
+            background-color: #45a049;
+        }
+
+        .copy-button:disabled {
+            background-color: #777;
+            cursor: not-allowed;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: var(--secondary-color);
+            padding: 40px 20px 20px;
+            border-top: 1px solid var(--border-color);
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            margin-top: auto; /* Pushes footer to the bottom */
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .footer-column h3 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-column p {
+            color: var(--text-color);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-column ul li a i {
+            margin-right: 8px;
+            font-size: 0.8em;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .copyright {
+            text-align: center;
+            color: var(--text-color);
+            font-size: 0.85rem;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Responsive adjustments for header and footer */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; /* Hide nav links by default on small screens */
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                margin-top: 15px;
+            }
+
+            .nav-links.active {
+                display: flex; /* Show when active */
+            }
+
+            .menu-toggle {
+                display: block; /* Show menu toggle on small screens */
+            }
+
+            .header-container {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr; /* Stack columns on small screens */
+                text-align: center;
+            }
+
+            .footer-column h3 {
+                margin-bottom: 10px;
+            }
+
+            .footer-column ul {
+                margin-bottom: 20px;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .container {
+                padding: 20px;
+                gap: 16px;
+            }
+            button {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            .caption-output {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-tools logo-icon"></i>
+                <span class="logo-text">Tools <span>Bazar</span></span>
+            </a>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav class="nav-links">
+                <a href="#"><i class="fas fa-home"></i> Home</a>
+                <a href="#"><i class="fas fa-calculator"></i> Tools</a>
+                <a href="#"><i class="fas fa-info-circle"></i> About</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Social Media Caption Generator</h1>
+            <p class="text-center text-lg text-gray-400 mb-4">Generate captions for your social media posts in seconds</p>
+
+            <div class="form-group">
+                <label for="topic">Write a caption about...</label>
+                <textarea id="topic" rows="4" placeholder="a burger restaurant in Texas OR a lawncare company OR a nail salon in Chicago, etc." class="rounded-lg"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="imageUpload">Upload Photo (Optional)</label>
+                <input type="file" id="imageUpload" accept="image/*" class="rounded-lg">
+                <div class="image-preview" id="imagePreview">
+                    </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="form-group">
+                    <label for="platform">Social Media Platform</label>
+                    <select id="platform" class="rounded-lg">
+                        <option value="Instagram">Instagram 📸</option>
+                        <option value="Facebook">Facebook 👍</option>
+                        <option value="Twitter">Twitter 🐦</option>
+                        <option value="TikTok">TikTok 🎶</option>
+                        <option value="Threads">Threads 🧵</option>
+                        <option value="LinkedIn">LinkedIn 💼</option>
+                        <option value="Pinterest">Pinterest 📌</option>
+                        <option value="Snapchat">Snapchat 👻</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tone">Tone of voice</label>
+                    <select id="tone" class="rounded-lg">
+                        <option value="casual">Casual 🤗</option>
+                        <option value="professional">Professional 👔</option>
+                        <option value="humorous">Humorous 😂</option>
+                        <option value="inspirational">Inspirational ✨</option>
+                        <option value="informative">Informative 💡</option>
+                        <option value="luxurious">Luxurious 💎</option>
+                        <option value="friendly">Friendly 👋</option>
+                        <option value="sarcastic">Sarcastic 😏</option>
+                        <option value="witty">Witty 🧠</option>
+                        <option value="enthusiastic">Enthusiastic 🎉</option>
+                        <option value="calm">Calm 🧘‍♀️</option>
+                        <option value="bold">Bold 💪</option>
+                        <option value="playful">Playful 🎈</option>
+                        <option value="mysterious">Mysterious 🤫</option>
+                        <option value="direct">Direct 🎯</option>
+                        <option value="empathetic">Empathetic 💖</option>
+                        <option value="vibrant">Vibrant 🌈</option>
+                        <option value="minimalist">Minimalist 📏</option>
+                        <option value="retro">Retro 📻</option>
+                        <option value="futuristic">Futuristic 🚀</option>
+                        <option value="vintage">Vintage 🕰️</option>
+                        <option value="quirky">Quirky 🤪</option>
+                        <option value="elegant">Elegant 🦢</option>
+                        <option value="rugged">Rugged 🏞️</option>
+                        <option value="scientific">Scientific 🔬</option>
+                        <option value="poetic">Poetic ✍️</option>
+                        <option value="conversational">Conversational 🗣️</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="hashtags">Number of hashtags</label>
+                    <input type="number" id="hashtags" value="0" min="0" max="30" class="rounded-lg">
+                </div>
+
+                <div class="form-group">
+                    <label for="length">Post length</label>
+                    <select id="length" class="rounded-lg">
+                        <option value="short">Short</option>
+                        <option value="medium">Medium</option>
+                        <option value="long">Long</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="language">Language</label>
+                    <select id="language" class="rounded-lg">
+                        <option value="English">English</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="French">French</option>
+                        <option value="German">German</option>
+                        <option value="Italian">Italian</option>
+                        <option value="Portuguese">Portuguese</option>
+                        <option value="Dutch">Dutch</option>
+                        <option value="Russian">Russian</option>
+                        <option value="Chinese (Simplified)">Chinese (Simplified)</option>
+                        <option value="Japanese">Japanese</option>
+                        <option value="Korean">Korean</option>
+                        <option value="Arabic">Arabic</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="Bengali">Bengali</option>
+                        <option value="Punjabi">Punjabi</option>
+                        <option value="Urdu">Urdu</option>
+                        <option value="Turkish">Turkish</option>
+                        <option value="Vietnamese">Vietnamese</option>
+                        <option value="Polish">Polish</option>
+                        <option value="Swedish">Swedish</option>
+                        <option value="Norwegian">Norwegian</option>
+                        <option value="Danish">Danish</option>
+                        <option value="Finnish">Finnish</option>
+                        <option value="Greek">Greek</option>
+                        <option value="Hebrew">Hebrew</option>
+                        <option value="Indonesian">Indonesian</option>
+                        <option value="Malay">Malay</option>
+                        <option value="Thai">Thai</option>
+                        <option value="Filipino">Filipino</option>
+                        <option value="Romanian">Romanian</option>
+                        <option value="Czech">Czech</option>
+                        <option value="Hungarian">Hungarian</option>
+                        <option value="Ukrainian">Ukrainian</option>
+                        <option value="Swahili">Swahili</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="variants">Number of variants</label>
+                    <input type="number" id="variants" value="1" min="1" max="10" class="rounded-lg">
+                </div>
+            </div>
+
+            <button id="generateBtn">Generate Caption</button>
+
+            <div class="caption-output-container">
+                <div class="caption-output" id="output">
+                    Your generated caption will appear here.
+                </div>
+                <button id="copyBtn" class="copy-button hidden">Copy Caption</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Tools Bazar</h3>
+                <p>Your one-stop destination for online tools and calculators.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> All Tools</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Popular Tools</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Password Generator</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Time Zone Converter</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Unit Converter</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Calculator</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Help Center</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> FAQs</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2025 Tools Bazar. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Get references to DOM elements
+        const topicInput = document.getElementById('topic');
+        const imageUpload = document.getElementById('imageUpload'); // New image upload input
+        const imagePreview = document.getElementById('imagePreview'); // New image preview div
+        const platformSelect = document.getElementById('platform');
+        const toneSelect = document.getElementById('tone');
+        const hashtagsInput = document.getElementById('hashtags');
+        const lengthSelect = document.getElementById('length');
+        const languageSelect = document.getElementById('language');
+        const variantsInput = document.getElementById('variants');
+        const generateBtn = document.getElementById('generateBtn');
+        const outputDiv = document.getElementById('output');
+        const copyBtn = document.getElementById('copyBtn');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        let selectedImageBase64 = null; // Variable to store base64 image data
+        let selectedImageMimeType = null; // Variable to store image MIME type
+
+        // Toggle mobile menu
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Event listener for image upload
+        imageUpload.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    imagePreview.innerHTML = ''; // Clear previous preview
+                    imagePreview.appendChild(img);
+
+                    // Store base64 data and MIME type
+                    selectedImageBase64 = e.target.result.split(',')[1]; // Get only the base64 part
+                    selectedImageMimeType = file.type;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.innerHTML = ''; // Clear preview if no file selected
+                selectedImageBase64 = null;
+                selectedImageMimeType = null;
+            }
+        });
+
+        // Event listener for the generate button
+        generateBtn.addEventListener('click', async () => {
+            const topic = topicInput.value.trim();
+            const platform = platformSelect.value;
+            const tone = toneSelect.value;
+            const hashtags = parseInt(hashtagsInput.value, 10);
+            const length = lengthSelect.value;
+            const language = languageSelect.value;
+            const variants = parseInt(variantsInput.value, 10);
+
+            // Basic validation for topic
+            if (!topic && !selectedImageBase64) {
+                outputDiv.textContent = "Please enter a topic or upload a photo to generate a caption.";
+                copyBtn.classList.add('hidden');
+                return;
+            }
+
+            // Disable button and show loading indicator
+            generateBtn.disabled = true;
+            outputDiv.innerHTML = '<div class="loading-indicator">Generating...</div>';
+            copyBtn.classList.add('hidden');
+
+            // Construct the prompt for the LLM, including platform, language, variants, and emoji instruction
+            let prompt = `Generate ${variants} ${tone}, ${length} ${platform} caption(s) in ${language}. Please include relevant emojis naturally within the caption.`;
+
+            if (topic) {
+                prompt += ` The caption should be about: ${topic}.`;
+            }
+            if (selectedImageBase64) {
+                prompt += ` Analyze the uploaded image and generate a caption relevant to its content.`;
+            }
+
+            if (hashtags > 0) {
+                prompt += ` Each caption should include exactly ${hashtags} relevant hashtags.`;
+            } else {
+                prompt += ` Do not include any hashtags in the captions.`;
+            }
+
+            if (variants > 1) {
+                prompt += ` Please provide them as a numbered list.`;
+            }
+
+            // Prepare the payload for the Gemini API
+            let chatHistory = [];
+            let parts = [{ text: prompt }];
+
+            // Add image data to parts if available
+            if (selectedImageBase64 && selectedImageMimeType) {
+                parts.push({
+                    inlineData: {
+                        mimeType: selectedImageMimeType,
+                        data: selectedImageBase64
+                    }
+                });
+            }
+
+            chatHistory.push({ role: "user", parts: parts });
+            const payload = { contents: chatHistory };
+
+            // Use the API key provided by the user
+            const apiKey = "AIzaSyCqe3FG3DdmMkIDoeF4lJ-Nb4EMzR9pibM";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                // Make the API call to Gemini
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                // Check if the response contains generated content
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const generatedText = result.candidates[0].content.parts[0].text;
+                    outputDiv.textContent = generatedText;
+                    copyBtn.classList.remove('hidden');
+                } else {
+                    outputDiv.textContent = "Could not generate a caption. Please try again or refine your request.";
+                    console.error("Unexpected API response structure:", result);
+                }
+            } catch (error) {
+                // Handle any errors during the API call
+                outputDiv.textContent = "An error occurred while generating the caption. Please check your network connection or try again later.";
+                console.error("Error generating caption:", error);
+            } finally {
+                // Re-enable the button after generation (or error)
+                generateBtn.disabled = false;
+            }
+        });
+
+        // Event listener for the copy button
+        copyBtn.addEventListener('click', () => {
+            const textToCopy = outputDiv.textContent;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textToCopy;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy');
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy Caption';
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                // Fallback for older browsers or restricted environments
+                outputDiv.textContent = "Copy failed. Please manually copy the text: \n" + textToCopy;
+            } finally {
+                document.body.removeChild(tempTextArea);
+            }
+        });
+    </script>
+</body>
+</html>
