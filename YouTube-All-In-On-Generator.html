@@ -99,10 +99,55 @@
                 right: 0;
                 background-color: var(--secondary-color);
                 padding: 1rem;
+                z-index: 10; /* Ensure it's above other content */
             }
             .nav-links.active {
                 display: flex;
             }
+        }
+
+        /* Output textarea and copy button styles */
+        .output-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            color: var(--text-color);
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 7rem; /* Ensure minimum height */
+            margin-bottom: 0.5rem; /* Space between textarea and button */
+        }
+
+        .copy-btn {
+            margin-top: 0.75rem;
+            width: 100%;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            font-weight: 600;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            border-radius: 0.5rem;
+            transition-property: all;
+            transition-duration: 300ms;
+            transition-timing-function: ease-in-out;
+            transform: scale(1);
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .copy-btn:hover {
+            background-color: var(--border-color);
+            transform: scale(1.02); /* Slightly larger scale on hover */
+        }
+
+        .copy-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--accent-color), 0 0 0 4px var(--secondary-color);
         }
 
         /* Footer styles */
@@ -185,6 +230,16 @@
         </div>
     </header>
 
+    <div class="container mx-auto p-4 md:p-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-extrabold text-[var(--primary-color)] mb-4">
+            Supercharge Your YouTube Channel!
+        </h2>
+        <p class="text-lg md:text-xl text-[var(--text-color)] leading-relaxed max-w-2xl mx-auto">
+            Generate engaging titles, compelling descriptions, relevant hashtags, and powerful keywords instantly.
+            Boost your video's visibility and attract more viewers with AI-powered content creation.
+        </p>
+    </div>
+
     <main class="flex-grow container mx-auto p-4 md:p-8 flex flex-col items-center">
         <div class="bg-[var(--card-bg)] p-6 rounded-lg shadow-xl w-full max-w-3xl mb-8">
             <label for="videoInput" class="block text-lg font-semibold mb-3 text-[var(--accent-color)]">
@@ -236,6 +291,26 @@
                         <option value="18">18</option>
                         <option value="19">19</option>
                         <option value="20">20</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="videoTypeSelect" class="block text-base font-semibold mb-2 text-[var(--accent-color)]">
+                        Select Video Type:
+                    </label>
+                    <select
+                        id="videoTypeSelect"
+                        class="w-full p-3 bg-[var(--secondary-color)] border border-[var(--border-color)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] text-[var(--text-color)]"
+                    >
+                    </select>
+                </div>
+                <div>
+                    <label for="videoToneSelect" class="block text-base font-semibold mb-2 text-[var(--accent-color)]">
+                        Select Video Tone:
+                    </label>
+                    <select
+                        id="videoToneSelect"
+                        class="w-full p-3 bg-[var(--secondary-color)] border border-[var(--border-color)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] text-[var(--text-color)]"
+                    >
                     </select>
                 </div>
             </div>
@@ -337,7 +412,7 @@
 
     <script>
         // Tailwind CSS classes for output textareas and copy buttons
-        const outputTextareaClasses = "w-full p-3 bg-[var(--secondary-color)] border border-[var(--border-color)] rounded-md text-[var(--text-color)] text-base resize-y";
+        const outputTextareaClasses = "w-full p-3 bg-[var(--secondary-color)] border border-[var(--border-color)] rounded-md text-[var(--text-color)] text-base resize-y min-h-[7rem]";
         const copyBtnClasses = "mt-3 w-full bg-[var(--secondary-color)] hover:bg-[var(--border-color)] text-[var(--text-color)] font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:ring-offset-2 focus:ring-offset-[var(--secondary-color)]";
 
         // Apply these classes to the elements
@@ -348,6 +423,8 @@
         const videoInput = document.getElementById('videoInput');
         const languageSelect = document.getElementById('languageSelect');
         const numSuggestions = document.getElementById('numSuggestions');
+        const videoTypeSelect = document.getElementById('videoTypeSelect'); // New
+        const videoToneSelect = document.getElementById('videoToneSelect'); // New
         const generateBtn = document.getElementById('generateBtn');
         const loadingIndicator = document.getElementById('loadingIndicator');
 
@@ -417,12 +494,42 @@
             { code: "tk", name: "Turkmen" }
         ];
 
+        // Video Type Options (20 options)
+        const videoTypes = [
+            "Tutorial", "Vlog", "Review", "Gaming", "Educational", "Comedy", "Music Video",
+            "Documentary", "Challenge", "Unboxing", "DIY", "Travel", "Fitness", "Cooking",
+            "Beauty", "Fashion", "Interview", "News", "Animation", "Short Film"
+        ];
+
+        // Video Tone Options (20 options)
+        const videoTones = [
+            "Informative", "Humorous", "Serious", "Motivational", "Relaxing", "Energetic",
+            "Empathetic", "Inspirational", "Professional", "Casual", "Enthusiastic", "Calm",
+            "Excited", "Reflective", "Dramatic", "Witty", "Sarcastic", "Friendly", "Authoritative", "Playful"
+        ];
+
         // Populate language dropdown
         languages.forEach(lang => {
             const option = document.createElement('option');
             option.value = lang.code;
             option.textContent = lang.name;
             languageSelect.appendChild(option);
+        });
+
+        // Populate video type dropdown
+        videoTypes.forEach(type => {
+            const option = document.createElement('option');
+            option.value = type;
+            option.textContent = type;
+            videoTypeSelect.appendChild(option);
+        });
+
+        // Populate video tone dropdown
+        videoTones.forEach(tone => {
+            const option = document.createElement('option');
+            option.value = tone;
+            option.textContent = tone;
+            videoToneSelect.appendChild(option);
         });
 
         // Function to show a temporary "Copied!" message
@@ -443,13 +550,15 @@
             const topic = videoInput.value.trim();
             const selectedLanguage = languageSelect.value;
             const desiredNum = parseInt(numSuggestions.value, 10);
+            const selectedVideoType = videoTypeSelect.value; // New
+            const selectedVideoTone = videoToneSelect.value; // New
 
             if (!topic) {
-                alert('Please enter your video topic or main idea.');
+                console.error('Please enter your video topic or main idea.');
                 return;
             }
             if (isNaN(desiredNum) || desiredNum < 1 || desiredNum > 20) {
-                alert('Invalid number of suggestions selected. Please select a number between 1 and 20.');
+                console.error('Invalid number of suggestions selected. Please select a number between 1 and 20.');
                 return;
             }
 
@@ -466,9 +575,8 @@
 
             try {
                 // Construct the prompt for the LLM
-                const prompt = `Generate the
-
- following content for a YouTube video based on the topic: "${topic}".
+                const prompt = `Generate the following content for a YouTube video based on the topic: "${topic}".
+                The video type is "${selectedVideoType}" and the tone should be "${selectedVideoTone}".
                 Generate ${desiredNum} suggestions for hashtags, tags, titles, captions, and keywords.
                 Generate 1 suggestion for a concise channel bio.
                 Ensure all generated content is in ${languages.find(l => l.code === selectedLanguage).name} language.
@@ -537,12 +645,12 @@
 
                 } else {
                     console.error("Unexpected API response structure:", result);
-                    alert("Error: Could not generate content. Please try again or refine your input.");
+                    console.error("Error: Could not generate content. Please try again or refine your input.");
                 }
 
             } catch (error) {
                 console.error("Error generating content:", error);
-                alert(`An error occurred: ${error.message}. Please check your input or try again later.`);
+                console.error(`An error occurred: ${error.message}. Please check your input or try again later.`);
             } finally {
                 // Hide loading indicator and re-enable button
                 loadingIndicator.classList.add('hidden');
