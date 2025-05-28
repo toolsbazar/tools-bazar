@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Thumbnail & Details Downloader</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Variables for Theme */
+        :root {
+            --primary-color: #8B0000; /* Dark Red */
+            --secondary-color: #1A1A1A; /* Dark Gray */
+            --accent-color: #FF3333; /* Bright Red */
+            --text-color: #E0E0E0; /* Light Gray Text */
+            --bg-color: #121212; /* Very Dark Background */
+            --card-bg: #1E1E1E; /* Slightly Lighter Card Background */
+            --border-color: #333; /* Dark Border */
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+        }
+
+        /* General Body Styling */
+        body {
+            font-family: 'Inter', sans-serif; /* Using Inter font as per guidelines */
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column; /* Changed to column to stack header and main content */
+            justify-content: flex-start; /* Align content to the top */
+            align-items: center;
+            min-height: 100vh;
+            padding: 0; /* Remove body padding as header will take space */
+            box-sizing: border-box;
+        }
+
+        /* Header Styling */
+        header {
+            background-color: var(--secondary-color);
+            width: 100%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: sticky; /* Makes header stick to the top */
+            top: 0;
+            z-index: 1000; /* Ensure header is above other content */
+        }
+
+        .header-container {
+            max-width: 1200px; /* Max width for content inside header */
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 1.8em;
+            font-weight: 700;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            color: var(--accent-color);
+            font-size: 1.2em;
+        }
+
+        .logo-text span {
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1em;
+            padding: 5px 0;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a i {
+            font-size: 1.1em;
+        }
+
+        .menu-toggle {
+            display: none; /* Hidden by default on larger screens */
+            font-size: 1.8em;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        /* Main Container Styling */
+        .container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px; /* Rounded corners */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            width: 90%; /* Adjusted for better spacing with header */
+            max-width: 700px;
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+            margin-top: 40px; /* Space from header */
+            margin-bottom: 40px; /* Space at the bottom */
+        }
+
+        /* Tool Main Title Styling (already exists, but ensuring it's below header) */
+        .tool-main-title {
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            font-weight: 800;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tool Description Styling */
+        .tool-description {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            color: var(--text-color);
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Section Title Styling */
+        h2 {
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        /* Input Group Styling */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .input-group input[type="text"] {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px; /* Rounded corners */
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            font-size: 1em;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-group input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.3);
+        }
+
+        /* Button Styling */
+        .action-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px; /* Rounded corners */
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            width: 100%;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-button:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Loading and Message Styling */
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none; /* Hidden by default */
+        }
+
+        .message.error {
+            background-color: rgba(255, 0, 0, 0.2);
+            color: #ff6666;
+            border: 1px solid #ff0000;
+        }
+
+        .message.loading {
+            background-color: rgba(23, 162, 184, 0.2);
+            color: var(--info-color);
+            border: 1px solid var(--info-color);
+        }
+
+        /* Thumbnail Preview Section */
+        .thumbnail-preview {
+            margin-top: 30px;
+            text-align: center;
+            display: none; /* Hidden by default */
+        }
+
+        .thumbnail-preview h3 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .image-preview-container { /* General container for any image preview */
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            background-color: var(--secondary-color);
+            display: inline-block; /* To center the image container */
+            max-width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-preview-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Download Buttons Grid */
+        .download-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .download-buttons .download-link {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .download-buttons .download-link:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+            border-color: var(--accent-color);
+        }
+
+        .download-buttons .download-link i {
+            font-size: 1.1em;
+        }
+
+        /* Video Details Extractor Section */
+        .video-details-extractor {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            display: none; /* Hidden by default */
+        }
+
+        .video-details-extractor h3 {
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .detail-group {
+            margin-bottom: 20px;
+        }
+
+        .detail-group label {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* Container for textarea and copy button */
+        .textarea-container {
+            position: relative;
+            margin-bottom: 10px; /* Space between textarea and tags */
+        }
+
+        .textarea-container textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            font-size: 1em;
+            box-sizing: border-box;
+            resize: vertical;
+            min-height: 80px;
+            padding-right: 45px; /* Make space for copy button */
+        }
+
+        /* Copy button for description */
+        .copy-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .copy-button:hover {
+            background-color: var(--accent-color);
+        }
+
+        .copy-button:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        /* Tags display styling */
+        .tags-container { /* New container for tags and its copy button */
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .tags-display {
+            min-height: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            padding: 8px 15px; /* Adjust padding for tags */
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--secondary-color);
+            padding-right: 45px; /* Make space for copy button */
+        }
+
+        .tag-item {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            white-space: nowrap; /* Prevent tags from breaking */
+            cursor: default; /* Not directly clickable for copy anymore */
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.2s ease;
+        }
+
+        .tag-item:hover {
+            background-color: var(--accent-color);
+        }
+
+        /* Copy all tags button */
+        .copy-all-tags-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .copy-all-tags-button:hover {
+            background-color: var(--accent-color);
+        }
+
+        .copy-all-tags-button:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-links {
+                display: none; /* Hide nav links by default on small screens */
+                flex-direction: column;
+                width: 100%;
+                margin-top: 15px;
+                gap: 10px;
+            }
+
+            .nav-links.active {
+                display: flex; /* Show when active */
+            }
+
+            .menu-toggle {
+                display: block; /* Show menu toggle on small screens */
+                position: absolute;
+                right: 20px;
+                top: 15px;
+            }
+
+            .container {
+                padding: 20px;
+                margin: 20px; /* Adjust margin for overall content */
+            }
+
+            .tool-main-title {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            .action-button {
+                font-size: 1em;
+                padding: 10px 20px;
+            }
+
+            .download-buttons {
+                grid-template-columns: 1fr; /* Stack buttons on small screens */
+            }
+
+            .video-details-extractor h3 {
+                font-size: 1.5em;
+            }
+
+            .textarea-container textarea,
+            .tags-display {
+                padding-right: 10px; /* Reduce padding on small screens if copy button is too wide */
+            }
+
+            .copy-button,
+            .copy-all-tags-button {
+                position: static; /* Position normally */
+                transform: none; /* Remove transform */
+                margin-top: 10px; /* Add margin */
+                width: auto;
+                padding: 8px 12px;
+                float: right; /* Float right if space allows */
+            }
+             .textarea-container,
+             .tags-container {
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-tools logo-icon"></i>
+                <span class="logo-text">Tools <span>Bazar</span></span>
+            </a>
+            <div class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav class="nav-links" id="nav-links">
+                <a href="#"><i class="fas fa-home"></i> Home</a>
+                <a href="#"><i class="fas fa-calculator"></i> Tools</a>
+                <a href="#"><i class="fas fa-info-circle"></i> About</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="tool-main-title">YouTube Thumbnail & Details Downloader</h1>
+
+        <div class="tool-description">
+            <p>Download any YouTube video’s thumbnail in high quality and extract video details like title, tags, and description—fast, free, and easy. Perfect for creators, marketers, and researchers.</p>
+        </div>
+
+        <h2><i class="fas fa-search"></i> Enter YouTube URL</h2>
+
+        <div class="input-group">
+            <label for="video-url">YouTube Video URL:</label>
+            <input type="text" id="video-url" placeholder="e.g., https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+        </div>
+
+        <button id="get-details-button" class="action-button">Get Video Details</button>
+
+        <div id="message-display" class="message"></div>
+        <div id="loading-spinner" class="message loading">
+            <i class="fas fa-spinner fa-spin"></i> Fetching video details...
+        </div>
+
+        <div id="thumbnail-preview-section" class="thumbnail-preview">
+            <h3>Available Video Thumbnails</h3>
+            <div id="thumbnail-image-display" class="image-preview-container">
+                <img id="preview-image" src="" alt="Thumbnail Preview">
+            </div>
+            <div id="download-links" class="download-buttons">
+                </div>
+        </div>
+
+        <div id="video-details-extractor-section" class="video-details-extractor">
+            <h3><i class="fas fa-info-circle"></i> Video Details</h3>
+            
+            <div class="detail-group">
+                <label for="video-title">Video Title:</label>
+                <div class="textarea-container">
+                    <textarea id="video-title" readonly placeholder="Video title will appear here."></textarea>
+                    <button class="copy-button" id="copy-title-btn" title="Copy Title"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+            </div>
+
+            <div class="detail-group">
+                <label for="video-description">Description:</label>
+                <div class="textarea-container">
+                    <textarea id="video-description" readonly placeholder="Video description will appear here."></textarea>
+                    <button class="copy-button" id="copy-description-btn" title="Copy Description"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+            </div>
+
+            <div class="detail-group">
+                <label for="video-tags">Tags:</label>
+                <div class="tags-container"> <div id="video-tags" class="tags-display">
+                        <span class="tag-item">No Tags Found</span>
+                    </div>
+                    <button class="copy-all-tags-button" id="copy-all-tags-btn" title="Copy All Tags"><i class="fas fa-copy"></i> Copy All</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoUrlInput = document.getElementById('video-url');
+            const getDetailsButton = document.getElementById('get-details-button');
+            const messageDisplay = document.getElementById('message-display');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            
+            const thumbnailPreviewSection = document.getElementById('thumbnail-preview-section');
+            const previewImage = document.getElementById('preview-image');
+            const downloadLinksContainer = document.getElementById('download-links');
+
+            const videoDetailsExtractorSection = document.getElementById('video-details-extractor-section');
+            const videoTitleTextarea = document.getElementById('video-title');
+            const videoDescriptionTextarea = document.getElementById('video-description');
+            const videoTagsDisplay = document.getElementById('video-tags');
+            const copyTitleBtn = document.getElementById('copy-title-btn');
+            const copyDescriptionBtn = document.getElementById('copy-description-btn');
+            const copyAllTagsBtn = document.getElementById('copy-all-tags-btn');
+
+            // Header elements for mobile toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const navLinks = document.getElementById('nav-links');
+
+            // Your YouTube Data API Key
+            const API_KEY = 'AIzaSyAJIgomnrABZjHc3LdOM5Rr7zM2aka4Rew'; // REPLACE WITH YOUR ACTUAL API KEY
+
+            /**
+             * Displays a message to the user.
+             * @param {string} msg - The message text.
+             * @param {string} type - 'error', 'loading', or empty for general.
+             */
+            function showMessage(msg, type = '') {
+                messageDisplay.textContent = msg;
+                messageDisplay.className = `message ${type}`;
+                messageDisplay.style.display = 'block';
+                if (type === 'loading') {
+                    loadingSpinner.style.display = 'block';
+                    messageDisplay.style.display = 'none'; // Hide general message when loading
+                } else {
+                    loadingSpinner.style.display = 'none';
+                }
+            }
+
+            /**
+             * Hides all messages.
+             */
+            function hideMessages() {
+                messageDisplay.style.display = 'none';
+                loadingSpinner.style.display = 'none';
+            }
+
+            /**
+             * Resets the entire display.
+             */
+            function resetDisplay() {
+                thumbnailPreviewSection.style.display = 'none';
+                previewImage.src = '';
+                downloadLinksContainer.innerHTML = '';
+
+                videoDetailsExtractorSection.style.display = 'none';
+                videoTitleTextarea.value = '';
+                videoDescriptionTextarea.value = '';
+                videoTagsDisplay.innerHTML = '<span class="tag-item">No Tags Found</span>';
+            }
+
+            /**
+             * Extracts the YouTube video ID from various URL formats.
+             * @param {string} url - The YouTube video URL.
+             * @returns {string|null} The video ID or null if not found.
+             */
+            function getVideoId(url) {
+                const regex = /(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([\w-]{11})(?:\S+)?/i;
+                const match = url.match(regex);
+                return match ? match[1] : null;
+            }
+
+            /**
+             * Copies text to clipboard.
+             * @param {string} text - The text to copy.
+             * @param {string} successMsg - Message on success.
+             * @param {string} failMsg - Message on failure.
+             */
+            function copyToClipboard(text, successMsg, failMsg) {
+                let tempInput = document.createElement('textarea');
+                tempInput.value = text;
+                tempInput.style.position = 'absolute';
+                tempInput.style.left = '-9999px';
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                tempInput.setSelectionRange(0, 99999); // For mobile devices
+
+                try {
+                    document.execCommand('copy');
+                    showMessage(successMsg, 'success');
+                } catch (err) {
+                    console.error('Failed to copy: ', err);
+                    showMessage(failMsg, 'error');
+                } finally {
+                    document.body.removeChild(tempInput);
+                    setTimeout(() => hideMessages(), 2000);
+                }
+            }
+
+            /**
+             * Triggers a file download.
+             * @param {string} url - The URL of the file to download.
+             * @param {string} filename - The desired filename for the download.
+             * @param {string} successMsg - Message on successful trigger.
+             * @param {string} failMsg - Message if URL is missing.
+             */
+            function downloadFile(url, filename, successMsg, failMsg) {
+                console.log('Attempting download: URL =', url, 'Filename =', filename); // Debug log
+                if (url && url !== '#') {
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    showMessage(successMsg, 'success');
+                } else {
+                    console.error('Download failed: Invalid URL provided for download.', url); // Debug log
+                    showMessage(failMsg, 'warning');
+                }
+                setTimeout(() => hideMessages(), 2000);
+            }
+
+
+            // --- Event Listeners for Copy Buttons ---
+            copyTitleBtn.addEventListener('click', () => {
+                copyToClipboard(videoTitleTextarea.value, 'Title copied to clipboard!', 'No title to copy.');
+            });
+
+            copyDescriptionBtn.addEventListener('click', () => {
+                copyToClipboard(videoDescriptionTextarea.value, 'Description copied to clipboard!', 'No description to copy.');
+            });
+
+            copyAllTagsBtn.addEventListener('click', () => {
+                const tagElements = videoTagsDisplay.querySelectorAll('.tag-item');
+                const tags = Array.from(tagElements).map(tag => tag.textContent.trim());
+                const filteredTags = tags.filter(tag => tag !== 'No Tags Found');
+                if (filteredTags.length > 0) {
+                    copyToClipboard(filteredTags.join(', '), 'Tags copied to clipboard!', 'No tags to copy.');
+                } else {
+                    showMessage('No tags to copy.', 'warning');
+                    setTimeout(() => hideMessages(), 2000);
+                }
+            });
+
+            // --- Mobile Menu Toggle ---
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+
+
+            // --- Main Fetch Logic ---
+            getDetailsButton.addEventListener('click', async () => {
+                const videoUrl = videoUrlInput.value.trim();
+                hideMessages();
+                resetDisplay(); // Reset all sections
+
+                if (!videoUrl) {
+                    showMessage('Please enter a YouTube video URL.', 'error');
+                    return;
+                }
+
+                const videoId = getVideoId(videoUrl);
+
+                if (!videoId) {
+                    showMessage('Invalid YouTube URL. Please enter a valid video URL.', 'error');
+                    return;
+                }
+
+                showMessage('Fetching video details...', 'loading');
+                getDetailsButton.disabled = true;
+
+                try {
+                    // Fetch Video Snippet (Thumbnails, Title, Description, Tags)
+                    const videoApiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&fields=items/snippet(thumbnails,title,description,tags)&key=${API_KEY}`;
+                    const videoResponse = await fetch(videoApiUrl);
+
+                    if (!videoResponse.ok) {
+                        let errorMessage = `HTTP error! status: ${videoResponse.status}`;
+                        try {
+                            const errorData = await videoResponse.json();
+                            if (errorData && errorData.error && errorData.error.message) {
+                                errorMessage = errorData.error.message;
+                            }
+                        } catch (parseError) {
+                            console.warn('Could not parse video API error response:', parseError);
+                        }
+                        throw new Error(`Video API error: ${errorMessage}`);
+                    }
+
+                    const videoData = await videoResponse.json();
+
+                    if (videoData.items && videoData.items.length > 0) {
+                        const snippet = videoData.items[0].snippet;
+                        const thumbnails = snippet.thumbnails;
+                        const title = snippet.title || 'No title available.';
+                        const description = snippet.description || 'No description available.';
+                        const tags = snippet.tags || [];
+
+                        // --- Populate Video Thumbnail Section ---
+                        const previewThumbnail = thumbnails.maxres || thumbnails.standard || thumbnails.high || thumbnails.medium || thumbnails.default;
+                        if (previewThumbnail) {
+                            previewImage.src = previewThumbnail.url;
+                            thumbnailPreviewSection.style.display = 'block';
+                        } else {
+                            showMessage('No video thumbnails found.', 'warning');
+                        }
+
+                        downloadLinksContainer.innerHTML = ''; // Clear previous links
+                        const qualities = {
+                            'Max Resolution': thumbnails.maxres,
+                            'Standard Quality': thumbnails.standard,
+                            'High Quality': thumbnails.high,
+                            'Medium Quality': thumbnails.medium,
+                            'Default Thumbnail': thumbnails.default
+                        };
+
+                        for (const qualityName in qualities) {
+                            const thumb = qualities[qualityName];
+                            if (thumb && thumb.url) {
+                                const link = document.createElement('a');
+                                link.href = thumb.url;
+                                link.download = `youtube_video_thumbnail_${videoId}_${qualityName.toLowerCase().replace(/ /g, '_')}.jpg`;
+                                link.target = '_blank';
+                                link.className = 'download-link';
+                                link.innerHTML = `<i class="fas fa-download"></i> ${qualityName}`;
+                                downloadLinksContainer.appendChild(link);
+                            }
+                        }
+
+                        // --- Populate Video Details Section ---
+                        videoTitleTextarea.value = title;
+                        videoDescriptionTextarea.value = description;
+                        videoTagsDisplay.innerHTML = '';
+                        if (tags.length > 0) {
+                            tags.forEach(tag => {
+                                const tagSpan = document.createElement('span');
+                                tagSpan.className = 'tag-item';
+                                tagSpan.textContent = tag;
+                                videoTagsDisplay.appendChild(tagSpan);
+                            });
+                        } else {
+                            const noTagsSpan = document.createElement('span');
+                            noTagsSpan.className = 'tag-item';
+                            noTagsSpan.textContent = 'No Tags Found';
+                            videoTagsDisplay.appendChild(noTagsSpan);
+                        }
+                        videoDetailsExtractorSection.style.display = 'block';
+
+                        hideMessages(); // Hide loading spinner on overall success
+                    } else {
+                        showMessage('No video found with that URL or no details available.', 'error');
+                    }
+
+                } catch (error) {
+                    console.error('Error fetching details:', error);
+                    let userMessage = `Failed to fetch details. This might be due to a network issue, an invalid YouTube URL, or an issue with the YouTube API. Please check your internet connection and the video URL, or try again later.`;
+                    if (error.message && error.message.includes('Failed to fetch')) {
+                        showMessage(userMessage, 'error');
+                    } else {
+                        showMessage(`Failed to fetch details: ${error.message}. Please check the URL or try again later.`, 'error');
+                    }
+                } finally {
+                    getDetailsButton.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
