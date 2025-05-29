@@ -2,57 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>YouTube Thumbnail & Details Downloader</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
     <style>
-        /* CSS Variables for Theme */
         :root {
-            --primary-color: #8B0000; /* Dark Red */
-            --secondary-color: #1A1A1A; /* Dark Gray */
-            --accent-color: #FF3333; /* Bright Red */
-            --text-color: #E0E0E0; /* Light Gray Text */
-            --bg-color: #121212; /* Very Dark Background */
-            --card-bg: #1E1E1E; /* Slightly Lighter Card Background */
-            --border-color: #333; /* Dark Border */
+            --primary-color: #8B0000;
+            --secondary-color: #1A1A1A;
+            --accent-color: #FF3333;
+            --text-color: #E0E0E0;
+            --bg-color: #121212;
+            --card-bg: #1E1E1E;
+            --border-color: #333;
             --success-color: #28a745;
             --warning-color: #ffc107;
             --info-color: #17a2b8;
+            --light-bg: #f5f5f5;
+            --light-text: #333;
+            --light-card: #ffffff;
+            --light-border: #ddd;
         }
 
-        /* General Body Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: 'Inter', sans-serif; /* Using Inter font as per guidelines */
             background-color: var(--bg-color);
             color: var(--text-color);
-            margin: 0;
-            display: flex;
-            flex-direction: column; /* Changed to column to stack header and main content */
-            justify-content: flex-start; /* Align content to the top */
-            align-items: center;
+            line-height: 1.6;
+            transition: all 0.3s ease;
             min-height: 100vh;
-            padding: 0; /* Remove body padding as header will take space */
-            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Header Styling */
+        body.light-mode {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+            flex: 1;
+        }
+
         header {
             background-color: var(--secondary-color);
-            width: 100%;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            position: sticky; /* Makes header stick to the top */
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
             top: 0;
-            z-index: 1000; /* Ensure header is above other content */
+            z-index: 1000;
+        }
+
+        body.light-mode header {
+            background-color: var(--light-card);
+            border-bottom-color: var(--light-border);
         }
 
         .header-container {
-            max-width: 1200px; /* Max width for content inside header */
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 15px 20px;
+            padding: 0 15px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap; /* Allow wrapping on small screens */
+            justify-content: space-between;
         }
 
         .logo {
@@ -60,466 +82,660 @@
             align-items: center;
             text-decoration: none;
             color: var(--text-color);
-            font-size: 1.8em;
-            font-weight: 700;
-            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        body.light-mode .logo {
+            color: var(--light-text);
         }
 
         .logo-icon {
-            color: var(--accent-color);
-            font-size: 1.2em;
+            margin-right: 8px;
+            color: var(--primary-color);
+            font-size: 1.5rem;
         }
 
         .logo-text span {
             color: var(--accent-color);
         }
 
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        body.light-mode .menu-toggle {
+            color: var(--light-text);
+        }
+
         .nav-links {
             display: flex;
-            gap: 25px;
+            gap: 15px;
         }
 
         .nav-links a {
             color: var(--text-color);
             text-decoration: none;
-            font-weight: 500;
-            font-size: 1em;
-            padding: 5px 0;
-            transition: color 0.3s ease;
+            font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            padding: 8px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            min-height: 44px; /* Touch target size */
+        }
+
+        body.light-mode .nav-links a {
+            color: var(--light-text);
         }
 
         .nav-links a:hover {
-            color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: white;
         }
 
         .nav-links a i {
-            font-size: 1.1em;
+            color: var(--primary-color);
         }
 
-        .menu-toggle {
-            display: none; /* Hidden by default on larger screens */
-            font-size: 1.8em;
-            cursor: pointer;
+        h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
             color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 15px;
         }
 
-        /* Main Container Styling */
-        .container {
+        body.light-mode .subtitle {
+            color: var(--light-text);
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .input-section, .result-section, .details-section, .analytics-section, .bulk-section, .seo-section {
+            width: 100%;
+            max-width: 800px;
             background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 12px; /* Rounded corners */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-            width: 90%; /* Adjusted for better spacing with header */
-            max-width: 700px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border: 1px solid var(--border-color);
-            box-sizing: border-box;
-            margin-top: 40px; /* Space from header */
-            margin-bottom: 40px; /* Space at the bottom */
         }
 
-        /* Tool Main Title Styling (already exists, but ensuring it's below header) */
-        .tool-main-title {
-            color: var(--text-color);
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 2.5em;
-            font-weight: 800;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        body.light-mode .input-section,
+        body.light-mode .result-section,
+        body.light-mode .details-section,
+        body.light-mode .analytics-section,
+        body.light-mode .bulk-section,
+        body.light-mode .seo-section {
+            background-color: var(--light-card);
+            border-color: var(--light-border);
         }
 
-        /* Tool Description Styling */
-        .tool-description {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 1.1em;
-            color: var(--text-color);
-            line-height: 1.6;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Section Title Styling */
-        h2 {
-            color: var(--accent-color);
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 2.2em;
-            font-weight: 700;
-        }
-
-        /* Input Group Styling */
         .input-group {
             display: flex;
             flex-direction: column;
-            margin-bottom: 20px;
+            gap: 10px;
         }
 
-        .input-group label {
-            margin-bottom: 8px;
-            font-weight: 600;
+        label {
+            font-size: 1rem;
             color: var(--text-color);
         }
 
-        .input-group input[type="text"] {
-            padding: 12px 15px;
+        body.light-mode label {
+            color: var(--light-text);
+        }
+
+        input[type="text"], textarea {
+            padding: 10px 12px;
+            border-radius: 4px;
             border: 1px solid var(--border-color);
-            border-radius: 8px; /* Rounded corners */
             background-color: var(--secondary-color);
             color: var(--text-color);
-            font-size: 1em;
+            font-size: 0.9rem;
             width: 100%;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s;
         }
 
-        .input-group input[type="text"]:focus {
+        body.light-mode input[type="text"],
+        body.light-mode textarea {
+            background-color: white;
+            color: var(--light-text);
+            border-color: var(--light-border);
+        }
+
+        input[type="text"]:focus, textarea:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.3);
         }
 
-        /* Button Styling */
-        .action-button {
+        button, .download-btn {
+            padding: 10px 20px;
             background-color: var(--primary-color);
             color: white;
-            padding: 12px 25px;
             border: none;
-            border-radius: 8px; /* Rounded corners */
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 1.1em;
+            font-size: 0.9rem;
             font-weight: 600;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            width: 100%;
-            margin-top: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 44px; /* Touch target size */
+            touch-action: manipulation; /* Improve touch responsiveness */
         }
 
-        .action-button:hover {
+        button:hover, .download-btn:hover {
             background-color: var(--accent-color);
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .action-button:disabled {
-            background-color: #555;
+        button:disabled {
+            background-color: var(--border-color);
             cursor: not-allowed;
             transform: none;
-            box-shadow: none;
-        }
-
-        /* Loading and Message Styling */
-        .message {
-            text-align: center;
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: 500;
-            display: none; /* Hidden by default */
-        }
-
-        .message.error {
-            background-color: rgba(255, 0, 0, 0.2);
-            color: #ff6666;
-            border: 1px solid #ff0000;
-        }
-
-        .message.loading {
-            background-color: rgba(23, 162, 184, 0.2);
-            color: var(--info-color);
-            border: 1px solid var(--info-color);
-        }
-
-        /* Thumbnail Preview Section */
-        .thumbnail-preview {
-            margin-top: 30px;
-            text-align: center;
-            display: none; /* Hidden by default */
-        }
-
-        .thumbnail-preview h3 {
-            color: var(--accent-color);
-            margin-bottom: 15px;
-            font-size: 1.5em;
-        }
-
-        .image-preview-container { /* General container for any image preview */
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            background-color: var(--secondary-color);
-            display: inline-block; /* To center the image container */
-            max-width: 100%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .image-preview-container img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* Download Buttons Grid */
-        .download-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .download-buttons .download-link {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            padding: 10px 15px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            text-align: center;
-            transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .download-buttons .download-link:hover {
-            background-color: #333;
-            transform: translateY(-2px);
-            border-color: var(--accent-color);
-        }
-
-        .download-buttons .download-link i {
-            font-size: 1.1em;
-        }
-
-        /* Video Details Extractor Section */
-        .video-details-extractor {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid var(--border-color);
-            display: none; /* Hidden by default */
-        }
-
-        .video-details-extractor h3 {
-            color: var(--accent-color);
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.8em;
         }
 
         .detail-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        .detail-group label {
-            font-weight: 600;
-            color: var(--text-color);
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        /* Container for textarea and copy button */
         .textarea-container {
             position: relative;
-            margin-bottom: 10px; /* Space between textarea and tags */
+            margin-top: 8px;
         }
 
-        .textarea-container textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            font-size: 1em;
-            box-sizing: border-box;
+        textarea {
+            min-height: 50px;
             resize: vertical;
-            min-height: 80px;
-            padding-right: 45px; /* Make space for copy button */
         }
 
-        /* Copy button for description */
         .copy-button {
             position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
+            right: 8px;
+            top: 8px;
+            padding: 5px 8px;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 5px;
-            padding: 8px 10px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 0.8em;
-            transition: background-color 0.2s ease;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 5px;
+            min-height: 36px; /* Touch target size */
         }
 
         .copy-button:hover {
             background-color: var(--accent-color);
         }
 
-        .copy-button:active {
-            transform: translateY(-50%) scale(0.95);
-        }
-
-        /* Tags display styling */
-        .tags-container { /* New container for tags and its copy button */
-            position: relative;
-            margin-bottom: 10px;
-        }
-
-        .tags-display {
-            min-height: 40px;
+        .tags-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
-            padding: 8px 15px; /* Adjust padding for tags */
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .tag {
             background-color: var(--secondary-color);
-            padding-right: 45px; /* Make space for copy button */
+            padding: 4px 8px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
         }
 
-        .tag-item {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.9em;
-            white-space: nowrap; /* Prevent tags from breaking */
-            cursor: default; /* Not directly clickable for copy anymore */
-            position: relative;
+        body.light-mode .tag {
+            background-color: #f0f0f0;
+            color: var(--light-text);
+            border-color: var(--light-border);
+        }
+
+        .thumbnails-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .thumbnail-card {
+            background-color: var(--secondary-color);
+            border-radius: 6px;
             overflow: hidden;
-            transition: background-color 0.2s ease;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s;
         }
 
-        .tag-item:hover {
-            background-color: var(--accent-color);
+        body.light-mode .thumbnail-card {
+            background-color: #f0f0f0;
+            border-color: var(--light-border);
         }
 
-        /* Copy all tags button */
-        .copy-all-tags-button {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: var(--primary-color);
+        .thumbnail-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .thumbnail-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .thumbnail-info {
+            padding: 10px;
+        }
+
+        .thumbnail-title {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        body.light-mode .thumbnail-title {
+            color: var(--light-text);
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            text-decoration: none;
+            min-height: 36px; /* Touch target size */
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary-color);
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: var(--warning-color);
+            background-color: rgba(255, 193, 7, 0.1);
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: none;
+            font-size: 0.85rem;
+        }
+
+        .success-message {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: var(--success-color);
             color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 8px 10px;
-            cursor: pointer;
-            font-size: 0.8em;
-            transition: background-color 0.2s ease;
+            padding: 8px 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+            font-size: 0.85rem;
+        }
+
+        /* Analytics Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-card {
+            background-color: var(--secondary-color);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        body.light-mode .stat-card {
+            background-color: #f0f0f0;
+            border-color: var(--light-border);
+        }
+
+        .stat-card i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Bulk Download Section */
+        .bulk-urls {
+            width: 100%;
+            min-height: 120px;
+            margin: 10px 0;
+        }
+
+        .bulk-results {
+            margin-top: 15px;
+            max-height: 250px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .bulk-item {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            gap: 5px;
+            padding: 8px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
         }
 
-        .copy-all-tags-button:hover {
-            background-color: var(--accent-color);
+        body.light-mode .bulk-item {
+            border-bottom-color: var(--light-border);
         }
 
-        .copy-all-tags-button:active {
-            transform: translateY(-50%) scale(0.95);
+        /* SEO Section */
+        .seo-score {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 0.9rem;
         }
 
-        /* Mobile Responsiveness */
+        .seo-good {
+            color: var(--success-color);
+        }
+
+        .seo-ok {
+            color: var(--warning-color);
+        }
+
+        .seo-bad {
+            color: var(--accent-color);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        body.light-mode .theme-toggle {
+            color: var(--light-text);
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 15px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        body.light-mode .tab-nav {
+            border-bottom-color: var(--light-border);
+        }
+
+        .tab-btn {
+            padding: 8px 15px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            min-height: 44px;
+        }
+
+        body.light-mode .tab-btn {
+            color: var(--light-text);
+        }
+
+        .tab-btn.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 30px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-color);
+            opacity: 0.7;
+            font-size: 0.8rem;
+        }
+
+        body.light-mode footer {
+            border-top-color: var(--light-border);
+            color: var(--light-text);
+        }
+
+        /* Media Queries */
         @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
             .header-container {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .nav-links {
-                display: none; /* Hide nav links by default on small screens */
-                flex-direction: column;
-                width: 100%;
-                margin-top: 15px;
-                gap: 10px;
-            }
-
-            .nav-links.active {
-                display: flex; /* Show when active */
+                flex-direction: row;
+                align-items: center;
+                position: relative;
             }
 
             .menu-toggle {
-                display: block; /* Show menu toggle on small screens */
+                display: block;
                 position: absolute;
-                right: 20px;
-                top: 15px;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
             }
 
-            .container {
-                padding: 20px;
-                margin: 20px; /* Adjust margin for overall content */
-            }
-
-            .tool-main-title {
-                font-size: 2em;
-            }
-
-            h2 {
-                font-size: 1.8em;
-            }
-
-            .action-button {
-                font-size: 1em;
-                padding: 10px 20px;
-            }
-
-            .download-buttons {
-                grid-template-columns: 1fr; /* Stack buttons on small screens */
-            }
-
-            .video-details-extractor h3 {
-                font-size: 1.5em;
-            }
-
-            .textarea-container textarea,
-            .tags-display {
-                padding-right: 10px; /* Reduce padding on small screens if copy button is too wide */
-            }
-
-            .copy-button,
-            .copy-all-tags-button {
-                position: static; /* Position normally */
-                transform: none; /* Remove transform */
-                margin-top: 10px; /* Add margin */
-                width: auto;
-                padding: 8px 12px;
-                float: right; /* Float right if space allows */
-            }
-             .textarea-container,
-             .tags-container {
-                display: flex;
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--secondary-color);
                 flex-direction: column;
+                padding: 15px;
+                z-index: 999;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            }
+
+            body.light-mode .nav-links {
+                background-color: var(--light-card);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 12px;
+                width: 100%;
+                text-align: left;
+                font-size: 1rem;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .subtitle {
+                font-size: 0.85rem;
+            }
+
+            .input-section, .result-section, .details-section, 
+            .analytics-section, .bulk-section, .seo-section {
+                padding: 15px;
+            }
+
+            .thumbnails-container {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            }
+
+            button, .download-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1rem;
+            }
+
+            .logo-icon {
+                font-size: 1.2rem;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            .subtitle {
+                font-size: 0.8rem;
+            }
+
+            .input-section, .result-section, .details-section, 
+            .analytics-section, .bulk-section, .seo-section {
+                padding: 12px;
+            }
+
+            input[type="text"], textarea {
+                font-size: 0.85rem;
+                padding: 8px 10px;
+            }
+
+            button, .download-btn {
+                font-size: 0.85rem;
+                padding: 8px;
+            }
+
+            .copy-button {
+                font-size: 0.75rem;
+                padding: 4px 6px;
+            }
+
+            .thumbnail-title {
+                font-size: 0.85rem;
+            }
+
+            .stat-card i {
+                font-size: 1.2rem;
+            }
+
+            .stat-value {
+                font-size: 1rem;
+            }
+
+            .stat-label {
+                font-size: 0.75rem;
+            }
+
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .container {
+                padding: 8px;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            .subtitle {
+                font-size: 0.75rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col">
     <header>
         <div class="header-container">
             <a href="#" class="logo">
                 <i class="fas fa-tools logo-icon"></i>
                 <span class="logo-text">Tools <span>Bazar</span></span>
             </a>
-            <div class="menu-toggle" id="menu-toggle">
+            <div class="menu-toggle">
                 <i class="fas fa-bars"></i>
             </div>
-            <nav class="nav-links" id="nav-links">
+            <nav class="nav-links">
                 <a href="#"><i class="fas fa-home"></i> Home</a>
                 <a href="#"><i class="fas fa-calculator"></i> Tools</a>
                 <a href="#"><i class="fas fa-info-circle"></i> About</a>
@@ -529,336 +745,686 @@
     </header>
 
     <div class="container">
-        <h1 class="tool-main-title">YouTube Thumbnail & Details Downloader</h1>
+        <h1>YouTube Thumbnail & Details Downloader</h1>
+        <p class="subtitle">Download any YouTube video’s thumbnail in high quality and extract video details like title, tags, and 
+            description—fast, free, and easy. Perfect for creators, marketers, and researchers.</p>
+        <button class="theme-toggle" id="theme-toggle">
+            <i class="fas fa-moon"></i>
+        </button>
 
-        <div class="tool-description">
-            <p>Download any YouTube video’s thumbnail in high quality and extract video details like title, tags, and description—fast, free, and easy. Perfect for creators, marketers, and researchers.</p>
-        </div>
-
-        <h2><i class="fas fa-search"></i> Enter YouTube URL</h2>
-
-        <div class="input-group">
-            <label for="video-url">YouTube Video URL:</label>
-            <input type="text" id="video-url" placeholder="e.g., https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-        </div>
-
-        <button id="get-details-button" class="action-button">Get Video Details</button>
-
-        <div id="message-display" class="message"></div>
-        <div id="loading-spinner" class="message loading">
-            <i class="fas fa-spinner fa-spin"></i> Fetching video details...
-        </div>
-
-        <div id="thumbnail-preview-section" class="thumbnail-preview">
-            <h3>Available Video Thumbnails</h3>
-            <div id="thumbnail-image-display" class="image-preview-container">
-                <img id="preview-image" src="" alt="Thumbnail Preview">
-            </div>
-            <div id="download-links" class="download-buttons">
-                </div>
-        </div>
-
-        <div id="video-details-extractor-section" class="video-details-extractor">
-            <h3><i class="fas fa-info-circle"></i> Video Details</h3>
-            
-            <div class="detail-group">
-                <label for="video-title">Video Title:</label>
-                <div class="textarea-container">
-                    <textarea id="video-title" readonly placeholder="Video title will appear here."></textarea>
-                    <button class="copy-button" id="copy-title-btn" title="Copy Title"><i class="fas fa-copy"></i> Copy</button>
-                </div>
+        <main class="main-content">
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="single-tab">Single Video</button>
+                <button class="tab-btn" data-tab="bulk-tab">Bulk Download</button>
             </div>
 
-            <div class="detail-group">
-                <label for="video-description">Description:</label>
-                <div class="textarea-container">
-                    <textarea id="video-description" readonly placeholder="Video description will appear here."></textarea>
-                    <button class="copy-button" id="copy-description-btn" title="Copy Description"><i class="fas fa-copy"></i> Copy</button>
-                </div>
-            </div>
-
-            <div class="detail-group">
-                <label for="video-tags">Tags:</label>
-                <div class="tags-container"> <div id="video-tags" class="tags-display">
-                        <span class="tag-item">No Tags Found</span>
+            <!-- Single Video Tab -->
+            <div class="tab-content active" id="single-tab">
+                <section class="input-section">
+                    <div class="input-group">
+                        <label for="youtube-url">Enter YouTube Video URL or ID:</label>
+                        <input type="text" id="youtube-url" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                        <button id="fetch-btn">
+                            <i class="fas fa-download"></i> Get Thumbnails & Details
+                        </button>
+                        <div class="error-message" id="error-message"></div>
                     </div>
-                    <button class="copy-all-tags-button" id="copy-all-tags-btn" title="Copy All Tags"><i class="fas fa-copy"></i> Copy All</button>
-                </div>
-            </div>
-        </div>
+                </section>
 
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Fetching video details...</p>
+                </div>
+
+                <section class="details-section" id="details-section">
+                    <h2>Video Details</h2>
+                    
+                    <div class="detail-group">
+                        <label for="video-title">Video Title:</label>
+                        <div class="textarea-container">
+                            <textarea id="video-title" readonly placeholder="Video title will appear here."></textarea>
+                            <button class="copy-button" id="copy-title-btn" title="Copy Title">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="detail-group">
+                        <label for="video-description">Video Description:</label>
+                        <div class="textarea-container">
+                            <textarea id="video-description" readonly placeholder="Video description will appear here." rows="5"></textarea>
+                            <button class="copy-button" id="copy-description-btn" title="Copy Description">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="detail-group">
+                        <label for="video-tags">Video Tags:</label>
+                        <div class="textarea-container">
+                            <textarea id="video-tags" readonly placeholder="Video tags will appear here."></textarea>
+                            <button class="copy-button" id="copy-tags-btn" title="Copy Tags">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="analytics-section" id="analytics-section">
+                    <h2>Video Analytics</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-eye"></i>
+                            <span class="stat-value" id="view-count">0</span>
+                            <span class="stat-label">Views</span>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span class="stat-value" id="like-count">0</span>
+                            <span class="stat-label">Likes</span>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-comment"></i>
+                            <span class="stat-value" id="comment-count">0</span>
+                            <span class="stat-label">Comments</span>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-calendar"></i>
+                            <span class="stat-value" id="publish-date">-</span>
+                            <span class="stat-label">Published</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="seo-section" id="seo-section">
+                    <h2>SEO Suggestions</h2>
+                    <div class="detail-group">
+                        <label for="meta-title">Suggested Meta Title:</label>
+                        <div class="textarea-container">
+                            <textarea id="meta-title" readonly placeholder="Suggested meta title will appear here."></textarea>
+                            <button class="copy-button" id="copy-meta-title-btn" title="Copy Meta Title">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="detail-group">
+                        <label for="meta-description">Suggested Meta Description:</label>
+                        <div class="textarea-container">
+                            <textarea id="meta-description" readonly placeholder="Suggested meta description will appear here." rows="3"></textarea>
+                            <button class="copy-button" id="copy-meta-desc-btn" title="Copy Meta Description">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="seo-score">
+                        <span>SEO Score: </span>
+                        <span id="seo-score-value" class="seo-good">0</span>/100
+                    </div>
+                </section>
+
+                <section class="result-section" id="result-section">
+                    <h2>Available Thumbnails</h2>
+                    <div class="thumbnails-container" id="thumbnails-container">
+                        <!-- Thumbnails will be inserted here -->
+                    </div>
+                    <button id="download-all-btn" style="margin-top: 15px; display: none;">
+                        <i class="fas fa-file-archive"></i> Download All Thumbnails (ZIP)
+                    </button>
+                </section>
+            </div>
+
+            <!-- Bulk Download Tab -->
+            <div class="tab-content" id="bulk-tab">
+                <section class="bulk-section">
+                    <h2>Bulk Thumbnail Downloader</h2>
+                    <div class="input-group">
+                        <label for="bulk-urls">Enter YouTube URLs (one per line):</label>
+                        <textarea id="bulk-urls" class="bulk-urls" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ
+https://www.youtube.com/watch?v=VIDEO_ID_2
+https://www.youtube.com/watch?v=VIDEO_ID_3"></textarea>
+                        <button id="process-bulk-btn">
+                            <i class="fas fa-tasks"></i> Process Videos
+                        </button>
+                        <div class="error-message" id="bulk-error-message"></div>
+                    </div>
+                    <div class="loading" id="bulk-loading">
+                        <div class="spinner"></div>
+                        <p>Processing videos... <span id="bulk-progress">0</span>/<span id="bulk-total">0</span></p>
+                    </div>
+                    <div class="bulk-results" id="bulk-results">
+                        <!-- Bulk results will appear here -->
+                    </div>
+                    <button id="download-bulk-btn" style="margin-top: 15px; display: none;">
+                        <i class="fas fa-file-archive"></i> Download All Thumbnails (ZIP)
+                    </button>
+                </section>
+            </div>
+        </main>
+
+        <div class="success-message" id="success-message">Copied to clipboard!</div>
+
+        <footer>
+            <p>© 2025 Tools Bazar| All Rights Reserved</p>
+        </footer>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const videoUrlInput = document.getElementById('video-url');
-            const getDetailsButton = document.getElementById('get-details-button');
-            const messageDisplay = document.getElementById('message-display');
-            const loadingSpinner = document.getElementById('loading-spinner');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const fetchBtn = document.getElementById('fetch-btn');
+            const youtubeUrlInput = document.getElementById('youtube-url');
+            const resultSection = document.getElementById('result-section');
+            const detailsSection = document.getElementById('details-section');
+            const analyticsSection = document.getElementById('analytics-section');
+            const seoSection = document.getElementById('seo-section');
+            const loadingElement = document.getElementById('loading');
+            const thumbnailsContainer = document.getElementById('thumbnails-container');
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+            const themeToggle = document.getElementById('theme-toggle');
+            const downloadAllBtn = document.getElementById('download-all-btn');
             
-            const thumbnailPreviewSection = document.getElementById('thumbnail-preview-section');
-            const previewImage = document.getElementById('preview-image');
-            const downloadLinksContainer = document.getElementById('download-links');
-
-            const videoDetailsExtractorSection = document.getElementById('video-details-extractor-section');
-            const videoTitleTextarea = document.getElementById('video-title');
-            const videoDescriptionTextarea = document.getElementById('video-description');
-            const videoTagsDisplay = document.getElementById('video-tags');
+            // Video detail elements
+            const videoTitle = document.getElementById('video-title');
+            const videoDescription = document.getElementById('video-description');
+            const videoTags = document.getElementById('video-tags');
+            const viewCount = document.getElementById('view-count');
+            const likeCount = document.getElementById('like-count');
+            const commentCount = document.getElementById('comment-count');
+            const publishDate = document.getElementById('publish-date');
+            const metaTitle = document.getElementById('meta-title');
+            const metaDescription = document.getElementById('meta-description');
+            const seoScore = document.getElementById('seo-score-value');
+            
+            // Copy buttons
             const copyTitleBtn = document.getElementById('copy-title-btn');
             const copyDescriptionBtn = document.getElementById('copy-description-btn');
-            const copyAllTagsBtn = document.getElementById('copy-all-tags-btn');
-
-            // Header elements for mobile toggle
-            const menuToggle = document.getElementById('menu-toggle');
-            const navLinks = document.getElementById('nav-links');
-
-            // Your YouTube Data API Key
-            const API_KEY = 'AIzaSyAJIgomnrABZjHc3LdOM5Rr7zM2aka4Rew'; // REPLACE WITH YOUR ACTUAL API KEY
-
-            /**
-             * Displays a message to the user.
-             * @param {string} msg - The message text.
-             * @param {string} type - 'error', 'loading', or empty for general.
-             */
-            function showMessage(msg, type = '') {
-                messageDisplay.textContent = msg;
-                messageDisplay.className = `message ${type}`;
-                messageDisplay.style.display = 'block';
-                if (type === 'loading') {
-                    loadingSpinner.style.display = 'block';
-                    messageDisplay.style.display = 'none'; // Hide general message when loading
-                } else {
-                    loadingSpinner.style.display = 'none';
-                }
+            const copyTagsBtn = document.getElementById('copy-tags-btn');
+            const copyMetaTitleBtn = document.getElementById('copy-meta-title-btn');
+            const copyMetaDescBtn = document.getElementById('copy-meta-desc-btn');
+            
+            // Bulk download elements
+            const bulkUrls = document.getElementById('bulk-urls');
+            const processBulkBtn = document.getElementById('process-bulk-btn');
+            const bulkLoading = document.getElementById('bulk-loading');
+            const bulkResults = document.getElementById('bulk-results');
+            const bulkErrorMessage = document.getElementById('bulk-error-message');
+            const downloadBulkBtn = document.getElementById('download-bulk-btn');
+            const bulkProgress = document.getElementById('bulk-progress');
+            const bulkTotal = document.getElementById('bulk-total');
+            
+            // Menu toggle
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleDarkMode);
+            
+            // Check user preference
+            if (localStorage.getItem('darkMode') === 'off') {
+                document.body.classList.add('light-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
             }
-
-            /**
-             * Hides all messages.
-             */
-            function hideMessages() {
-                messageDisplay.style.display = 'none';
-                loadingSpinner.style.display = 'none';
-            }
-
-            /**
-             * Resets the entire display.
-             */
-            function resetDisplay() {
-                thumbnailPreviewSection.style.display = 'none';
-                previewImage.src = '';
-                downloadLinksContainer.innerHTML = '';
-
-                videoDetailsExtractorSection.style.display = 'none';
-                videoTitleTextarea.value = '';
-                videoDescriptionTextarea.value = '';
-                videoTagsDisplay.innerHTML = '<span class="tag-item">No Tags Found</span>';
-            }
-
-            /**
-             * Extracts the YouTube video ID from various URL formats.
-             * @param {string} url - The YouTube video URL.
-             * @returns {string|null} The video ID or null if not found.
-             */
-            function getVideoId(url) {
-                const regex = /(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([\w-]{11})(?:\S+)?/i;
-                const match = url.match(regex);
-                return match ? match[1] : null;
-            }
-
-            /**
-             * Copies text to clipboard.
-             * @param {string} text - The text to copy.
-             * @param {string} successMsg - Message on success.
-             * @param {string} failMsg - Message on failure.
-             */
-            function copyToClipboard(text, successMsg, failMsg) {
-                let tempInput = document.createElement('textarea');
-                tempInput.value = text;
-                tempInput.style.position = 'absolute';
-                tempInput.style.left = '-9999px';
-                document.body.appendChild(tempInput);
-                tempInput.select();
-                tempInput.setSelectionRange(0, 99999); // For mobile devices
-
-                try {
-                    document.execCommand('copy');
-                    showMessage(successMsg, 'success');
-                } catch (err) {
-                    console.error('Failed to copy: ', err);
-                    showMessage(failMsg, 'error');
-                } finally {
-                    document.body.removeChild(tempInput);
-                    setTimeout(() => hideMessages(), 2000);
-                }
-            }
-
-            /**
-             * Triggers a file download.
-             * @param {string} url - The URL of the file to download.
-             * @param {string} filename - The desired filename for the download.
-             * @param {string} successMsg - Message on successful trigger.
-             * @param {string} failMsg - Message if URL is missing.
-             */
-            function downloadFile(url, filename, successMsg, failMsg) {
-                console.log('Attempting download: URL =', url, 'Filename =', filename); // Debug log
-                if (url && url !== '#') {
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = filename;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    showMessage(successMsg, 'success');
-                } else {
-                    console.error('Download failed: Invalid URL provided for download.', url); // Debug log
-                    showMessage(failMsg, 'warning');
-                }
-                setTimeout(() => hideMessages(), 2000);
-            }
-
-
-            // --- Event Listeners for Copy Buttons ---
-            copyTitleBtn.addEventListener('click', () => {
-                copyToClipboard(videoTitleTextarea.value, 'Title copied to clipboard!', 'No title to copy.');
-            });
-
-            copyDescriptionBtn.addEventListener('click', () => {
-                copyToClipboard(videoDescriptionTextarea.value, 'Description copied to clipboard!', 'No description to copy.');
-            });
-
-            copyAllTagsBtn.addEventListener('click', () => {
-                const tagElements = videoTagsDisplay.querySelectorAll('.tag-item');
-                const tags = Array.from(tagElements).map(tag => tag.textContent.trim());
-                const filteredTags = tags.filter(tag => tag !== 'No Tags Found');
-                if (filteredTags.length > 0) {
-                    copyToClipboard(filteredTags.join(', '), 'Tags copied to clipboard!', 'No tags to copy.');
-                } else {
-                    showMessage('No tags to copy.', 'warning');
-                    setTimeout(() => hideMessages(), 2000);
-                }
-            });
-
-            // --- Mobile Menu Toggle ---
+            
+            // Menu toggle functionality
             menuToggle.addEventListener('click', () => {
                 navLinks.classList.toggle('active');
             });
-
-
-            // --- Main Fetch Logic ---
-            getDetailsButton.addEventListener('click', async () => {
-                const videoUrl = videoUrlInput.value.trim();
-                hideMessages();
-                resetDisplay(); // Reset all sections
-
-                if (!videoUrl) {
-                    showMessage('Please enter a YouTube video URL.', 'error');
-                    return;
-                }
-
-                const videoId = getVideoId(videoUrl);
-
-                if (!videoId) {
-                    showMessage('Invalid YouTube URL. Please enter a valid video URL.', 'error');
-                    return;
-                }
-
-                showMessage('Fetching video details...', 'loading');
-                getDetailsButton.disabled = true;
-
-                try {
-                    // Fetch Video Snippet (Thumbnails, Title, Description, Tags)
-                    const videoApiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&fields=items/snippet(thumbnails,title,description,tags)&key=${API_KEY}`;
-                    const videoResponse = await fetch(videoApiUrl);
-
-                    if (!videoResponse.ok) {
-                        let errorMessage = `HTTP error! status: ${videoResponse.status}`;
-                        try {
-                            const errorData = await videoResponse.json();
-                            if (errorData && errorData.error && errorData.error.message) {
-                                errorMessage = errorData.error.message;
-                            }
-                        } catch (parseError) {
-                            console.warn('Could not parse video API error response:', parseError);
-                        }
-                        throw new Error(`Video API error: ${errorMessage}`);
-                    }
-
-                    const videoData = await videoResponse.json();
-
-                    if (videoData.items && videoData.items.length > 0) {
-                        const snippet = videoData.items[0].snippet;
-                        const thumbnails = snippet.thumbnails;
-                        const title = snippet.title || 'No title available.';
-                        const description = snippet.description || 'No description available.';
-                        const tags = snippet.tags || [];
-
-                        // --- Populate Video Thumbnail Section ---
-                        const previewThumbnail = thumbnails.maxres || thumbnails.standard || thumbnails.high || thumbnails.medium || thumbnails.default;
-                        if (previewThumbnail) {
-                            previewImage.src = previewThumbnail.url;
-                            thumbnailPreviewSection.style.display = 'block';
-                        } else {
-                            showMessage('No video thumbnails found.', 'warning');
-                        }
-
-                        downloadLinksContainer.innerHTML = ''; // Clear previous links
-                        const qualities = {
-                            'Max Resolution': thumbnails.maxres,
-                            'Standard Quality': thumbnails.standard,
-                            'High Quality': thumbnails.high,
-                            'Medium Quality': thumbnails.medium,
-                            'Default Thumbnail': thumbnails.default
-                        };
-
-                        for (const qualityName in qualities) {
-                            const thumb = qualities[qualityName];
-                            if (thumb && thumb.url) {
-                                const link = document.createElement('a');
-                                link.href = thumb.url;
-                                link.download = `youtube_video_thumbnail_${videoId}_${qualityName.toLowerCase().replace(/ /g, '_')}.jpg`;
-                                link.target = '_blank';
-                                link.className = 'download-link';
-                                link.innerHTML = `<i class="fas fa-download"></i> ${qualityName}`;
-                                downloadLinksContainer.appendChild(link);
-                            }
-                        }
-
-                        // --- Populate Video Details Section ---
-                        videoTitleTextarea.value = title;
-                        videoDescriptionTextarea.value = description;
-                        videoTagsDisplay.innerHTML = '';
-                        if (tags.length > 0) {
-                            tags.forEach(tag => {
-                                const tagSpan = document.createElement('span');
-                                tagSpan.className = 'tag-item';
-                                tagSpan.textContent = tag;
-                                videoTagsDisplay.appendChild(tagSpan);
-                            });
-                        } else {
-                            const noTagsSpan = document.createElement('span');
-                            noTagsSpan.className = 'tag-item';
-                            noTagsSpan.textContent = 'No Tags Found';
-                            videoTagsDisplay.appendChild(noTagsSpan);
-                        }
-                        videoDetailsExtractorSection.style.display = 'block';
-
-                        hideMessages(); // Hide loading spinner on overall success
-                    } else {
-                        showMessage('No video found with that URL or no details available.', 'error');
-                    }
-
-                } catch (error) {
-                    console.error('Error fetching details:', error);
-                    let userMessage = `Failed to fetch details. This might be due to a network issue, an invalid YouTube URL, or an issue with the YouTube API. Please check your internet connection and the video URL, or try again later.`;
-                    if (error.message && error.message.includes('Failed to fetch')) {
-                        showMessage(userMessage, 'error');
-                    } else {
-                        showMessage(`Failed to fetch details: ${error.message}. Please check the URL or try again later.`, 'error');
-                    }
-                } finally {
-                    getDetailsButton.disabled = false;
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
+                    navLinks.classList.remove('active');
                 }
             });
+            
+            // Tab navigation
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.getAttribute('data-tab');
+                    
+                    // Update active tab button
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // Update active tab content
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Main fetch function
+            fetchBtn.addEventListener('click', fetchThumbnails);
+            youtubeUrlInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    fetchThumbnails();
+                }
+            });
+            
+            // Bulk download
+            processBulkBtn.addEventListener('click', processBulkUrls);
+            downloadBulkBtn.addEventListener('click', downloadBulkThumbnails);
+            
+            // Copy buttons functionality
+            copyTitleBtn.addEventListener('click', () => copyToClipboard(videoTitle));
+            copyDescriptionBtn.addEventListener('click', () => copyToClipboard(videoDescription));
+            copyTagsBtn.addEventListener('click', () => copyToClipboard(videoTags));
+            copyMetaTitleBtn.addEventListener('click', () => copyToClipboard(metaTitle));
+            copyMetaDescBtn.addEventListener('click', () => copyToClipboard(metaDescription));
+            
+            // Download all thumbnails
+            downloadAllBtn.addEventListener('click', downloadAllThumbnails);
+            
+            function fetchThumbnails() {
+                const youtubeUrl = youtubeUrlInput.value.trim();
+                
+                // Hide previous results and errors
+                resultSection.style.display = 'none';
+                detailsSection.style.display = 'none';
+                analyticsSection.style.display = 'none';
+                seoSection.style.display = 'none';
+                downloadAllBtn.style.display = 'none';
+                errorMessage.style.display = 'none';
+                
+                // Validate input
+                if (!youtubeUrl) {
+                    showError('Please enter a YouTube URL or video ID');
+                    return;
+                }
+                
+                // Extract video ID
+                let videoId = extractVideoId(youtubeUrl);
+                
+                if (!videoId) {
+                    showError('Invalid YouTube URL or video ID');
+                    return;
+                }
+                
+                // Show loading
+                loadingElement.style.display = 'block';
+                fetchBtn.disabled = true;
+                
+                // Fetch video details using YouTube API
+                fetchVideoDetails(videoId);
+            }
+            
+            function extractVideoId(url) {
+                // Handle full URL
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                const match = url.match(regExp);
+                
+                if (match && match[2].length === 11) {
+                    return match[2];
+                }
+                
+                // Handle just the video ID (11 characters)
+                if (url.length === 11 && !url.includes('/') && !url.includes('?')) {
+                    return url;
+                }
+                
+                return null;
+            }
+            
+            function fetchVideoDetails(videoId) {
+                const apiKey = 'AIzaSyAJIgomnrABZjHc3LdOM5Rr7zM2aka4Rew';
+                const apiUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=snippet,statistics`;
+                
+                fetch(apiUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.items && data.items.length > 0) {
+                            const videoData = data.items[0].snippet;
+                            const stats = data.items[0].statistics;
+                            
+                            displayVideoDetails(videoData, stats);
+                            displayThumbnails(videoId, videoData.title);
+                            generateSeoSuggestions(videoData);
+                        } else {
+                            throw new Error('Video not found');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching video details:', error);
+                        showError('Failed to fetch video details. Please check the URL and try again.');
+                    })
+                    .finally(() => {
+                        loadingElement.style.display = 'none';
+                        fetchBtn.disabled = false;
+                    });
+            }
+            
+            function displayVideoDetails(videoData, stats) {
+                // Set title
+                videoTitle.value = videoData.title || 'No title available';
+                
+                // Set description
+                videoDescription.value = videoData.description || 'No description available';
+                
+                // Set tags
+                if (videoData.tags && videoData.tags.length > 0) {
+                    videoTags.value = videoData.tags.join(', ');
+                } else {
+                    videoTags.value = 'No tags available';
+                }
+                
+                // Set analytics
+                if (stats) {
+                    viewCount.textContent = formatNumber(stats.viewCount);
+                    likeCount.textContent = formatNumber(stats.likeCount);
+                    commentCount.textContent = formatNumber(stats.commentCount);
+                }
+                
+                // Set publish date
+                if (videoData.publishedAt) {
+                    publishDate.textContent = new Date(videoData.publishedAt).toLocaleDateString();
+                }
+                
+                // Show sections
+                detailsSection.style.display = 'block';
+                analyticsSection.style.display = 'block';
+                seoSection.style.display = 'block';
+            }
+            
+            function displayThumbnails(videoId, videoTitle) {
+                // Clear previous thumbnails
+                thumbnailsContainer.innerHTML = '';
+                
+                // Create thumbnail URLs for all available resolutions
+                const thumbnails = [
+                    {
+                        name: 'Max Resolution',
+                        url: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+                        quality: 'maxresdefault'
+                    },
+                    {
+                        name: 'High Quality',
+                        url: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+                        quality: 'hqdefault'
+                    },
+                    {
+                        name: 'Medium Quality',
+                        url: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
+                        quality: 'mqdefault'
+                    },
+                    {
+                        name: 'Standard Quality',
+                        url: `https://img.youtube.com/vi/${videoId}/sddefault.jpg`,
+                        quality: 'sddefault'
+                    },
+                    {
+                        name: 'Default Thumbnail 1',
+                        url: `https://img.youtube.com/vi/${videoId}/0.jpg`,
+                        quality: 'default1'
+                    },
+                    {
+                        name: 'Default Thumbnail 2',
+                        url: `https://img.youtube.com/vi/${videoId}/1.jpg`,
+                        quality: 'default2'
+                    },
+                    {
+                        name: 'Default Thumbnail 3',
+                        url: `https://img.youtube.com/vi/${videoId}/2.jpg`,
+                        quality: 'default3'
+                    }
+                ];
+                
+                // Create thumbnail cards
+                thumbnails.forEach(thumb => {
+                    const card = document.createElement('div');
+                    card.className = 'thumbnail-card';
+                    
+                    card.innerHTML = `
+                        <img src="${thumb.url}" alt="${videoTitle}" class="thumbnail-img" 
+                             onerror="this.style.display='none'" data-quality="${thumb.quality}">
+                        <div class="thumbnail-info">
+                            <h3 class="thumbnail-title">${thumb.name}</h3>
+                            <a href="${thumb.url}" download="yt-thumbnail-${videoId}-${thumb.name.replace(/\s+/g, '-').toLowerCase()}.jpg" 
+                               class="download-btn">
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                        </div>
+                    `;
+                    
+                    thumbnailsContainer.appendChild(card);
+                });
+                
+                // Show result section and download all button
+                resultSection.style.display = 'block';
+                downloadAllBtn.style.display = 'inline-flex';
+                downloadAllBtn.setAttribute('data-video-id', videoId);
+            }
+            
+            function generateSeoSuggestions(videoData) {
+                // Generate meta title
+                const title = videoData.title || '';
+                metaTitle.value = `${title} - ${videoData.channelTitle || 'YouTube Video'}`;
+                
+                // Generate meta description
+                let description = videoData.description || '';
+                if (description.length > 160) {
+                    description = description.substring(0, 157) + '...';
+                }
+                metaDescription.value = description;
+                
+                // Calculate SEO score (simple example)
+                let score = 70; // Base score
+                
+                if (videoData.tags && videoData.tags.length >= 5) score += 10;
+                if (title.length >= 30 && title.length <= 60) score += 10;
+                if (description.length >= 70 && description.length <= 160) score += 10;
+                
+                seoScore.textContent = score;
+                
+                // Update score color
+                seoScore.className = '';
+                if (score >= 80) {
+                    seoScore.classList.add('seo-good');
+                } else if (score >= 60) {
+                    seoScore.classList.add('seo-ok');
+                } else {
+                    seoScore.classList.add('seo-bad');
+                }
+            }
+            
+            function processBulkUrls() {
+                const urlsText = bulkUrls.value.trim();
+                
+                // Hide previous results and errors
+                bulkResults.style.display = 'none';
+                bulkErrorMessage.style.display = 'none';
+                downloadBulkBtn.style.display = 'none';
+                
+                // Validate input
+                if (!urlsText) {
+                    showBulkError('Please enter at least one YouTube URL');
+                    return;
+                }
+                
+                // Split URLs by line
+                const urls = urlsText.split('\n').filter(url => url.trim());
+                const videoIds = [];
+                
+                // Extract video IDs
+                for (const url of urls) {
+                    const videoId = extractVideoId(url.trim());
+                    if (videoId) {
+                        videoIds.push(videoId);
+                    }
+                }
+                
+                if (videoIds.length === 0) {
+                    showBulkError('No valid YouTube URLs found');
+                    return;
+                }
+                
+                // Show loading
+                bulkLoading.style.display = 'block';
+                processBulkBtn.disabled = true;
+                bulkTotal.textContent = videoIds.length;
+                bulkProgress.textContent = '0';
+                
+                // Clear previous results
+                bulkResults.innerHTML = '';
+                
+                // Process each video
+                const processedVideos = [];
+                const zip = new JSZip();
+                const imgFolder = zip.folder("thumbnails");
+                
+                videoIds.forEach((videoId, index) => {
+                    fetchVideoDetailsForBulk(videoId, index + 1, videoIds.length, processedVideos, imgFolder)
+                        .then(() => {
+                            if (processedVideos.length === videoIds.length) {
+                                // All videos processed
+                                bulkLoading.style.display = 'none';
+                                processBulkBtn.disabled = false;
+                                bulkResults.style.display = 'block';
+                                downloadBulkBtn.style.display = 'inline-flex';
+                                
+                                // Save zip for download
+                                downloadBulkBtn.setAttribute('data-zip-data', JSON.stringify({
+                                    videos: processedVideos,
+                                    zip: zip
+                                }));
+                            }
+                        });
+                });
+            }
+            
+            function fetchVideoDetailsForBulk(videoId, current, total, processedVideos, imgFolder) {
+                return new Promise((resolve) => {
+                    const apiKey = 'AIzaSyAJIgomnrABZjHc3LdOM5Rr7zM2aka4Rew';
+                    const apiUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=snippet`;
+                    
+                    fetch(apiUrl)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.items && data.items.length > 0) {
+                                const videoData = data.items[0].snippet;
+                                const thumbUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+                                
+                                // Add to processed videos
+                                const videoInfo = {
+                                    id: videoId,
+                                    title: videoData.title || 'Untitled',
+                                    thumbnail: thumbUrl
+                                };
+                                processedVideos.push(videoInfo);
+                                
+                                // Add to results list
+                                const item = document.createElement('div');
+                                item.className = 'bulk-item';
+                                item.innerHTML = `
+                                    <span>${videoInfo.title}</span>
+                                    <a href="${thumbUrl}" download="yt-thumbnail-${videoId}.jpg" class="download-btn">
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                `;
+                                bulkResults.appendChild(item);
+                                
+                                // Fetch thumbnail for ZIP
+                                fetch(thumbUrl)
+                                    .then(response => response.blob())
+                                    .then(blob => {
+                                        imgFolder.file(`thumbnail-${videoId}.jpg`, blob);
+                                        resolve();
+                                    })
+                                    .catch(() => resolve());
+                            } else {
+                                resolve();
+                            }
+                            
+                            // Update progress
+                            bulkProgress.textContent = current;
+                        })
+                        .catch(() => {
+                            resolve();
+                            bulkProgress.textContent = current;
+                        });
+                });
+            }
+            
+            function downloadBulkThumbnails() {
+                const zipData = JSON.parse(downloadBulkBtn.getAttribute('data-zip-data'));
+                zipData.zip.generateAsync({type: "blob"})
+                    .then(function(content) {
+                        saveAs(content, "youtube-thumbnails.zip");
+                    });
+            }
+            
+            function downloadAllThumbnails() {
+                const videoId = downloadAllBtn.getAttribute('data-video-id');
+                const zip = new JSZip();
+                const imgFolder = zip.folder("thumbnails");
+                let count = 0;
+                const total = document.querySelectorAll('.thumbnail-img:not([style*="display: none"])').length;
+                
+                document.querySelectorAll('.thumbnail-img:not([style*="display: none"])').forEach(img => {
+                    const quality = img.getAttribute('data-quality');
+                    const url = img.src;
+                    
+                    fetch(url)
+                        .then(response => response.blob())
+                        .then(blob => {
+                            imgFolder.file(`thumbnail-${videoId}-${quality}.jpg`, blob);
+                            count++;
+                            
+                            if (count === total) {
+                                zip.generateAsync({type: "blob"})
+                                    .then(function(content) {
+                                        saveAs(content, `youtube-thumbnails-${videoId}.zip`);
+                                    });
+                            }
+                        });
+                });
+            }
+            
+            function toggleDarkMode() {
+                document.body.classList.toggle('light-mode');
+                if (document.body.classList.contains('light-mode')) {
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                    localStorage.setItem('darkMode', 'off');
+                } else {
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                    localStorage.setItem('darkMode', 'on');
+                }
+            }
+            
+            function copyToClipboard(element) {
+                element.select();
+                document.execCommand('copy');
+                showSuccessMessage();
+            }
+            
+            function showSuccessMessage(message = 'Copied to clipboard!') {
+                successMessage.textContent = message;
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 2000);
+            }
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+            
+            function showBulkError(message) {
+                bulkErrorMessage.textContent = message;
+                bulkErrorMessage.style.display = 'block';
+            }
+            
+            function formatNumber(num) {
+                return num ? parseInt(num).toLocaleString() : 'N/A';
+            }
         });
     </script>
 </body>
