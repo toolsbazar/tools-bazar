@@ -4,47 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tools Bazar - Your Daily Tools, All in One Place</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         :root {
+            /* Dark Theme Variables (Default) */
             --primary: #8B0000; /* Dark red */
             --secondary: #121212; /* Dark black */
             --accent: #A52A2A; /* Lighter red */
             --text: #F5F5F5; /* Light gray */
             --card-bg: #1E1E1E;
+            --body-bg: var(--secondary);
+            --header-shadow: rgba(0, 0, 0, 0.3);
+            --card-border: rgba(255, 255, 255, 0.05);
+            --footer-border: rgba(255, 255, 255, 0.1);
         }
-        
+
+        body.light-theme {
+            /* Light Theme Variables */
+            --primary: #DC143C; /* Crimson */
+            --secondary: #F0F2F5; /* Light Gray Blue */
+            --accent: #FF6347; /* Tomato */
+            --text: #333333; /* Dark Gray */
+            --card-bg: #FFFFFF;
+            --body-bg: #E0E2E4; /* Slightly darker light gray */
+            --header-shadow: rgba(0, 0, 0, 0.1);
+            --card-border: rgba(0, 0, 0, 0.1);
+            --footer-border: rgba(0, 0, 0, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
-            background-color: var(--secondary);
+            background-color: var(--body-bg);
             color: var(--text);
             line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth theme transition */
         }
-        
-        .container {
+
+       .container {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 15px;
         }
-        
+
         /* Header */
         header {
             background-color: var(--secondary);
             padding: 10px 0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 8px var(--header-shadow);
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: all 0.3s ease; /* Smooth transition for header changes */
         }
-        
-        .header-container {
+
+        header.scrolled {
+            padding: 5px 0; /* Smaller padding when scrolled */
+            background-color: rgba(18, 18, 18, 0.95); /* Slightly more opaque */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        body.light-theme header.scrolled {
+            background-color: rgba(240, 242, 245, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+       .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -52,8 +83,8 @@
             margin: 0 auto;
             padding: 0 15px;
         }
-        
-        .logo {
+
+       .logo {
             display: flex;
             align-items: center;
             font-size: 20px;
@@ -61,65 +92,85 @@
             color: var(--text);
             text-decoration: none;
         }
-        
-        .logo-icon {
+
+       .logo-image { /* New style for the logo image */
+            width: 30px; /* Adjust size as needed */
+            height: 30px; /* Adjust size as needed */
             margin-right: 8px;
-            color: var(--primary);
+            border-radius: 50%; /* Make it circular if desired */
+            object-fit: cover; /* Ensures the image covers the area without distortion */
         }
-        
-        .logo-text span {
+
+       .logo-text span {
             color: var(--primary);
+            text-shadow: none;
+            animation: none;
         }
-        
-        .nav-links {
+
+       .nav-links {
             display: flex;
             align-items: center;
         }
-        
-        .nav-links a {
+
+       .nav-links a {
             color: var(--text);
             text-decoration: none;
             font-weight: 500;
             margin-left: 15px;
             transition: color 0.3s;
         }
-        
-        .nav-links a i {
+
+       .nav-links a i {
             margin-right: 6px;
         }
-        
-        .nav-links a:hover {
+
+       .nav-links a:hover {
             color: var(--primary);
         }
-        
-        .menu-toggle {
+
+       .menu-toggle {
             display: none;
             cursor: pointer;
             font-size: 20px;
             color: var(--text);
         }
-        
+
+       .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 15px;
+            transition: color 0.3s;
+        }
+
+       .theme-toggle:hover {
+            color: var(--primary);
+        }
+
         /* Hero Section */
-        .hero {
+       .hero {
             background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
             padding: 50px 0;
             text-align: center;
+            transition: background 0.3s ease; /* Smooth theme transition */
         }
-        
-        .hero h1 {
+
+       .hero h1 {
             font-size: 2rem;
             margin-bottom: 15px;
             line-height: 1.2;
         }
-        
-        .hero p {
+
+       .hero p {
             font-size: 1rem;
             max-width: 600px;
             margin: 0 auto 20px;
             opacity: 0.9;
         }
-        
-        .cta-button {
+
+       .cta-button {
             display: inline-block;
             background-color: var(--primary);
             color: white;
@@ -128,24 +179,28 @@
             text-decoration: none;
             font-weight: 600;
             font-size: 1rem;
-            transition: all 0.3s;
+            transition: all 0.3s ease; /* Smooth transition for CTA */
             border: 2px solid var(--primary);
+            box-shadow: none;
+            animation: none;
         }
-        
-        .cta-button:hover {
-            background-color: transparent;
-            color: var(--primary);
+
+       .cta-button:hover {
+            background-color: var(--accent); /* Change background on hover */
+            transform: translateY(-3px) scale(1.02); /* Subtle lift and slight scale */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Stronger shadow */
         }
-        
-        .tool-icons {
+
+
+       .tool-icons {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 15px;
             margin-top: 25px;
         }
-        
-        .tool-icon {
+
+       .tool-icon {
             background-color: rgba(255, 255, 255, 0.1);
             width: 50px;
             height: 50px;
@@ -154,21 +209,22 @@
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            transition: transform 0.3s;
+            transition: transform 0.3s, background-color 0.3s ease; /* Smooth theme transition */
+            cursor: pointer; /* Added cursor pointer to indicate clickability */
         }
-        
-        .tool-icon:hover {
+
+       .tool-icon:hover {
             transform: translateY(-3px);
         }
-        
+
         /* Search Bar */
-        .search-container {
+       .search-container {
             max-width: 600px;
             margin: -20px auto 40px;
             position: relative;
         }
-        
-        .search-bar {
+
+       .search-bar {
             width: 100%;
             padding: 12px 15px;
             border-radius: 25px;
@@ -177,14 +233,15 @@
             color: var(--text);
             font-size: 0.9rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth theme transition */
         }
-        
-        .search-bar:focus {
+
+       .search-bar:focus {
             outline: 2px solid var(--primary);
         }
-        
+
         /* No Results Message */
-        .no-results {
+       .no-results {
             text-align: center;
             padding: 15px;
             font-size: 1rem;
@@ -192,85 +249,101 @@
             opacity: 0.8;
             display: none;
         }
-        
-        .no-results.show {
+
+       .no-results.show {
             display: block;
         }
-        
+
         /* Tool Sections */
-        .section {
+       .section {
             padding: 40px 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Smooth fade-in and slide-up */
+            opacity: 0;
+            transform: translateY(20px);
         }
-        
-        .section.hidden {
+
+       .section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+       .section.hidden {
             display: none;
         }
-        
-        .section-title {
+
+       .section-title {
             display: flex;
             align-items: center;
             margin-bottom: 20px;
             font-size: 1.6rem;
         }
-        
-        .section-title i {
+
+       .section-title i {
             margin-right: 10px;
             color: var(--primary);
         }
-        
-        .section-subtitle {
+
+       .section-subtitle {
             margin-bottom: 20px;
             opacity: 0.8;
             max-width: 600px;
         }
-        
-        .tools-grid {
+
+       .tools-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
+            gap: 25px; /* Adjusted gap from 20px to 25px */
         }
-        
-        .tool-card {
+
+       .tool-card {
             background-color: var(--card-bg);
             border-radius: 10px;
             padding: 15px;
-            transition: all 0.3s;
+            transition: all 0.3s ease-in-out; /* Enhanced transition */
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
             opacity: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        
-        .tool-card.hidden {
+
+       .tool-card.hidden {
             display: none;
         }
-        
-        .tool-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+
+       .tool-card:hover {
+            transform: translateY(-5px) scale(1.02); /* More pronounced lift and slight scale */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Stronger shadow */
             border-color: var(--primary);
         }
-        
-        .tool-icon-small {
+
+       .tool-icon-small {
             font-size: 20px;
             color: var(--primary);
-            margin-bottom: 10px;
         }
-        
-        .tool-name {
+
+       .tool-name {
             font-size: 1rem;
             margin-bottom: 8px;
             font-weight: 600;
         }
-        
-        .tool-desc {
+
+       .tool-desc {
             font-size: 0.8rem;
             opacity: 0.8;
             margin-bottom: 15px;
             min-height: 30px;
         }
-        
-        .use-tool {
+
+       .card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+       .use-tool {
             display: inline-block;
             background-color: var(--primary);
             color: white;
@@ -281,98 +354,193 @@
             font-size: 0.8rem;
             transition: all 0.3s;
         }
-        
-        .use-tool:hover {
+
+       .use-tool:hover {
             background-color: var(--accent);
         }
-        
+
+        /* Styles for share buttons */
+        .share-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .share-buttons a {
+            color: var(--text);
+            font-size: 1rem;
+            opacity: 0.7;
+            transition: opacity 0.3s, color 0.3s;
+        }
+
+        .share-buttons a:hover {
+            opacity: 1;
+        }
+
+        .share-buttons .fa-facebook-f:hover { color: #3b5998; }
+        .share-buttons .fa-twitter:hover { color: #00acee; }
+        .share-buttons .fa-linkedin-in:hover { color: #0077b5; }
+        .share-buttons .fa-whatsapp:hover { color: #25D366; }
+
+
         /* Footer */
-        .footer-container {
+        footer {
+            border-top: 1px solid var(--footer-border);
+            background-color: var(--secondary);
+            padding-top: 40px; /* Added padding to footer */
+            transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth theme transition */
+        }
+
+       .footer-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 30px;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 15px 20px;
+            padding: 0 15px 20px; /* Adjusted padding */
         }
-        
-        .footer-column h3 {
+
+       .footer-column h3 {
             font-size: 1.1rem;
             margin-bottom: 15px;
             color: var(--primary);
         }
-        
-        .footer-column p {
+
+       .footer-column p {
             opacity: 0.7;
             margin-bottom: 15px;
         }
-        
-        .footer-column ul {
+
+       .footer-column ul {
             list-style: none;
         }
-        
-        .footer-column ul li {
+
+       .footer-column ul li {
             margin-bottom: 8px;
         }
-        
-        .footer-column ul li a {
+
+       .footer-column ul li a {
             color: var(--text);
             text-decoration: none;
             opacity: 0.7;
             transition: opacity 0.3s;
         }
-        
-        .footer-column ul li a i {
+
+       .footer-column ul li a i {
             margin-right: 6px;
         }
-        
-        .footer-column ul li a:hover {
+
+       .footer-column ul li a:hover {
             opacity: 1;
             color: var(--primary);
         }
-        
-        .social-links {
+
+       .social-links {
             display: flex;
             gap: 12px;
         }
-        
-        .social-links a {
+
+       .social-links a {
             color: var(--text);
             font-size: 1.1rem;
             opacity: 0.7;
             transition: opacity 0.3s;
         }
-        
-        .social-links a:hover {
+
+       .social-links a:hover {
             opacity: 1;
             color: var(--primary);
         }
-        
-        .copyright {
+
+       .copyright {
             text-align: center;
             padding: 20px 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--footer-border);
             opacity: 0.7;
             font-size: 0.8rem;
         }
-        
+
+        /* Floating Buttons (Back to Top) */
+       .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1000;
+        }
+
+       .floating-button:hover {
+            background-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Back to Top Button */
+        #back-to-top {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        #back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Load More Button Style */
+        .load-more-container {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        .load-more-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .load-more-button:hover {
+            background-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* Responsive Design */
         @media (max-width: 992px) {
-            .hero h1 {
+           .hero h1 {
                 font-size: 1.8rem;
             }
-            
-            .hero p {
+
+           .hero p {
                 font-size: 0.9rem;
             }
         }
-        
+
         @media (max-width: 768px) {
-            .menu-toggle {
+           .menu-toggle {
                 display: block;
             }
-            
-            .nav-links {
+
+           .nav-links {
                 position: fixed;
                 top: 60px;
                 left: -100%;
@@ -382,81 +550,84 @@
                 flex-direction: column;
                 align-items: center;
                 padding: 30px 15px;
-                transition: left 0.3s;
-                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+                transition: left 0.3s, background-color 0.3s ease; /* Smooth theme transition */
             }
-            
-            .nav-links.active {
+
+           .nav-links.active {
                 left: 0;
             }
-            
-            .nav-links a {
+
+           .nav-links a {
                 margin: 12px 0;
                 text-align: center;
             }
-            
-            .hero {
+
+           .hero {
                 padding: 40px 0;
             }
-            
-            .section {
+
+           .section {
                 padding: 30px 0;
             }
         }
-        
+
         @media (max-width: 576px) {
-            .hero h1 {
+           .hero h1 {
                 font-size: 1.6rem;
             }
-            
-            .section-title {
+
+           .section-title {
                 font-size: 1.4rem;
             }
-            
-            .tools-grid {
+
+           .tools-grid {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="header-container">
             <a href="#" class="logo">
-                <i class="fas fa-tools logo-icon"></i>
                 <span class="logo-text">Tools <span>Bazar</span></span>
             </a>
-            <div class="menu-toggle">
-                <i class="fas fa-bars"></i>
-            </div>
-            <nav class="nav-links">
+            <div class="nav-links">
                 <a href="#"><i class="fas fa-home"></i> Home</a>
                 <a href="#"><i class="fas fa-calculator"></i> Tools</a>
                 <a href="#"><i class="fas fa-info-circle"></i> About</a>
                 <a href="#"><i class="fas fa-envelope"></i> Contact</a>
-            </nav>
+                <button id="theme-toggle" class="theme-toggle">
+                    <i class="fas fa-sun"></i> </button>
+            </div>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <h1>Your Daily Tools, All in One Place</h1>
             <p>Convert, calculate, compress, and simplify your everyday tasks — fast and free.</p>
             <a href="#tools" class="cta-button">Explore Tools</a>
-            
+
             <div class="tool-icons">
-                <div class="tool-icon"><i class="fas fa-image"></i></div>
-                <div class="tool-icon"><i class="fas fa-file-alt"></i></div>
-                <div class="tool-icon"><i class="fas fa-calculator"></i></div>
-                <div class="tool-icon"><i class="fas fa-font"></i></div>
-                <div class="tool-icon"><i class="fas fa-palette"></i></div>
+                <div class="tool-icon" data-target-section="image-tools-section"><i class="fas fa-image"></i></div>
+                <div class="tool-icon" data-target-section="calculator-tools-section"><i class="fas fa-calculator"></i></div>
+                <div class="tool-icon" data-target-section="color-tools-section"><i class="fas fa-palette"></i></div>
+                <div class="tool-icon" data-target-section="utility-tools-section"><i class="fas fa-tools"></i></div>
+                <div class="tool-icon" data-target-section="social-media-section"><i class="fas fa-share-alt"></i></div>
+                <div class="tool-icon" data-target-section="offline-games-section"><i class="fas fa-gamepad"></i></div>
+                <div class="tool-icon" data-target-section="miscellaneous-tools-section"><i class="fas fa-dice"></i></div>
+                <div class="tool-icon" data-target-section="text-tools-section"><i class="fas fa-font"></i></div>
+                <div class="tool-icon" data-target-section="education-tools-section"><i class="fas fa-book-open"></i></div>
+                <div class="tool-icon" data-target-section="marketing-tools-section"><i class="fas fa-bullhorn"></i></div>
+                <div class="tool-icon" data-target-section="seo-tools-section"><i class="fas fa-chart-line"></i></div>
             </div>
         </div>
     </section>
 
-    <!-- Search Bar -->
     <div class="container">
         <div class="search-container">
             <input type="text" class="search-bar" placeholder="Search a tool...">
@@ -464,232 +635,1531 @@
         </div>
     </div>
 
-    <!-- Tools Sections -->
     <main class="container" id="tools">
-        <!-- Image Tools -->
-        <section class="section">
+        <section class="section" id="image-tools-section">
             <h2 class="section-title"><i class="fas fa-image"></i> Image Tools</h2>
             <p class="section-subtitle">Enhance, convert, and optimize your images with our powerful tools.</p>
-            
-            <div class="tools-grid">
+
+            <div class="tools-grid" data-initial-display="4">
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-exchange-alt"></i></div>
                     <h3 class="tool-name">Image Converter</h3>
                     <p class="tool-desc">Convert between JPG, PNG, GIF, and more formats.</p>
-                    <a href="Image-Converter.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Image-Converter.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Image Converter" data-tool-url="Image-Converter.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-compress-alt"></i></div>
                     <h3 class="tool-name">Image Compressor</h3>
                     <p class="tool-desc">Reduce image file size without losing quality.</p>
-                    <a href="Image-Compressor.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Image-Compressor.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Image Compressor" data-tool-url="Image-Compressor.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-expand-alt"></i></div>
                     <h3 class="tool-name">Image Resizer</h3>
                     <p class="tool-desc">Resize images to any dimensions you need.</p>
-                    <a href="Image-Resizer.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Image-Resizer.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Image Resizer" data-tool-url="Image-Resizer.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-crop-alt"></i></div>
                     <h3 class="tool-name">Image Cropper</h3>
                     <p class="tool-desc">Crop images to remove unwanted areas.</p>
-                    <a href="Image-Cropper.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Image-Cropper.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Image Cropper" data-tool-url="Image-Cropper.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-text-height"></i></div>
                     <h3 class="tool-name">Image to Text (OCR)</h3>
                     <p class="tool-desc">Extract text from images with OCR technology.</p>
-                    <a href="Image-to-Text.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Image-to-Text.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Image to Text (OCR)" data-tool-url="Image-to-Text.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-sync-alt"></i></div>
                     <h3 class="tool-name">Image Rotator/Flipper</h3>
                     <p class="tool-desc">Rotate or flip images horizontally/vertically.</p>
-                    <a href="Image-Rotator-&-Flipper.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Image-Rotator-&-Flipper.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Image Rotator/Flipper" data-tool-url="Image-Rotator-&-Flipper.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-magic"></i></div>
                     <h3 class="tool-name">Image Enhancer</h3>
                     <p class="tool-desc">Improve image quality and clarity.</p>
-                    <a href="Image-Enhancer.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Image-Enhancer.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Image Enhancer" data-tool-url="Image-Enhancer.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-image"></i></div>
+                    <h3 class="tool-name">Meme Generator</h3>
+                    <p class="tool-desc">Create your own funny memes quickly.</p>
+                    <div class="card-actions">
+                        <a href="Meme-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Meme Generator" data-tool-url="Meme-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-pencil-ruler"></i></div>
+                    <h3 class="tool-name">Photo to Sketch</h3>
+                    <p class="tool-desc">Convert your photos into beautiful sketches.</p>
+                    <div class="card-actions">
+                        <a href="Photo-to-Sketch.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Photo to Sketch" data-tool-url="Photo-to-Sketch.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-tint"></i></div>
+                    <h3 class="tool-name">Convert Black and White</h3>
+                    <p class="tool-desc">Convert colored images to black and white.</p>
+                    <div class="card-actions">
+                        <a href="Convert-Black-and-White.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Convert Black and White" data-tool-url="Convert-Black-and-White.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-eraser"></i></div>
+                    <h3 class="tool-name">Background Remover</h3>
+                    <p class="tool-desc">Remove backgrounds from your images instantly.</p>
+                    <div class="card-actions">
+                        <a href="Background-Remover.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Background Remover" data-tool-url="Background-Remover.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-user-circle"></i></div>
+                    <h3 class="tool-name">Profile Picture Maker</h3>
+                    <p class="tool-desc">Create unique profile pictures for social media.</p>
+                    <div class="card-actions">
+                        <a href="Profile-Picture-Maker.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Profile Picture Maker" data-tool-url="Profile-Picture-Maker.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-robot"></i></div>
+                    <h3 class="tool-name">AI Flyer Generator</h3>
+                    <p class="tool-desc">Generate stunning flyers with AI assistance.</p>
+                    <div class="card-actions">
+                        <a href="AI-Flyer-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="AI Flyer Generator" data-tool-url="AI-Flyer-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="load-more-container">
+                <button class="load-more-button">Load More Image Tools</button>
+            </div>
         </section>
-            
-        <!-- Calculator Tools -->
-        <section class="section">
+
+        <section class="section" id="calculator-tools-section">
             <h2 class="section-title"><i class="fas fa-calculator"></i> Calculator Tools</h2>
             <p class="section-subtitle">Perform various calculations for your daily needs.</p>
-            
-            <div class="tools-grid">
+
+            <div class="tools-grid" data-initial-display="4">
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-square-root-alt"></i></div>
                     <h3 class="tool-name">Scientific Calculator</h3>
                     <p class="tool-desc">Advanced calculator for complex calculations.</p>
-                    <a href="Scientific-Calculator.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Scientific-Calculator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Scientific Calculator" data-tool-url="Scientific-Calculator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-birthday-cake"></i></div>
                     <h3 class="tool-name">Age Calculator</h3>
                     <p class="tool-desc">Calculate age from birth date to present.</p>
-                    <a href="AGE-Calculator.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="AGE-Calculator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Age Calculator" data-tool-url="AGE-Calculator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-weight"></i></div>
                     <h3 class="tool-name">BMI Calculator</h3>
                     <p class="tool-desc">Calculate your Body Mass Index.</p>
-                    <a href="BMI-Calculator.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="BMI-Calculator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="BMI Calculator" data-tool-url="BMI-Calculator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-home"></i></div>
                     <h3 class="tool-name">Loan EMI Calculator</h3>
                     <p class="tool-desc">Calculate Equated Monthly Installments.</p>
-                    <a href="EMI-Calculator.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="EMI-Calculator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Loan EMI Calculator" data-tool-url="EMI-Calculator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-percentage"></i></div>
                     <h3 class="tool-name">GST Calculator</h3>
                     <p class="tool-desc">Calculate Goods and Services Tax.</p>
-                    <a href="GST-Calculator.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="GST-Calculator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="GST Calculator" data-tool-url="GST-Calculator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-money-bill-wave"></i></div>
                     <h3 class="tool-name">Currency Converter</h3>
                     <p class="tool-desc">Convert between world currencies.</p>
-                    <a href="Currency-Converter.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Currency-Converter.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Currency Converter" data-tool-url="Currency-Converter.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-chart-line"></i></div>
                     <h3 class="tool-name">Forex Calculator</h3>
                     <p class="tool-desc">Foreign exchange rate calculations.</p>
-                    <a href="Forex-Compound-Calculator.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Forex-Compound-Calculator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Forex Calculator" data-tool-url="Forex-Compound-Calculator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-percent"></i></div>
+                    <h3 class="tool-name">Profit Margin Calculator</h3>
+                    <p class="tool-desc">Calculate the profit margin of your products or services.</p>
+                    <div class="card-actions">
+                        <a href="Profit-Margin-Calculator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Profit Margin Calculator" data-tool-url="Profit-Margin-Calculator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-chart-pie"></i></div>
+                    <h3 class="tool-name">ROI Calculator</h3>
+                    <p class="tool-desc">Calculate the Return on Investment for your ventures.</p>
+                    <div class="card-actions">
+                        <a href="ROI-Calculator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="ROI Calculator" data-tool-url="ROI-Calculator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-piggy-bank"></i></div>
+                    <h3 class="tool-name">SIP Calculator</h3>
+                    <p class="tool-desc">Estimate the returns on your Systematic Investment Plan.</p>
+                    <div class="card-actions">
+                        <a href="SIP-Calculator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="SIP Calculator" data-tool-url="SIP-Calculator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-fire"></i></div>
+                    <h3 class="tool-name">Calories Calculator</h3>
+                    <p class="tool-desc">Calculate your daily calorie needs based on your activity.</p>
+                    <div class="card-actions">
+                        <a href="Calories-Calculator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Calories Calculator" data-tool-url="Calories-Calculator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-baby"></i></div>
+                    <h3 class="tool-name">Pregnancy Calculator</h3>
+                    <p class="tool-desc">Estimate your due date and track your pregnancy progress.</p>
+                    <div class="card-actions">
+                        <a href="Pregnancy-Calculator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Pregnancy Calculator" data-tool-url="Pregnancy-Calculator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-percentage"></i></div>
+                    <h3 class="tool-name">Percent Calculator</h3>
+                    <p class="tool-desc">Calculate percentages quickly and easily.</p>
+                    <div class="card-actions">
+                        <a href="Percent-Calculator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Percent Calculator" data-tool-url="Percent-Calculator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="load-more-container">
+                <button class="load-more-button">Load More Calculator Tools</button>
+            </div>
         </section>
-        
-        <!-- Color Tools -->
-        <section class="section">
+
+        <section class="section" id="color-tools-section">
             <h2 class="section-title"><i class="fas fa-palette"></i> Color Tools</h2>
             <p class="section-subtitle">Work with colors for design and development.</p>
-            
-            <div class="tools-grid">
+
+            <div class="tools-grid" data-initial-display="4">
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-eye-dropper"></i></div>
                     <h3 class="tool-name">Color Picker from Image</h3>
                     <p class="tool-desc">Extract colors from any image.</p>
-                    <a href="Color-Picker-Image.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Color-Picker-Image.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Color Picker from Image" data-tool-url="Color-Picker-Image.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-code"></i></div>
                     <h3 class="tool-name">HEX to RGB Converter</h3>
                     <p class="tool-desc">Convert HEX color codes to RGB values.</p>
-                    <a href="HEX-RGB-Converter.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="HEX-RGB-Converter.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="HEX to RGB Converter" data-tool-url="HEX-RGB-Converter.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-code"></i></div>
                     <h3 class="tool-name">Material Color</h3>
                     <p class="tool-desc">Provides the full Material Design color palette with primary and accent colors.</p>
-                    <a href="Material-Color.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Material-Color.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Material Color" data-tool-url="Material-Color.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-code"></i></div>
                     <h3 class="tool-name">Brand Colors</h3>
                     <p class="tool-desc">Quickly find brands by name or category.</p>
-                    <a href="Brand-Colors.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Brand-Colors.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Brand Colors" data-tool-url="Brand-Colors.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="load-more-container">
+                <button class="load-more-button">Load More Color Tools</button>
+            </div>
         </section>
-        
-        <!-- Utility Tools -->
-        <section class="section">
+
+        <section class="section" id="utility-tools-section">
             <h2 class="section-title"><i class="fas fa-tools"></i> Utility Tools</h2>
             <p class="section-subtitle">Handy tools for various everyday tasks.</p>
-            
-            <div class="tools-grid">
+
+            <div class="tools-grid" data-initial-display="4">
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-qrcode"></i></div>
                     <h3 class="tool-name">QR Code Generator & Scanner</h3>
                     <p class="tool-desc">Enter text or a URL to instantly create your QR code and decode any QR code.</p>
-                    <a href="QR-Code-Generator-&-Scanner.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="QR-Code-Generator-&-Scanner.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="QR Code Generator & Scanner" data-tool-url="QR-Code-Generator-&-Scanner.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-barcode"></i></div>
                     <h3 class="tool-name">Barcode Generator</h3>
                     <p class="tool-desc">Create Custom Barcodes Instantly.</p>
-                    <a href="Barcode-Generator.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Barcode-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Barcode Generator" data-tool-url="Barcode-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-fingerprint"></i></div>
                     <h3 class="tool-name">UUID Generator</h3>
                     <p class="tool-desc">Generate Universally Unique Identifiers Instantly</p>
-                    <a href="UUID-Generater.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="UUID-Generater.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="UUID Generator" data-tool-url="UUID-Generater.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-globe-americas"></i></div>
                     <h3 class="tool-name">Unit Converter</h3>
                     <p class="tool-desc">Convert Length, Weight, Temperature, Time, and 10+ Unit Types Instantly.</p>
-                    <a href="Unit-Converter.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Unit-Converter.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Unit Converter" data-tool-url="Unit-Converter.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-               
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fas fa-key"></i></div>
                     <h3 class="tool-name">Random Password Generator</h3>
                     <p class="tool-desc">Create secure random passwords.</p>
-                    <a href="Random-Password-Generator.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="Random-Password-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Random Password Generator" data-tool-url="Random-Password-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-keyboard"></i></div>
+                    <h3 class="tool-name">Keyboard Tester</h3>
+                    <p class="tool-desc">Test your keyboard keys for functionality.</p>
+                    <div class="card-actions">
+                        <a href="Keyboard-Tester.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Keyboard Tester" data-tool-url="Keyboard-Tester.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-hourglass-half"></i></div>
+                    <h3 class="tool-name">Day Countdown</h3>
+                    <p class="tool-desc">Count down days to a specific event.</p>
+                    <div class="card-actions">
+                        <a href="Day-Countdown.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Day Countdown" data-tool-url="Day-Countdown.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-desktop"></i></div>
+                    <h3 class="tool-name">Monitor Test</h3>
+                    <p class="tool-desc">Test your monitor for dead pixels and display issues.</p>
+                    <div class="card-actions">
+                        <a href="Monitor-Test.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Monitor Test" data-tool-url="Monitor-Test.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-compass"></i></div>
+                    <h3 class="tool-name">Niche Finder Tool</h3>
+                    <p class="tool-desc">Discover profitable niches for your business.</p>
+                    <div class="card-actions">
+                        <a href="Niche-Finder-Tool.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Niche Finder Tool" data-tool-url="Niche-Finder-Tool.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="load-more-container">
+                <button class="load-more-button">Load More Utility Tools</button>
+            </div>
         </section>
-        
-        <!-- Social Media Tools -->
-        <section class="section" id="social">
+
+        <section class="section" id="social-media-section">
             <h2 class="section-title"><i class="fas fa-share-alt"></i> Social Media</h2>
             <p class="section-subtitle">Tools to enhance your social media presence.</p>
-            
-            <div class="tools-grid">
+
+            <div class="tools-grid" data-initial-display="4">
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-magic"></i></div>
+                    <h3 class="tool-name">AI Content Idea Generator</h3>
+                    <p class="tool-desc">Generate creative ideas for your content using AI.</p>
+                    <div class="card-actions">
+                        <a href="AI-Content-Idea-Generator.html" class="use-tool">Use Tool ✨</a>
+                        <div class="share-buttons" data-tool-name="AI Content Idea Generator" data-tool-url="AI-Content-Idea-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fab fa-youtube"></i></div>
                     <h3 class="tool-name">YouTube all in one Generator</h3>
                     <p class="tool-desc">Generate effective hashtags, tag, title, etc. for YouTube.</p>
-                    <a href="YouTube-All-In-On-Generator.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="YouTube-All-In-On-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="YouTube all in one Generator" data-tool-url="YouTube-All-In-On-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fab fa-instagram"></i></div>
                     <h3 class="tool-name">All Social Media Caption Generator</h3>
                     <p class="tool-desc">Generate captions & hashtag for your all social media posts in seconds.</p>
-                    <a href="All-Social-Media-Hashtag-Caption-Generator.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="All-Social-Media-Hashtag-Caption-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="All Social Media Caption Generator" data-tool-url="All-Social-Media-Hashtag-Caption-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="tool-card">
                     <div class="tool-icon-small"><i class="fab fa-youtube"></i></div>
                     <h3 class="tool-name">YouTube Thumbnail & Detail Downloader</h3>
                     <p class="tool-desc">Instantly Download Thumbnails, Tags, description real time".</p>
-                    <a href="YouTube-Thumbnail-&-Details-Downloader.html" class="use-tool">Use Tool</a>
+                    <div class="card-actions">
+                        <a href="YouTube-Thumbnail-&-Details-Downloader.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="YouTube Thumbnail & Detail Downloader" data-tool-url="YouTube-Thumbnail-&-Details-Downloader.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-user-friends"></i></div>
+                    <h3 class="tool-name">Competitor Profile Analyzer</h3>
+                    <p class="tool-desc">Analyze competitor social media profiles.</p>
+                    <div class="card-actions">
+                        <a href="Competitor-Profile-Analyzer.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Competitor Profile Analyzer" data-tool-url="Competitor-Profile-Analyzer.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-lightbulb"></i></div>
+                    <h3 class="tool-name">Bio Idea Generator</h3>
+                    <p class="tool-desc">Generate creative bio ideas for your social profiles.</p>
+                    <div class="card-actions">
+                        <a href="Bio-Idea-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Bio Idea Generator" data-tool-url="Bio-Idea-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fab fa-whatsapp"></i></div>
+                    <h3 class="tool-name">WhatsApp Full DP Image</h3>
+                    <p class="tool-desc">Fit full images as WhatsApp DP without cropping.</p>
+                    <div class="card-actions">
+                        <a href="Whatsapp-Full-DP-Image.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="WhatsApp Full DP Image" data-tool-url="Whatsapp-Full-DP-Image.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-grin-beam"></i></div>
+                    <h3 class="tool-name">Daily Emoji Quiz</h3>
+                    <p class="tool-desc">Test your emoji knowledge with a daily quiz.</p>
+                    <div class="card-actions">
+                        <a href="Daily-Emoji-Quiz.html" class="use-tool">Play Game</a>
+                        <div class="share-buttons" data-tool-name="Daily Emoji Quiz" data-tool-url="Daily-Emoji-Quiz.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-file-image"></i></div>
+                    <h3 class="tool-name">Social Post Mockup</h3>
+                    <p class="tool-desc">Create mockups for your social media posts.</p>
+                    <div class="card-actions">
+                        <a href="Social-Post-Mockup.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Social Post Mockup" data-tool-url="Social-Post-Mockup.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-calendar-alt"></i></div>
+                    <h3 class="tool-name">Bulk Post Scheduler</h3>
+                    <p class="tool-desc">Schedule multiple social media posts at once.</p>
+                    <div class="card-actions">
+                        <a href="Bulk-Post-Scheduler.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Bulk Post Scheduler" data-tool-url="Bulk-Post-Scheduler.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-user-tag"></i></div>
+                    <h3 class="tool-name">Insta Unique Username Generator</h3>
+                    <p class="tool-desc">Generate unique Instagram usernames.</p>
+                    <div class="card-actions">
+                        <a href="Insta-Unique-Username-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Insta Unique Username Generator" data-tool-url="Insta-Unique-Username-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="load-more-container">
+                <button class="load-more-button">Load More Social Media Tools</button>
+            </div>
+        </section>
+
+        <section class="section" id="offline-games-section">
+            <h2 class="section-title"><i class="fas fa-gamepad"></i> Offline Games</h2>
+            <p class="section-subtitle">Enjoy classic and engaging games directly in your browser.</p>
+
+            <div class="tools-grid" data-initial-display="4">
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-times"></i><i class="fas fa-circle"></i></div>
+                    <h3 class="tool-name">Tic Tac Toe</h3>
+                    <p class="tool-desc">Play the classic game of Tic Tac Toe against a friend or the computer.</p>
+                    <div class="card-actions">
+                        <a href="Tic-Tac-Toe.html" class="use-tool">Play Game</a>
+                        <div class="share-buttons" data-tool-name="Tic Tac Toe" data-tool-url="Tic-Tac-Toe.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-th"></i></div>
+                    <h3 class="tool-name">Sudoku</h3>
+                    <p class="tool-desc">Challenge your logic with daily Sudoku puzzles.</p>
+                    <div class="card-actions">
+                        <a href="Sudoku.html" class="use-tool">Play Game</a>
+                        <div class="share-buttons" data-tool-name="Sudoku" data-tool-url="Sudoku.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-snake"></i></div>
+                    <h3 class="tool-name">Snake Game</h3>
+                    <p class="tool-desc">Relive the classic Snake game, grow your snake and avoid obstacles.</p>
+                    <div class="card-actions">
+                        <a href="Snake-Game.html" class="use-tool">Play Game</a>
+                        <div class="share-buttons" data-tool-name="Snake Game" data-tool-url="Snake-Game.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-chess-knight"></i></div>
+                    <h3 class="tool-name">Chess</h3>
+                    <p class="tool-desc">Play a game of chess against the computer or a friend.</p>
+                    <div class="card-actions">
+                        <a href="Chess.html" class="use-tool">Play Game</a>
+                        <div class="share-buttons" data-tool-name="Chess" data-tool-url="Chess.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-hand-rock"></i></div>
+                    <h3 class="tool-name">Rock Paper Scissors</h3>
+                    <p class="tool-desc">Test your luck and strategy in a game of Rock Paper Scissors.</p>
+                    <div class="card-actions">
+                        <a href="Rock-Paper-Scissors.html" class="use-tool">Play Game</a>
+                        <div class="share-buttons" data-tool-name="Rock Paper Scissors" data-tool-url="Rock-Paper-Scissors.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-skull-crossbones"></i></div>
+                    <h3 class="tool-name">Zombie Shooter</h3>
+                    <p class="tool-desc">Survive hordes of zombies in this action-packed shooter game.</p>
+                    <div class="card-actions">
+                        <a href="Zombie-Shooter.html" class="use-tool">Play Game</a>
+                        <div class="share-buttons" data-tool-name="Zombie Shooter" data-tool-url="Zombie-Shooter.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-puzzle-piece"></i></div>
+                    <h3 class="tool-name">Math Puzzle</h3>
+                    <p class="tool-desc">Sharpen your mind with fun and challenging math puzzles.</p>
+                    <div class="card-actions">
+                        <a href="Math-Puzzle.html" class="use-tool">Play Game</a>
+                        <div class="share-buttons" data-tool-name="Math Puzzle" data-tool-url="Math-Puzzle.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-question-circle"></i></div>
+                    <h3 class="tool-name">Random Yes or No Generator</h3>
+                    <p class="tool-desc">Get a random "Yes" or "No" decision for your dilemmas.</p>
+                    <div class="card-actions">
+                        <a href="Random-Yes-or-No-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Random Yes or No Generator" data-tool-url="Random-Yes-or-No-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-chart-bar"></i></div>
+                    <h3 class="tool-name">Life Statistics</h3>
+                    <p class="tool-desc">Explore interesting statistics about life.</p>
+                    <div class="card-actions">
+                        <a href="Life-Statistics.html" class="use-tool">Play Game</a>
+                        <div class="share-buttons" data-tool-name="Life Statistics" data-tool-url="Life-Statistics.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-user-alt"></i></div>
+                    <h3 class="tool-name">Random Name Generator Game</h3>
+                    <p class="tool-desc">Generate random names for characters or fun.</p>
+                    <div class="card-actions">
+                        <a href="Random-Name-Generator-Game.html" class="use-tool">Play Game</a>
+                        <div class="share-buttons" data-tool-name="Random Name Generator Game" data-tool-url="Random-Name-Generator-Game.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-heart"></i></div>
+                    <h3 class="tool-name">Love Percentage Checker Game</h3>
+                    <p class="tool-desc">Check your love compatibility with a fun game.</p>
+                    <div class="card-actions">
+                        <a href="Love-Percentage-Checker-Game.html" class="use-tool">Play Game</a>
+                        <div class="share-buttons" data-tool-name="Love Percentage Checker Game" data-tool-url="Love-Percentage-Checker-Game.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="load-more-container">
+                <button class="load-more-button">Load More Offline Games</button>
+            </div>
+        </section>
+
+        <section class="section" id="miscellaneous-tools-section">
+            <h2 class="section-title"><i class="fas fa-dice"></i> Miscellaneous Tools</h2>
+            <p class="section-subtitle">A collection of various handy tools for everyday use.</p>
+
+            <div class="tools-grid" data-initial-display="4">
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-dice"></i></div>
+                    <h3 class="tool-name">Dice Roller</h3>
+                    <p class="tool-desc">Roll virtual dice for games or decisions.</p>
+                    <div class="card-actions">
+                        <a href="Dice-Roller.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Dice Roller" data-tool-url="Dice-Roller.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-coins"></i></div>
+                    <h3 class="tool-name">Coin Flip</h3>
+                    <p class="tool-desc">Flip a virtual coin for quick decisions.</p>
+                    <div class="card-actions">
+                        <a href="Coin-Flip.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Coin Flip" data-tool-url="Coin-Flip.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-question-circle"></i></div>
+                    <h3 class="tool-name">Random Truth or Dare Generator</h3>
+                    <p class="tool-desc">Generate random truth or dare questions for fun.</p>
+                    <div class="card-actions">
+                        <a href="Random-Truth-or-Dare-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Random Truth or Dare Generator" data-tool-url="Random-Truth-or-Dare-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-balance-scale"></i></div>
+                    <h3 class="tool-name">Would You Rather Generator</h3>
+                    <p class="tool-desc">Generate "Would You Rather" questions for debates.</p>
+                    <div class="card-actions">
+                        <a href="Would-You-Rather-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Would You Rather Generator" data-tool-url="Would-You-Rather-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-wheelchair"></i></div>
+                    <h3 class="tool-name">Fortune Wheel</h3>
+                    <p class="tool-desc">Spin a wheel to make random decisions.</p>
+                    <div class="card-actions">
+                        <a href="Fortune-Wheel.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Fortune Wheel" data-tool-url="Fortune-Wheel.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-user-secret"></i></div>
+                    <h3 class="tool-name">Fake Name Generator</h3>
+                    <p class="tool-desc">Generate random fake names for various purposes.</p>
+                    <div class="card-actions">
+                        <a href="Fake-Name-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Fake Name Generator" data-tool-url="Fake-Name-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-gift"></i></div>
+                    <h3 class="tool-name">Birthday Reminder</h3>
+                    <p class="tool-desc">Never miss a birthday again with this reminder tool.</p>
+                    <div class="card-actions">
+                        <a href="Birthday-Reminder.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Birthday Reminder" data-tool-url="Birthday-Reminder.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-id-card"></i></div>
+                    <h3 class="tool-name">Business Card Creator</h3>
+                    <p class="tool-desc">Design professional business cards online.</p>
+                    <div class="card-actions">
+                        <a href="Business-Card-Creator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Business Card Creator" data-tool-url="Business-Card-Creator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-chalkboard"></i></div>
+                    <h3 class="tool-name">Online Whiteboard</h3>
+                    <p class="tool-desc">Collaborate and draw ideas on a virtual whiteboard.</p>
+                    <div class="card-actions">
+                        <a href="Online-Whiteboard.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Online Whiteboard" data-tool-url="Online-Whiteboard.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-money-bill-wave-alt"></i></div>
+                    <h3 class="tool-name">Expense Tracker</h3>
+                    <p class="tool-desc">Track your daily expenses easily.</p>
+                    <div class="card-actions">
+                        <a href="Expense-Tracker.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Expense Tracker" data-tool-url="Expense-Tracker.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="load-more-container">
+                <button class="load-more-button">Load More Miscellaneous Tools</button>
+            </div>
+        </section>
+
+        <section class="section" id="text-tools-section">
+            <h2 class="section-title"><i class="fas fa-font"></i> Text Tools</h2>
+            <p class="section-subtitle">Tools for manipulating and generating text.</p>
+
+            <div class="tools-grid" data-initial-display="4">
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-sort-numeric-up-alt"></i></div>
+                    <h3 class="tool-name">Word Counter</h3>
+                    <p class="tool-desc">Count words, characters, and sentences in your text.</p>
+                    <div class="card-actions">
+                        <a href="Word-Counter.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Word Counter" data-tool-url="Word-Counter.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-redo"></i></div>
+                    <h3 class="tool-name">Text Repeater</h3>
+                    <p class="tool-desc">Repeat any text multiple times.</p>
+                    <div class="card-actions">
+                        <a href="Text-Repeater.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Text Repeater" data-tool-url="Text-Repeater.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-random"></i></div>
+                    <h3 class="tool-name">Random Word Generator</h3>
+                    <p class="tool-desc">Generate random words for creative writing or games.</p>
+                    <div class="card-actions">
+                        <a href="Random-Word-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Random Word Generator" data-tool-url="Random-Word-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-signature"></i></div>
+                    <h3 class="tool-name">Text to Handwriting</h3>
+                    <p class="tool-desc">Convert typed text into realistic handwriting.</p>
+                    <div class="card-actions">
+                        <a href="Text-to-Handwriting.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Text to Handwriting" data-tool-url="Text-to-Handwriting.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-magic"></i></div>
+                    <h3 class="tool-name">Stylish Text Generator</h3>
+                    <p class="tool-desc">Generate fancy and stylish text for social media.</p>
+                    <div class="card-actions">
+                        <a href="Stylish-Text-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Stylish Text Generator" data-tool-url="Stylish-Text-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-smile-beam"></i></div>
+                    <h3 class="tool-name">Text to Emoji Generator</h3>
+                    <p class="tool-desc">Convert text into expressive emoji art.</p>
+                    <div class="card-actions">
+                        <a href="Text-to-Emoji-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Text to Emoji Generator" data-tool-url="Text-to-Emoji-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-font"></i></div>
+                    <h3 class="tool-name">Fancy Text Generator</h3>
+                    <p class="tool-desc">Generate cool and fancy text for nicknames and bios.</p>
+                    <div class="card-actions">
+                        <a href="Fancy-Text-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Fancy Text Generator" data-tool-url="Fancy-Text-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-font"></i></div>
+                    <h3 class="tool-name">Font Pairing Generator</h3>
+                    <p class="tool-desc">Find perfect font combinations for your designs.</p>
+                    <div class="card-actions">
+                        <a href="Font-Pairing-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Font Pairing Generator" data-tool-url="Font-Pairing-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="load-more-container">
+                <button class="load-more-button">Load More Text Tools</button>
+            </div>
+        </section>
+
+        <section class="section" id="education-tools-section">
+            <h2 class="section-title"><i class="fas fa-book-open"></i> Education Tools</h2>
+            <p class="section-subtitle">Tools to assist with learning and academic tasks.</p>
+
+            <div class="tools-grid" data-initial-display="4">
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-question"></i></div>
+                    <h3 class="tool-name">Quiz Creator</h3>
+                    <p class="tool-desc">Create custom quizzes for study or fun.</p>
+                    <div class="card-actions">
+                        <a href="Quiz-Creator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Quiz Creator" data-tool-url="Quiz-Creator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-book-reader"></i></div>
+                    <h3 class="tool-name">Reading Speed Tester</h3>
+                    <p class="tool-desc">Test and improve your reading speed.</p>
+                    <div class="card-actions">
+                        <a href="Reading-Speed-Tester.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Reading Speed Tester" data-tool-url="Reading-Speed-Tester.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-calculator"></i></div>
+                    <h3 class="tool-name">Math Formula Sheet Viewer</h3>
+                    <p class="tool-desc">View common math formulas for quick reference.</p>
+                    <div class="card-actions">
+                        <a href="Math-Formula-Sheet-Viewer.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Math Formula Sheet Viewer" data-tool-url="Math-Formula-Sheet-Viewer.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-pen-nib"></i></div>
+                    <h3 class="tool-name">Essay Generator</h3>
+                    <p class="tool-desc">Generate essay ideas and outlines with AI.</p>
+                    <div class="card-actions">
+                        <a href="Essay-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Essay Generator" data-tool-url="Essay-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-check-double"></i></div>
+                    <h3 class="tool-name">True or False Quiz</h3>
+                    <p class="tool-desc">Create or play true or false quizzes.</p>
+                    <div class="card-actions">
+                        <a href="True-or-False-Quiz.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="True or False Quiz" data-tool-url="True-or-False-Quiz.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-robot"></i></div>
+                    <h3 class="tool-name">AI Text Humanizer</h3>
+                    <p class="tool-desc">Make AI-generated text sound more natural and human-like.</p>
+                    <div class="card-actions">
+                        <a href="AI-Text-Humanizer.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="AI Text Humanizer" data-tool-url="AI-Text-Humanizer.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-paragraph"></i></div>
+                    <h3 class="tool-name">Paragraph Generator</h3>
+                    <p class="tool-desc">Generate paragraphs on various topics.</p>
+                    <div class="card-actions">
+                        <a href="Paragraph-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Paragraph Generator" data-tool-url="Paragraph-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-pen-fancy"></i></div>
+                    <h3 class="tool-name">Sentence Writer Generator</h3>
+                    <p class="tool-desc">Generate grammatically correct sentences.</p>
+                    <div class="card-actions">
+                        <a href="Sentence-Writer-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Sentence Writer Generator" data-tool-url="Sentence-Writer-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-compress-arrows-alt"></i></div>
+                    <h3 class="tool-name">Summarizer Tool</h3>
+                    <p class="tool-desc">Summarize long texts into concise versions.</p>
+                    <div class="card-actions">
+                        <a href="Summarizer-Tool.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Summarizer Tool" data-tool-url="Summarizer-Tool.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-exchange-alt"></i></div>
+                    <h3 class="tool-name">Passive & Active Voice Converter</h3>
+                    <p class="tool-desc">Convert sentences between passive and active voice.</p>
+                    <div class="card-actions">
+                        <a href="Passive-Active-Voice-Converter.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Passive & Active Voice Converter" data-tool-url="Passive-Active-Voice-Converter.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="load-more-container">
+                <button class="load-more-button">Load More Education Tools</button>
+            </div>
+        </section>
+
+        <section class="section" id="marketing-tools-section">
+            <h2 class="section-title"><i class="fas fa-bullhorn"></i> Marketing Tools</h2>
+            <p class="section-subtitle">Tools to help with your marketing efforts.</p>
+
+            <div class="tools-grid" data-initial-display="4">
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-pager"></i></div>
+                    <h3 class="tool-name">Landing Page Builder</h3>
+                    <p class="tool-desc">Build high-converting landing pages easily.</p>
+                    <div class="card-actions">
+                        <a href="Landing-Page-Builder.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Landing Page Builder" data-tool-url="Landing-Page-Builder.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-paint-brush"></i></div>
+                    <h3 class="tool-name">Branding Kit Generator</h3>
+                    <p class="tool-desc">Generate a complete branding kit for your business.</p>
+                    <div class="card-actions">
+                        <a href="Branding-Kit-Generator.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Branding Kit Generator" data-tool-url="Branding-Kit-Generator.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="load-more-container">
+                <button class="load-more-button">Load More Marketing Tools</button>
+            </div>
+        </section>
+
+        <section class="section" id="seo-tools-section">
+            <h2 class="section-title"><i class="fas fa-chart-line"></i> SEO Tools</h2>
+            <p class="section-subtitle">Tools to optimize your website for search engines.</p>
+
+            <div class="tools-grid" data-initial-display="4">
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-tachometer-alt"></i></div>
+                    <h3 class="tool-name">Webpage Speed Tester</h3>
+                    <p class="tool-desc">Test your website's loading speed and performance.</p>
+                    <div class="card-actions">
+                        <a href="Webpage-Speed-Tester.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Webpage Speed Tester" data-tool-url="Webpage-Speed-Tester.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-file-alt"></i></div>
+                    <h3 class="tool-name">Resume Optimizer</h3>
+                    <p class="tool-desc">Optimize your resume for job applications.</p>
+                    <div class="card-actions">
+                        <a href="Resume-Optimizer.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Resume Optimizer" data-tool-url="Resume-Optimizer.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon-small"><i class="fas fa-compass"></i></div>
+                    <h3 class="tool-name">Niche Finder Tool</h3>
+                    <p class="tool-desc">Discover profitable niches for your business.</p>
+                    <div class="card-actions">
+                        <a href="Niche-Finder-Tool.html" class="use-tool">Use Tool</a>
+                        <div class="share-buttons" data-tool-name="Niche Finder Tool" data-tool-url="Niche-Finder-Tool.html">
+                            <a href="#" class="share-facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="share-twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="load-more-container">
+                <button class="load-more-button">Load More SEO Tools</button>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
+    <button id="back-to-top" class="floating-button">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <footer id="contact">
         <div class="footer-container">
             <div class="footer-column">
@@ -735,19 +2205,29 @@
         </div>
     </footer>
 
-    <script>
+    <script type="module">
         // Mobile menu toggle
         document.querySelector('.menu-toggle').addEventListener('click', function() {
             document.querySelector('.nav-links').classList.toggle('active');
         });
-        
+
         // Close mobile menu when clicking a link
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', function() {
                 document.querySelector('.nav-links').classList.remove('active');
             });
         });
-        
+
+        // Dynamic Header Functionality
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) { // Adjust scroll threshold as needed
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
         // Search functionality
         document.querySelector('.search-bar').addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase().trim();
@@ -756,20 +2236,28 @@
             const noResults = document.querySelector('.no-results');
             let hasVisibleTools = false;
 
-            // Reset visibility
-            toolCards.forEach(card => card.classList.remove('hidden'));
+            // Reset visibility for all cards and sections, and hide "no results"
+            toolCards.forEach(card => card.classList.add('hidden')); // Hide all initially
             sections.forEach(section => section.classList.remove('hidden'));
             noResults.classList.remove('show');
 
+            // If search term is empty, re-initialize load more buttons and show initial cards
+            if (searchTerm.length === 0) {
+                initializeLoadMoreButtons();
+                return;
+            }
+
+            // If search term is present, hide all load more buttons during search
+            document.querySelectorAll('.load-more-container').forEach(container => container.style.display = 'none');
+
+
             if (searchTerm.length >= 2) {
-                // Filter tool cards
                 toolCards.forEach(card => {
                     const toolName = card.querySelector('.tool-name').textContent.toLowerCase();
                     const toolDesc = card.querySelector('.tool-desc').textContent.toLowerCase();
                     const isMatch = toolName.includes(searchTerm) || toolDesc.includes(searchTerm);
-                    if (!isMatch) {
-                        card.classList.add('hidden');
-                    } else {
+                    if (isMatch) {
+                        card.classList.remove('hidden'); // Show matched cards
                         hasVisibleTools = true;
                     }
                 });
@@ -779,6 +2267,8 @@
                     const visibleCards = section.querySelectorAll('.tool-card:not(.hidden)');
                     if (visibleCards.length === 0) {
                         section.classList.add('hidden');
+                    } else {
+                        section.classList.remove('hidden'); // Ensure section is visible if it has matches
                     }
                 });
 
@@ -786,8 +2276,194 @@
                 if (!hasVisibleTools) {
                     noResults.classList.add('show');
                 }
+            } else {
+                // If search term is less than 2 characters, show all cards again
+                toolCards.forEach(card => card.classList.remove('hidden'));
+                sections.forEach(section => section.classList.remove('hidden'));
+                noResults.classList.remove('show');
+                initializeLoadMoreButtons(); // Re-initialize load more if search is cleared
             }
         });
+
+
+        // Social Media Share Functionality
+        document.querySelectorAll('.share-buttons a').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default link behavior
+
+                const toolCard = this.closest('.tool-card');
+                const toolNameElement = toolCard.querySelector('.tool-name');
+                const toolName = toolNameElement ? toolNameElement.textContent : 'Tool'; // Get tool name
+                const toolUrl = toolCard.dataset.toolUrl;
+                const fullUrl = window.location.origin + '/' + toolUrl; // Construct full URL
+
+                let shareUrl = '';
+                let shareText = `Check out this amazing tool: ${toolName} on Tools Bazar!`;
+
+                if (this.classList.contains('share-facebook')) {
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(fullUrl)}`;
+                } else if (this.classList.contains('share-twitter')) {
+                    shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(fullUrl)}`;
+                } else if (this.classList.contains('share-linkedin')) {
+                    shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(fullUrl)}&title=${encodeURIComponent(toolName)}&summary=${encodeURIComponent(shareText)}`;
+                } else if (this.classList.contains('share-whatsapp')) {
+                    shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + fullUrl)}`;
+                }
+
+                if (shareUrl) {
+                    window.open(shareUrl, '_blank', 'width=600,height=400');
+                }
+            });
+        });
+
+        // Theme Toggle Functionality
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Function to set the theme
+        function setTheme(theme) {
+            if (theme === 'light') {
+                body.classList.add('light-theme');
+                themeToggleBtn.querySelector('i').classList.remove('fa-sun');
+                themeToggleBtn.querySelector('i').classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.remove('light-theme');
+                themeToggleBtn.querySelector('i').classList.remove('fa-moon');
+                themeToggleBtn.querySelector('i').classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Check for saved theme preference on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                // Default to dark theme if no preference is saved
+                setTheme('dark');
+            }
+        });
+
+        // Toggle theme on button click
+        themeToggleBtn.addEventListener('click', () => {
+            if (body.classList.contains('light-theme')) {
+                setTheme('dark');
+            } else {
+                setTheme('light');
+            }
+        });
+
+        // Smooth scroll for tool icons in hero section
+        document.querySelectorAll('.tool-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const targetSectionId = this.dataset.targetSection;
+                const targetSection = document.getElementById(targetSectionId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for scroll-triggered animations
+        const sections = document.querySelectorAll('.section');
+
+        const observerOptions = {
+            root: null, // viewport
+            rootMargin: '0px',
+            threshold: 0.1 // 10% of the section must be visible
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target); // Stop observing once visible
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Back to Top Button functionality
+        const backToTopButton = document.getElementById('back-to-top');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                backToTopButton.classList.add('show');
+            } else {
+                backToTopButton.classList.remove('show');
+            }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Load More Functionality
+        const cardsPerLoad = 4; // Number of cards to load each time
+
+        function initializeLoadMoreButtons() {
+            document.querySelectorAll('.tools-grid').forEach(grid => {
+                const toolCards = Array.from(grid.children);
+                const initialDisplay = parseInt(grid.dataset.initialDisplay || cardsPerLoad);
+                const loadMoreButtonContainer = grid.nextElementSibling; // Assumes load-more-container is next sibling
+
+                if (!loadMoreButtonContainer || !loadMoreButtonContainer.classList.contains('load-more-container')) {
+                    console.error("Load more button container not found or incorrectly placed.");
+                    return;
+                }
+
+                const loadMoreButton = loadMoreButtonContainer.querySelector('.load-more-button');
+
+                // Hide all cards first, then show initial ones
+                toolCards.forEach(card => card.classList.add('hidden'));
+                for (let i = 0; i < initialDisplay && i < toolCards.length; i++) {
+                    toolCards[i].classList.remove('hidden');
+                }
+
+                if (toolCards.length > initialDisplay) {
+                    loadMoreButtonContainer.style.display = 'block'; // Show the button container
+                    loadMoreButton.textContent = `Load More ${grid.closest('.section').querySelector('.section-title').textContent.replace(' Tools', '')} Tools`;
+                } else {
+                    loadMoreButtonContainer.style.display = 'none'; // Hide if all cards are shown
+                }
+
+                // Remove previous event listener to prevent duplicates
+                if (loadMoreButton) {
+                    const oldButton = loadMoreButton.cloneNode(true);
+                    loadMoreButton.parentNode.replaceChild(oldButton, loadMoreButton);
+                    oldButton.addEventListener('click', function() {
+                        let hiddenCards = toolCards.filter(card => card.classList.contains('hidden'));
+                        let cardsShown = 0;
+                        for (let i = 0; i < hiddenCards.length; i++) {
+                            hiddenCards[i].classList.remove('hidden');
+                            cardsShown++;
+                            if (cardsShown >= cardsPerLoad) {
+                                break;
+                            }
+                        }
+
+                        // Check if all cards are now visible
+                        const allVisible = toolCards.every(card => !card.classList.contains('hidden'));
+                        if (allVisible) {
+                            loadMoreButtonContainer.style.display = 'none'; // Hide button if all cards are loaded
+                        }
+                    });
+                }
+            });
+        }
+
+        // Initialize load more buttons on page load
+        document.addEventListener('DOMContentLoaded', initializeLoadMoreButtons);
     </script>
 </body>
 </html>
