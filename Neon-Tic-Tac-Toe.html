@@ -1,0 +1,2348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Tic Tac Toe | Tools Bazaar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Import Starzone font from Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@400;700&family=Rajdhani:wght@400;700&family=Starzone&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* Changed font-family to Starzone, with Michroma and sans-serif as fallbacks */
+            font-family: 'Starzone', 'Starzone', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; /* Changed to column to accommodate header */
+            justify-content: center;
+            align-items: center;
+            /* Changed from overflow: hidden to allow scrolling */
+            overflow-y: auto; 
+            position: relative;
+        }
+
+        /* Header Styles */
+        header {
+            width: 100%;
+            background: rgba(10, 10, 10, 0.9);
+            padding: 6px 12px; /* Reduced */
+            box-shadow: 0 0 8px rgba(0, 242, 255, 0.3); /* Reduced */
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            backdrop-filter: blur(3px); /* Reduced */
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px; /* Reduced */
+            margin: 0 auto;
+        }
+
+        .logo {
+            text-decoration: none;
+            color: #00f2ff;
+            font-size: 1.2rem; /* Reduced */
+            font-weight: bold;
+            letter-spacing: 0.8px; /* Reduced */
+            text-shadow: 0 0 5px #00f2ff; /* Reduced */
+            transition: all 0.3s ease;
+            display: flex; /* To align image and text if both are present */
+            align-items: center;
+        }
+
+        .logo:hover {
+            transform: scale(1.02); /* Reduced */
+            text-shadow: 0 0 8px #00f2ff, 0 0 15px #00f2ff; /* Reduced */
+        }
+
+        .logo-text span {
+            color: #ff0000;
+            text-shadow: 0 0 5px #ff0000; /* Reduced */
+        }
+
+        /* Removed .logo img styling as the image tag is removed */
+
+        .nav-links {
+            display: flex;
+            gap: 12px; /* Reduced */
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 0.85rem; /* Reduced */
+            font-weight: bold;
+            padding: 4px 7px; /* Reduced */
+            border-radius: 4px; /* Reduced */
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a i {
+            margin-right: 4px; /* Reduced */
+            color: #00f2ff;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: rgba(0, 242, 255, 0.08); /* Reduced opacity */
+            color: #00f2ff;
+            text-shadow: 0 0 2px #00f2ff; /* Reduced */
+        }
+
+        .nav-links a:hover i {
+            transform: scale(1.05); /* Reduced */
+        }
+
+        /* Removed theme-toggle CSS */
+        .menu-toggle {
+            display: none; /* Hidden on desktop */
+            font-size: 1.2rem; /* Reduced */
+            cursor: pointer;
+            color: #00f2ff;
+            text-shadow: 0 0 5px #00f2ff; /* Reduced */
+        }
+
+        /* Animated Background */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(135deg, #1a0000 0%, #0a001a 100%);
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(139, 0, 0, 0.3);
+            animation: float 15s infinite linear;
+            filter: blur(0.6px); /* Reduced */
+        }
+
+        .neon-line {
+            position: absolute;
+            height: 1px;
+            background: rgba(255, 0, 0, 0.5);
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.7); /* Reduced */
+            animation: neon-line-anim 5s infinite alternate;
+        }
+
+        /* Container */
+        .container {
+            width: 95%; /* Reduced */
+            max-width: 380px; /* Reduced */
+            padding: 18px; /* Reduced */
+            background: rgba(20, 20, 20, 0.7);
+            border-radius: 10px; /* Reduced */
+            box-shadow: 0 0 20px rgba(139, 0, 0, 0.6); /* Reduced */
+            border: 1px solid rgba(139, 0, 0, 0.4); /* Reduced */
+            backdrop-filter: blur(5px); /* Reduced */
+            margin: 8px; /* Reduced */
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            margin-top: 60px; /* Adjusted margin to account for fixed header */
+            margin-bottom: 15px; /* Added margin-bottom to ensure space for scroll indicator */
+        }
+
+        /* Logo Badge */
+        .logo-badge {
+            position: absolute;
+            top: -10px; /* Reduced */
+            right: -10px; /* Reduced */
+            width: 50px; /* Reduced */
+            height: 50px; /* Reduced */
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B0000 0%, #ff0000 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 12px #ff0000; /* Reduced */
+            z-index: 10;
+            border: 1px solid #fff;
+            animation: pulse 2s infinite alternate;
+        }
+
+        .logo-badge i {
+            color: white;
+            font-size: 25px; /* Reduced */
+            animation: rotate 10s linear infinite;
+        }
+
+        /* Title */
+        h1 {
+            text-align: center;
+            margin-bottom: 18px; /* Reduced */
+            color: #00f2ff;
+            text-shadow: 0 0 8px #00f2ff, 0 0 15px #00f2ff; /* Reduced */
+            font-size: 1.8rem; /* Reduced */
+            letter-spacing: 1.2px; /* Reduced */
+            animation: text-flicker 3s infinite alternate;
+        }
+
+        /* Game Controls */
+        .game-controls {
+            width: 100%;
+            margin-bottom: 18px; /* Reduced */
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 6px; /* Reduced */
+            margin-bottom: 12px; /* Reduced */
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 8px; /* Reduced */
+            border: none;
+            background: rgba(30, 30, 30, 0.8);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px; /* Reduced */
+            letter-spacing: 0.7px; /* Reduced */
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(0, 242, 255, 0.3); /* Reduced */
+            font-size: 0.85rem; /* Reduced */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0.15), /* Reduced opacity */
+                rgba(255, 255, 0)
+            );
+            transform: rotate(45deg);
+            z-index: -1;
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, #8B0000 0%, #ff0000 100%);
+            box-shadow: 0 0 10px #ff0000; /* Reduced */
+            color: white;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-1px); /* Reduced */
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.6); /* Reduced */
+        }
+
+        .mode-btn:hover::before {
+            opacity: 1;
+            animation: shine 1.5s infinite;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 6px; /* Reduced */
+            margin-bottom: 12px; /* Reduced */
+        }
+
+        .difficulty-btn {
+            flex: 1;
+            padding: 8px; /* Reduced */
+            border: none;
+            background: rgba(30, 30, 30, 0.8);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px; /* Reduced */
+            letter-spacing: 0.7px; /* Reduced */
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(0, 242, 255, 0.3); /* Reduced */
+            font-size: 0.85rem; /* Reduced */
+        }
+
+        .difficulty-btn.active {
+            background: linear-gradient(135deg, #006eff 0%, #00f2ff 100%);
+            box-shadow: 0 0 10px #00f2ff; /* Reduced */
+            color: #000;
+        }
+
+        .difficulty-btn:hover {
+            transform: translateY(-1px); /* Reduced */
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.6); /* Reduced */
+        }
+
+        /* Player Name Inputs & Icon Selection */
+        .player-sections-container {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            gap: 15px; /* Spacing between player sections */
+            margin-bottom: 12px;
+            justify-content: center; /* Center items when they wrap */
+        }
+
+        .player-section {
+            flex: 1; /* Allow sections to grow and shrink */
+            min-width: 150px; /* Minimum width for each section */
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* Spacing between elements within a section */
+        }
+
+        .player-name-input {
+            width: 100%;
+            padding: 7px 9px; /* Reduced */
+            border: 1px solid rgba(0, 242, 255, 0.2); /* Reduced opacity */
+            border-radius: 4px; /* Reduced */
+            background: rgba(30, 30, 30, 0.8);
+            color: #fff;
+            font-size: 0.75rem; /* Reduced */
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 242, 255, 0.15); /* Reduced */
+            transition: box-shadow 0.3s ease, border-color 0.3s ease; /* Added border-color transition */
+        }
+
+        .player-name-input::placeholder {
+            color: rgba(255, 255, 255, 0.5); /* Reduced opacity */
+        }
+
+        .player-name-input:focus {
+            box-shadow: 0 0 8px rgba(0, 242, 255, 0.5), 0 0 15px rgba(0, 242, 255, 0.3); /* Enhanced glow */
+            border-color: #00f2ff; /* Neon border on focus */
+        }
+
+        /* Icon Selection */
+        .icon-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 5px; /* Reduced */
+            /* margin-bottom: 12px; Removed, handled by parent .player-section gap */
+        }
+
+        .icon-row {
+            display: flex;
+            justify-content: flex-start; /* Align icons to the start */
+            gap: 4px; /* Increased gap between icons */
+            flex-wrap: wrap; /* Allow icons to wrap if too many */
+        }
+
+        .icon-btn {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(0, 242, 255, 0.2); /* Reduced opacity */
+            border-radius: 4px; /* Reduced */
+            padding: 4px; /* Reduced */
+            font-size: 1rem; /* Reduced */
+            cursor: pointer;
+            transition: all 0.2s ease;
+            /* flex: 1; Removed flex:1 to allow icons to size based on content */
+            text-align: center;
+            min-width: 25px; /* Reduced */
+            height: 25px; /* Fixed height for consistency */
+            display: flex; /* For centering content */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .icon-btn.active {
+            background: linear-gradient(135deg, #006eff 0%, #00f2ff 100%);
+            box-shadow: 0 0 8px #00f2ff; /* Reduced */
+            transform: scale(1.04); /* Reduced */
+            border-color: #00f2ff; /* Active border color */
+        }
+
+        .icon-btn:hover:not(.active) {
+            transform: scale(1.01); /* Reduced */
+            box-shadow: 0 0 5px rgba(0, 242, 255, 0.4); /* Reduced */
+            border-color: rgba(0, 242, 255, 0.5); /* Hover border color */
+        }
+
+        /* Score Board */
+        .score-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px; /* Reduced */
+            margin-bottom: 12px; /* Reduced */
+        }
+
+        .score {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 6px; /* Reduced */
+            padding: 10px; /* Reduced */
+            text-align: center;
+            box-shadow: 0 0 8px rgba(0, 242, 255, 0.3); /* Reduced */
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 242, 255, 0.2); /* Default border for scores */
+        }
+
+        .score.x-score {
+            color: #ff0000;
+            text-shadow: 0 0 4px #ff0000; /* Reduced */
+        }
+
+        .score.o-score {
+            color: #00f2ff;
+            text-shadow: 0 0 4px #00f2ff; /* Reduced */
+        }
+
+        .score.draw-score {
+            color: #9E9E9E;
+        }
+
+        .score .player-icon {
+            font-size: 18px; /* Reduced */
+            margin-bottom: 6px; /* Reduced */
+            display: block; /* Ensure icon is on its own line */
+        }
+
+        .score-value {
+            font-size: 18px; /* Reduced */
+            font-weight: bold;
+        }
+
+        /* NEW: Active Turn Glow for Score Board */
+        .score.active-turn {
+            transform: scale(1.03); /* Slightly enlarge */
+            animation: activeScoreGlow 1.5s infinite alternate; /* Add glowing animation */
+            border-color: #ffcc00; /* Highlight border */
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px; /* Reduced */
+            margin-top: 12px; /* Reduced */
+            flex-wrap: wrap; /* Allow buttons to wrap */
+            justify-content: center; /* Center buttons when they wrap */
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px; /* Reduced */
+            border: none;
+            border-radius: 6px; /* Reduced */
+            background: linear-gradient(135deg, #8B0000 0%, #ff0000 100%);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 0.7px; /* Reduced */
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); /* Reduced */
+            transition: all 0.3s ease;
+            font-size: 0.9rem; /* Reduced */
+            min-width: 120px; /* Ensure buttons don't get too small */
+        }
+
+        .action-btn:nth-child(2) {
+            background: linear-gradient(135deg, #006eff 0%, #00f2ff 100%);
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.5); /* Reduced */
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px); /* Reduced */
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); /* Reduced */
+        }
+
+        .action-btn:nth-child(2):hover {
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.8); /* Reduced */
+        }
+
+        .action-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Game Board */
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px; /* Reduced */
+            width: 100%;
+            max-width: 350px; /* Reduced */
+            margin: 0 auto 18px; /* Reduced */
+            aspect-ratio: 1/1;
+            position: relative; /* For winning line */
+        }
+
+        .cell {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 6px; /* Reduced */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 45px; /* Reduced */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); /* Reduced */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cell::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 6px; /* Reduced */
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1); /* Reduced */
+            pointer-events: none;
+        }
+
+        .cell:hover {
+            background: rgba(50, 50, 50, 0.8);
+            transform: scale(1.01); /* Reduced */
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.3); /* Reduced */
+        }
+
+        .cell.x {
+            color: #ff0000; /* Fallback color for X */
+            text-shadow: 0 0 10px #ff0000; /* Reduced */
+        }
+
+        .cell.o {
+            color: #00f2ff; /* Fallback color for O */
+            text-shadow: 0 0 10px #00f2ff; /* Reduced */
+        }
+
+        .cell.win {
+            animation: winCell 1s infinite alternate, winningGlow 1s infinite alternate; /* Added winningGlow */
+        }
+
+        /* Winning Line */
+        .winning-line {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, #fff, transparent);
+            box-shadow: 0 0 8px #fff, 0 0 15px #fff; /* Reduced */
+            z-index: 50;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .winning-line.active {
+            opacity: 1;
+            animation: drawLine 0.8s forwards;
+        }
+
+        /* Status Message */
+        .status-message {
+            text-align: center;
+            font-size: 16px; /* Reduced */
+            font-weight: bold;
+            margin-top: 10px; /* Reduced */
+            min-height: 25px; /* Reduced */
+            text-shadow: 0 0 4px white; /* Reduced */
+            letter-spacing: 0.7px; /* Reduced */
+            animation: pulse-text 2s infinite alternate;
+            display: flex; /* Use flexbox for centering text */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .status-message.x-turn {
+            color: #ff0000;
+            text-shadow: 0 0 5px #ff0000; /* Reduced */
+        }
+
+        .status-message.o-turn {
+            color: #00f2ff;
+            text-shadow: 0 0 5px #00f2ff; /* Reduced */
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: rgba(20, 20, 20, 0.95);
+            padding: 25px; /* Reduced */
+            border-radius: 15px; /* Reduced */
+            text-align: center;
+            max-width: 75%; /* Reduced */
+            width: 350px; /* Reduced */
+            box-shadow: 0 0 20px #00f2ff; /* Reduced */
+            border: 1px solid rgba(0, 242, 255, 0.3); /* Reduced */
+            transform: scale(0.9);
+            transition: transform 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(0, 242, 255, 0.1), /* Reduced opacity */
+                rgba(0, 242, 255, 0)
+            );
+            transform: rotate(45deg);
+            z-index: -1;
+            animation: modal-shine 8s infinite;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal h2 {
+            color: #00f2ff;
+            margin-bottom: 15px; /* Reduced */
+            font-size: 24px; /* Reduced */
+            text-shadow: 0 0 8px #00f2ff; /* Reduced */
+        }
+
+        .modal p {
+            margin-bottom: 20px; /* Reduced */
+            font-size: 18px; /* Reduced */
+            color: white;
+            text-shadow: 0 0 4px white; /* Reduced */
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px; /* Reduced */
+            justify-content: center;
+            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+        }
+
+        .modal-btn {
+            padding: 10px 18px; /* Reduced */
+            border: none;
+            border-radius: 6px; /* Reduced */
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 0.7px; /* Reduced */
+            transition: all 0.3s ease;
+            font-size: 0.85rem; /* Reduced */
+            min-width: 100px; /* Reduced */
+        }
+
+        #play-again {
+            background: linear-gradient(135deg, #8B0000 0%, #ff0000 100%);
+            color: white;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); /* Reduced */
+        }
+
+        #back-to-tools {
+            background: linear-gradient(135deg, #006eff 0%, #00f2ff 100%);
+            color: #000;
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.5); /* Reduced */
+        }
+
+        #back-menu-btn { /* New style for the "Back to Menu" button */
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%); /* Green gradient */
+            color: white;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5); /* Reduced */
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-1px); /* Reduced */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Reduced */
+        }
+
+        /* Specific hover for the new button */
+        #back-menu-btn:hover {
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.8); /* Reduced */
+        }
+
+        /* Settings Menu Toggle Button */
+        .settings-menu-toggle {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(30, 30, 30, 0.8);
+            color: #00f2ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            z-index: 102; /* Higher than scroll indicator */
+        }
+
+        .settings-menu-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.8);
+        }
+
+        /* Audio Settings Panel */
+        .audio-settings-panel {
+            position: fixed;
+            bottom: 70px; /* Position above the toggle button */
+            right: 15px;
+            background: rgba(20, 20, 20, 0.9);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.6);
+            border: 1px solid rgba(0, 242, 255, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 101; /* Below the toggle button but above other content */
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px); /* Start slightly below */
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .audio-settings-panel.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        /* Audio Controls (inside panel) */
+        .audio-controls {
+            /* Removed fixed positioning as it's now inside a panel */
+            position: static;
+            bottom: auto;
+            left: auto;
+            display: flex;
+            flex-direction: column; /* Stack controls vertically */
+            gap: 8px; /* Reduced */
+            z-index: auto; /* Reset z-index */
+            background: none; /* No background for the internal container */
+            padding: 0; /* No padding for the internal container */
+            box-shadow: none; /* No shadow for the internal container */
+            border: none; /* No border for the internal container */
+        }
+
+        .audio-btn {
+            width: 35px; /* Reduced */
+            height: 35px; /* Reduced */
+            border-radius: 50%;
+            background: rgba(30, 30, 30, 0.8);
+            color: #00f2ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px; /* Reduced */
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0, 242, 255, 0.3); /* Reduced */
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 242, 255, 0.2); /* Reduced */
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.04); /* Reduced */
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.6); /* Reduced */
+        }
+
+        /* Volume Sliders */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Reduced */
+            background: rgba(30, 30, 30, 0.8);
+            padding: 5px 8px; /* Reduced */
+            border-radius: 6px; /* Reduced */
+            box-shadow: 0 0 8px rgba(0, 242, 255, 0.3); /* Reduced */
+            width: 120px; /* Reduced */
+        }
+
+        .volume-control i {
+            font-size: 0.9rem; /* Reduced */
+            color: #00f2ff;
+        }
+
+        .volume-control input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px; /* Reduced */
+            background: rgba(0, 242, 255, 0.15); /* Reduced opacity */
+            border-radius: 2px; /* Reduced */
+            outline: none;
+            transition: opacity .2s;
+        }
+
+        .volume-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px; /* Reduced */
+            height: 14px; /* Reduced */
+            border-radius: 50%;
+            background: #00f2ff;
+            cursor: pointer;
+            box-shadow: 0 0 4px #00f2ff; /* Reduced */
+        }
+
+        .volume-control input[type="range"]::-moz-range-thumb {
+            width: 14px; /* Reduced */
+            height: 14px; /* Reduced */
+            border-radius: 50%;
+            background: #00f2ff;
+            cursor: pointer;
+            box-shadow: 0 0 4px #00f2ff; /* Reduced */
+        }
+
+        /* Game History */
+        .game-history {
+            background: rgba(20, 20, 20, 0.7);
+            border-radius: 8px; /* Reduced */
+            padding: 10px; /* Reduced */
+            margin-top: 18px; /* Reduced */
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.3); /* Reduced */
+            max-height: 140px; /* Reduced */
+            overflow-y: auto;
+            border: 1px solid rgba(0, 242, 255, 0.15); /* Reduced */
+        }
+
+        .game-history h3 {
+            text-align: center;
+            color: #00f2ff;
+            text-shadow: 0 0 5px #00f2ff; /* Reduced */
+            margin-bottom: 8px; /* Reduced */
+            font-size: 1rem; /* Reduced */
+            letter-spacing: 0.7px; /* Reduced */
+        }
+
+        .history-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .history-item {
+            background: rgba(30, 30, 30, 0.8);
+            padding: 5px 8px; /* Reduced */
+            margin-bottom: 4px; /* Reduced */
+            border-radius: 4px; /* Reduced */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem; /* Reduced */
+            color: rgba(255, 255, 255, 0.7); /* Reduced opacity */
+            border: 1px solid rgba(0, 242, 255, 0.08); /* Reduced opacity */
+        }
+
+        .history-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .history-item.win {
+            color: #8BC34A;
+            text-shadow: 0 0 2px #8BC34A; /* Reduced */
+        }
+
+        .history-item.draw {
+            color: #FFC107;
+            text-shadow: 0 0 2px #FFC107; /* Reduced */
+        }
+
+        /* NEW: Styles for player icons in history */
+        .history-players {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between icons and result text */
+        }
+
+        .history-player-icon {
+            font-size: 0.9em; /* Slightly larger than surrounding text */
+            line-height: 1; /* Ensure vertical alignment */
+        }
+
+
+        /* Confetti Styles */
+        .confetti {
+            position: absolute;
+            width: var(--size, 8px); /* Use CSS variable for size */
+            height: var(--size, 8px);
+            background-color: var(--color, #f00); /* Use CSS variable for color */
+            border-radius: 0; /* Default to square */
+            animation: confetti-fall var(--duration, 3s) forwards var(--delay, 0s); /* Use CSS variables */
+            filter: blur(0.5px);
+            box-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+            transform-origin: center center;
+            z-index: 1000; /* Ensures confetti is on top */
+        }
+
+        .confetti-shape-circle {
+            border-radius: 50%;
+        }
+
+        .confetti-shape-triangle {
+            width: 0;
+            height: 0;
+            border-left: var(--size-half, 4px) solid transparent;
+            border-right: var(--size-half, 4px) solid transparent;
+            border-bottom: var(--size, 8px) solid var(--color, #f00); /* Use color variable */
+            background-color: transparent; /* Override default */
+        }
+
+        /* Bubble Confetti Styles */
+        .confetti-shape-bubble {
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1); /* Very light, semi-transparent */
+            border: 1px solid rgba(255, 255, 255, 0.8); /* White border */
+            box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.5), 0 0 10px rgba(0, 242, 255, 0.7); /* Inner shadow and outer neon glow */
+            filter: blur(0.2px); /* Slight blur for realism */
+            animation: bubble-float var(--duration, 5s) forwards var(--delay, 0s); /* Use new animation */
+            opacity: 0.8; /* Start slightly more opaque */
+        }
+
+        /* Emoji/Icon Confetti Styles */
+        .confetti-shape-emoji {
+            background-color: transparent; /* Emojis/icons don't need background */
+            font-size: var(--size, 18px); /* Larger size for visibility */
+            text-shadow: 0 0 5px var(--color, #fff), 0 0 10px var(--color, #fff); /* Neon glow */
+            animation: confetti-fall var(--duration, 3s) forwards var(--delay, 0s); /* Use confetti-fall animation */
+            display: flex; /* To center icon if it's a Font Awesome icon */
+            justify-content: center;
+            align-items: center;
+            width: auto; /* Allow content to dictate width */
+            height: auto; /* Allow content to dictate height */
+            /* Ensure font awesome icons are colored */
+            color: var(--color, #fff); 
+        }
+
+        /* Firework Styles */
+        .firework { /* Renamed from .firework-particle */
+            position: absolute;
+            width: 4px; /* Increased size for visibility */
+            height: 4px; /* Increased size for visibility */
+            background-color: white;
+            border-radius: 50%;
+            opacity: 1; /* Let animation control this */
+            transform: scale(0);
+            animation: firework-animation 0.8s forwards; /* Using new animation name */
+            box-shadow: 0 0 3px white; /* Increased shadow */
+            z-index: 999; /* Ensures fireworks are visible */
+        }
+
+        /* Scroll Indicator Styles */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 15px; /* Reduced */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 242, 255, 0.08); /* Reduced opacity */
+            color: #00f2ff;
+            padding: 6px 12px; /* Reduced */
+            border-radius: 18px; /* Reduced */
+            box-shadow: 0 0 12px rgba(0, 242, 255, 0.6); /* Reduced */
+            font-size: 0.75rem; /* Reduced */
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px; /* Reduced */
+            z-index: 101; /* Above other elements */
+            opacity: 0; /* Hidden by default */
+            pointer-events: none; /* Not interactive when hidden */
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .scroll-indicator.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .scroll-indicator i {
+            animation: bounce-arrow 1.5s infinite;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px #ff0000; } /* Reduced */
+            100% { box-shadow: 0 0 20px #ff0000; } /* Reduced */
+        }
+
+        @keyframes text-flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow: 0 0 8px #00f2ff, 0 0 15px #00f2ff; /* Reduced */
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+            }
+        }
+
+        @keyframes winCell {
+            0% { 
+                transform: scale(1);
+                box-shadow: 0 0 8px rgba(255, 0, 0, 0.4); /* Reduced */
+            }
+            100% { 
+                transform: scale(1.03); /* Reduced */
+                box-shadow: 0 0 15px rgba(255, 0, 0, 0.7); /* Reduced */
+            }
+        }
+
+        @keyframes winningGlow {
+            0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.4); } /* Reduced */
+            50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.6); } /* Reduced */
+            100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.4); } /* Reduced */
+        }
+
+        /* NEW: Active Score Glow Animation */
+        @keyframes activeScoreGlow {
+            0% { 
+                box-shadow: 0 0 8px rgba(255, 204, 0, 0.6), 0 0 15px rgba(255, 204, 0, 0.3);
+                border-color: rgba(255, 204, 0, 0.8);
+            }
+            100% { 
+                box-shadow: 0 0 15px rgba(255, 204, 0, 0.9), 0 0 25px rgba(255, 204, 0, 0.5);
+                border-color: rgba(255, 204, 0, 1);
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0) rotate(0); }
+            100% { transform: translateY(-100vh) translateX(100vw) rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); } /* Reduced bounce scale */
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes modal-shine {
+            0% { top: -50%; left: -50%; }
+            50% { top: 50%; left: 50%; }
+            100% { top: 150%; left: 150%; }
+        }
+
+        @keyframes neon-line-anim {
+            0% { opacity: 0.15; box-shadow: 0 0 2px rgba(255, 0, 0, 0.4); } /* Reduced */
+            100% { opacity: 0.7; box-shadow: 0 0 10px rgba(255, 0, 0, 0.7); } /* Reduced */
+        }
+
+        @keyframes pulse-text {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.01); } /* Reduced pulse scale */
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes drawLine {
+            0% {
+                transform: scaleX(0);
+                transform-origin: left;
+            }
+            100% {
+                transform: scaleX(1);
+                transform-origin: left;
+            }
+        }
+
+        /* New firework animation using --x and --y */
+        @keyframes firework-animation { /* Renamed from firework-burst */
+            0% {
+                transform: scale(0) translate(0, 0);
+                opacity: 1; /* Ensure firework is visible at start */
+            }
+            100% {
+                transform: scale(1) translate(var(--x), var(--y)); /* Changed to --x, --y */
+                opacity: 0;
+            }
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateX(0);
+                opacity: 1; /* Ensure confetti is visible at start */
+            }
+            100% {
+                transform: translateY(100vh) rotateX(720deg) rotateY(720deg) rotateZ(720deg) translateX(var(--end-x, 0px)); /* Add horizontal drift */
+                opacity: 0;
+            }
+        }
+
+        /* New animation for bubbles floating upwards */
+        @keyframes bubble-float {
+            0% {
+                transform: translateY(100vh) scale(0.5); /* Start from bottom, smaller */
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.8; /* Fully opaque in the middle */
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.2); /* Float to top, slightly larger */
+                opacity: 0;
+            }
+        }
+
+        @keyframes bounce-arrow {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-4px); /* Reduced bounce */
+            }
+            60% {
+                transform: translateY(-1.5px); /* Reduced bounce */
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.5rem; } /* Reduced for tablet */
+            .cell { font-size: 35px; } /* Reduced for tablet */
+            .score-board { grid-template-columns: 1fr; }
+            .action-buttons { flex-direction: column; }
+            .modal-buttons { flex-direction: column; }
+            .logo-badge {
+                width: 45px; /* Reduced */
+                height: 45px; /* Reduced */
+                top: -7px; /* Adjusted position */
+                right: -7px; /* Adjusted position */
+            }
+            .logo-badge i { font-size: 22px; } /* Reduced */
+            .modal { padding: 20px; } /* Reduced */
+            .modal h2 { font-size: 22px; } /* Reduced */
+            .modal p { font-size: 16px; } /* Reduced */
+            .player-name-input { font-size: 0.7rem; padding: 6px 8px; } /* Reduced */
+            .volume-control { width: 100%; }
+
+            /* Header Responsive */
+            .nav-links {
+                display: none; /* Hide nav links by default on small screens */
+                flex-direction: column;
+                position: absolute;
+                top: 45px; /* Adjusted position */
+                left: 0;
+                width: 100%;
+                background: rgba(10, 10, 10, 0.95);
+                box-shadow: 0 5px 10px rgba(0, 242, 255, 0.2); /* Reduced */
+                padding: 8px 0; /* Reduced */
+                border-radius: 0 0 8px 8px; /* Reduced */
+                z-index: 90;
+                transition: all 0.3s ease-in-out;
+                transform: translateY(-100%);
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .nav-links a {
+                padding: 8px 0; /* Reduced */
+                text-align: center;
+                width: 100%;
+                border-bottom: 1px solid rgba(0, 242, 255, 0.08); /* Reduced opacity */
+            }
+
+            .nav-links a:last-child {
+                border-bottom: none;
+            }
+
+            .menu-toggle {
+                display: block; /* Show menu toggle icon */
+            }
+
+            /* Responsive icons */
+            .icon-btn {
+                font-size: 0.85rem; /* Reduced font size for tablets */
+                min-width: 22px; /* Reduced min-width for tablets */
+            }
+
+            /* Responsive for settings panel */
+            .settings-menu-toggle {
+                bottom: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .audio-settings-panel {
+                bottom: 60px;
+                right: 10px;
+                padding: 10px;
+                gap: 8px;
+            }
+
+            .volume-control {
+                width: 100%;
+            }
+
+            /* Player sections stack on smaller screens */
+            .player-sections-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .player-section {
+                min-width: unset; /* Remove min-width when stacking */
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 10px; max-width: 260px; } /* Reduced */
+            .game-board { gap: 5px; max-width: 230px; } /* Reduced */
+            .cell { font-size: 28px; } /* Reduced */
+            h1 { font-size: 1.2rem; } /* Reduced */
+            .modal { padding: 15px; width: 260px; } /* Reduced */
+            .modal h2 { font-size: 18px; } /* Reduced */
+            .modal p { font-size: 14px; } /* Reduced */
+            .modal-btn { padding: 8px 15px; min-width: 90px; font-size: 0.75rem; } /* Reduced */
+            .score { padding: 8px; } /* Reduced */
+            .score i { font-size: 16px; } /* Reduced */
+            .score-value { font-size: 16px; } /* Reduced */
+            .status-message { font-size: 13px; min-height: 20px;} /* Reduced */
+            .mode-btn, .difficulty-btn { padding: 7px; font-size: 0.75rem; } /* Reduced */
+            .modal-buttons { flex-direction: column; } /* Ensure buttons stack on very small screens */
+            .audio-controls {
+                flex-direction: column; /* Keep audio controls in a row on very small screens if space permits */
+                flex-wrap: wrap;
+                justify-content: center;
+                /* Removed fixed positioning, now handled by parent panel */
+                bottom: auto; 
+                left: auto;
+                transform: none;
+                gap: 6px; /* Reduced */
+            }
+            .audio-btn {
+                width: 30px; /* Reduced */
+                height: 30px; /* Reduced */
+                font-size: 14px; /* Reduced */
+            }
+            .volume-control { width: 100%; padding: 4px 6px; } /* Adjusted for very small screens */
+            .volume-control i { font-size: 0.8rem; } /* Reduced */
+            .volume-control input[type="range"] { height: 3px; } /* Reduced */
+            .volume-control input[type="range"]::-webkit-slider-thumb { width: 12px; height: 12px; } /* Reduced */
+            .volume-control input[type="range"]::-moz-range-thumb { width: 12px; height: 12px; } /* Reduced */
+            .game-history {
+                padding: 8px; /* Reduced */
+                margin-top: 12px; /* Reduced */
+                max-height: 110px; /* Reduced */
+            }
+            .game-history h3 { font-size: 0.9rem; margin-bottom: 6px; } /* Reduced */
+            .history-item { padding: 4px 6px; font-size: 0.7rem; } /* Reduced */
+
+            /* Responsive icons for smaller screens */
+            .icon-btn {
+                font-size: 0.75rem; /* Reduced font size for mobile */
+                min-width: 18px; /* Reduced min-width for mobile */
+            }
+
+            /* Responsive for settings panel on very small screens */
+            .settings-menu-toggle {
+                bottom: 5px;
+                right: 5px;
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+
+            .audio-settings-panel {
+                bottom: 50px;
+                right: 5px;
+                padding: 8px;
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">
+                <span class="logo-text">Tools <span>Bazar</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="#"><i class="fas fa-home"></i> Home</a>
+                <a href="#"><i class="fas fa-calculator"></i> Tools</a>
+                <a href="#"><i class="fas fa-info-circle"></i> About</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+                </div>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="background" id="background"></div>
+    
+    <div class="container">
+        <div class="">
+            <i class="fas fa-tools"></i>
+        </div>
+        
+        <h1>NEON TIC TAC TOE</h1>
+        
+        <div class="game-controls">
+            <div class="player-sections-container">
+                <div class="player-section">
+                    <label for="playerXName">Player X Name:</label>
+                    <input type="text" id="playerXName" class="player-name-input" placeholder="Player X Name" value="Player X">
+                    <div class="icon-selection">
+                        <label>Select Player X Icon:</label>
+                        <div class="icon-row" id="playerX-icon-row">
+                            <button class="icon-btn" data-player="X" data-icon="❌">❌</button>
+                            <button class="icon-btn" data-player="X" data-icon="😺">😺</button>
+                            <button class="icon-btn" data-player="X" data-icon="⭐">⭐</button>
+                            <button class="icon-btn" data-player="X" data-icon="⚡">⚡</button>
+                            <button class="icon-btn" data-player="X" data-icon="👾">👾</button>
+                            <button class="icon-btn" data-player="X" data-icon="🚀">🚀</button>
+                            <button class="icon-btn" data-player="X" data-icon="💎">💎</button>
+                            <button class="icon-btn" data-player="X" data-icon="🎯">🎯</button>
+                            <button class="icon-btn" data-player="X" data-icon="🍀">🍀</button>
+                            <button class="icon-btn" data-player="X" data-icon="👻">👻</button>
+                            <button class="icon-btn" data-player="X" data-icon="🔥">🔥</button>
+                            <button class="icon-btn" data-player="X" data-icon="⚔️">⚔️</button>
+                            <button class="icon-btn" data-player="X" data-icon="🛡️">🛡️</button>
+                            <button class="icon-btn" data-player="X" data-icon="👑">👑</button>
+                            <button class="icon-btn" data-player="X" data-icon="🐉">🐉</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="player-section">
+                    <label for="playerOName">Player O Name:</label>
+                    <input type="text" id="playerOName" class="player-name-input" placeholder="Player O Name" value="Player O">
+                    <div class="icon-selection">
+                        <label>Select Player O Icon:</label>
+                        <div class="icon-row" id="playerO-icon-row">
+                            <button class="icon-btn" data-player="O" data-icon="⭕">⭕</button>
+                            <button class="icon-btn" data-player="O" data-icon="🐶">🐶</button>
+                            <button class="icon-btn" data-player="O" data-icon="🌙">🌙</button>
+                            <button class="icon-btn" data-player="O" data-icon="🌟">🌟</button>
+                            <button class="icon-btn" data-player="O" data-icon="🤖">🤖</button>
+                            <button class="icon-btn" data-player="O" data-icon="🌌">🌌</button>
+                            <button class="icon-btn" data-player="O" data-icon="🔮">🔮</button>
+                            <button class="icon-btn" data-player="O" data-icon="🌀">🌀</button>
+                            <button class="icon-btn" data-player="O" data-icon="👽">👽</button>
+                            <button class="icon-btn" data-player="O" data-icon="⚡">⚡</button>
+                            <button class="icon-btn" data-player="O" data-icon="💧">💧</button>
+                            <button class="icon-btn" data-player="O" data-icon="🧊">🧊</button>
+                            <button class="icon-btn" data-player="O" data-icon="🌿">🌿</button>
+                            <button class="icon-btn" data-player="O" data-icon="🍄">🍄</button>
+                            <button class="icon-btn" data-player="O" data-icon="🦉">🦉</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mode-selector">
+                <button class="mode-btn" id="1player">1 PLAYER</button>
+                <button class="mode-btn active" id="2players">2 PLAYERS</button>
+            </div>
+            
+            <div class="difficulty-selector">
+                <button class="difficulty-btn active" data-level="easy">EASY</button>
+                <button class="difficulty-btn" data-level="medium">MEDIUM</button>
+                <button class="difficulty-btn" data-level="hard">HARD</button>
+            </div>
+
+            <div class="score-board">
+                <div class="score x-score" id="score-x">
+                    <span class="player-icon" id="x-player-icon">❌</span>
+                    <div class="score-value" id="x-score">0</div>
+                </div>
+                <div class="score draw-score">
+                    <i class="fas fa-equals"></i>
+                    <div class="score-value" id="draw-score">0</div>
+                </div>
+                <div class="score o-score" id="score-o">
+                    <span class="player-icon" id="o-player-icon">⭕</span>
+                    <div class="score-value" id="o-score">0</div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn" id="new-game">NEW GAME</button>
+                <button class="action-btn" id="reset">RESET SCORES</button>
+            </div>
+        </div>
+        
+        <div class="game-board" id="game-board">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+            <div class="winning-line" id="winning-line"></div> 
+        </div>
+        
+        <div class="status-message" id="status">PLAYER X'S TURN</div>
+        
+
+        <div class="game-history">
+            <h3>GAME HISTORY</h3>
+            <ul class="history-list" id="history-list">
+                </ul>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h2 id="modal-title">GAME OVER!</h2>
+            <p id="modal-message">PLAYER X WINS!</p>
+            <div class="modal-buttons">
+                <button class="modal-btn" id="play-again">PLAY AGAIN</button>
+                <button class="modal-btn" id="back-to-tools">TOOLS BAZAAR</button>
+                <button class="modal-btn" id="back-menu-btn">BACK TO MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="settings-menu-toggle" id="settings-menu-toggle">
+        <i class="fas fa-cog"></i>
+    </div>
+
+    <div class="audio-settings-panel" id="audio-settings-panel">
+        <div class="audio-controls">
+            <button class="audio-btn" id="music-toggle">
+                <i class="fas fa-music"></i>
+            </button>
+            <button class="audio-btn" id="sound-toggle">
+                <i class="fas fa-volume-up"></i>
+            </button>
+            <div class="volume-control">
+                <i class="fas fa-music"></i>
+                <input type="range" id="music-volume" min="0" max="1" step="0.01" value="0.3">
+            </div>
+            <div class="volume-control">
+                <i class="fas fa-volume-up"></i>
+                <input type="range" id="sound-volume" min="0" max="1" step="0.01" value="1">
+            </div>
+        </div>
+    </div>
+    
+    <div id="scroll-indicator" class="scroll-indicator">
+        <span>SCROLL DOWN FOR MORE FEATURES</span>
+        <i class="fas fa-chevron-down"></i>
+    </div>
+    
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2023/03/12/audio_0763df1ad9.mp3?filename=chiptune-grooving-142242.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="click-sound">
+        <source src="https://cdn.pixabay.com/download/audio/2025/01/19/audio_af5c830f07.mp3?filename=button-click-289742.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="win-sound">
+        <source src="https://cdn.pixabay.com/download/audio/2024/06/22/audio_67de33d7b6.mp3?filename=winning-218995.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="draw-sound">
+        <source src="https://cdn.pixabay.com/download/audio/2024/08/07/audio_cba96c8800.mp3?filename=game-over-2-sound-effect-230463.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="celebration-sound"> <source src="https://assets.mixkit.co/sfx/preview/mixkit-game-level-completed-2059.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Background Animations ---
+            const background = document.getElementById('background');
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.width = `${Math.random() * 15 + 5}px`;
+                particle.style.height = particle.style.width;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.backgroundColor = `rgba(${Math.random() * 100 + 155}, ${Math.random() * 50}, ${Math.random() * 100}, ${Math.random() * 0.3 + 0.1})`;
+                particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+                background.appendChild(particle);
+            }
+            for (let i = 0; i < 20; i++) {
+                const line = document.createElement('div');
+                line.classList.add('neon-line');
+                line.style.width = `${Math.random() * 100 + 50}%`;
+                line.style.left = `${Math.random() * 100}%`;
+                line.style.top = `${Math.random() * 100}%`;
+                line.style.animationDuration = `${Math.random() * 10 + 5}s`;
+                background.appendChild(line);
+            }
+            
+            // --- Game State Variables ---
+            let board = ['', '', '', '', '', '', '', '', ''];
+            let currentPlayer = 'X';
+            let gameActive = true;
+            let gameMode = '2players'; // Changed default to '2players' to match image
+            let difficulty = 'easy'; // 'easy', 'medium', 'hard'
+            let scores = { X: 0, O: 0, draw: 0 };
+            let playerXName = "Player X";
+            let playerOName = "Player O";
+            let playerXIcon = "❌";
+            let playerOIcon = "⭕";
+            let gameHistory = []; // Stores recent game results (max 10)
+            
+            // --- Audio State ---
+            let musicEnabled = true;
+            let soundEnabled = true;
+            
+            // --- DOM Elements ---
+            const cells = document.querySelectorAll('.cell');
+            const statusMessage = document.getElementById('status');
+            const xScoreDisplay = document.getElementById('x-score');
+            const oScoreDisplay = document.getElementById('o-score');
+            const drawScoreDisplay = document.getElementById('draw-score');
+            const scoreXElement = document.getElementById('score-x'); // Get the X score element
+            const scoreOElement = document.getElementById('score-o'); // Get the O score element
+            const newGameBtn = document.getElementById('new-game');
+            const resetBtn = document.getElementById('reset');
+            const player1Btn = document.getElementById('1player');
+            const player2Btn = document.getElementById('2players');
+            const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+            const playerXNameInput = document.getElementById('playerXName');
+            const playerONameInput = document.getElementById('playerOName');
+            const playerXIconRow = document.getElementById('playerX-icon-row');
+            const playerOIconRow = document.getElementById('playerO-icon-row');
+            const xPlayerIconDisplay = document.getElementById('x-player-icon');
+            const oPlayerIconDisplay = document.getElementById('o-player-icon');
+            const modalOverlay = document.getElementById('modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const playAgainBtn = document.getElementById('play-again');
+            const backToToolsBtn = document.getElementById('back-to-tools');
+            const backMenuBtn = document.getElementById('back-menu-btn');
+            const musicToggle = document.getElementById('music-toggle');
+            const soundToggle = document.getElementById('sound-toggle');
+            const musicVolumeSlider = document.getElementById('music-volume');
+            const soundVolumeSlider = document.getElementById('sound-volume');
+            const gameBoard = document.getElementById('game-board');
+            const winningLine = document.getElementById('winning-line');
+            const historyList = document.getElementById('history-list');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            const scrollIndicator = document.getElementById('scroll-indicator'); // Scroll indicator element
+            
+            // New DOM elements for settings menu
+            const settingsMenuToggle = document.getElementById('settings-menu-toggle');
+            const audioSettingsPanel = document.getElementById('audio-settings-panel');
+
+
+            // --- Audio Elements ---
+            const bgMusic = document.getElementById('bg-music');
+            const clickSound = document.getElementById('click-sound');
+            const winSound = document.getElementById('win-sound');
+            const drawSound = document.getElementById('draw-sound');
+            const celebrationSound = document.getElementById('celebration-sound'); // New celebration sound
+
+            // Define playMusic function here, after bgMusic is defined
+            const playMusic = () => {
+                // Attempt to play music and catch any autoplay errors
+                bgMusic.play().catch(e => {
+                    console.log("Autoplay prevented: ", e);
+                    // Inform the user if autoplay is blocked
+                    if (musicEnabled) { // Only show message if music is supposed to be on
+                        displayTemporaryMessage("Music autoplay blocked by browser. Click anywhere to enable!", true);
+                    }
+                });
+            };
+            
+            // --- Local Storage Keys ---
+            const LS_PLAYER_X_NAME = 'ticTacToePlayerXName';
+            const LS_PLAYER_O_NAME = 'ticTacToePlayerOName';
+            const LS_PLAYER_X_ICON = 'ticTacToePlayerXIcon';
+            const LS_PLAYER_O_ICON = 'ticTacToePlayerOIcon';
+            const LS_MUSIC_VOLUME = 'ticTacToeMusicVolume';
+            const LS_SOUND_VOLUME = 'ticTacToeSoundVolume';
+            const LS_GAME_HISTORY = 'ticTacToeGameHistory';
+
+            // --- Winning Combinations ---
+            const winningConditions = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+                [0, 4, 8], [2, 4, 6] // diagonals
+            ];
+            
+            // --- Game Initialization & Persistence ---
+
+            // Loads saved settings from local storage
+            function loadSettings() {
+                playerXName = localStorage.getItem(LS_PLAYER_X_NAME) || "Player X";
+                playerOName = localStorage.getItem(LS_PLAYER_O_NAME) || "Player O";
+                playerXIcon = localStorage.getItem(LS_PLAYER_X_ICON) || "❌";
+                playerOIcon = localStorage.getItem(LS_PLAYER_O_ICON) || "⭕";
+                
+                playerXNameInput.value = playerXName;
+                playerONameInput.value = playerOName;
+
+                // Set active icon buttons
+                setActiveIconButton(playerXIconRow, playerXIcon);
+                setActiveIconButton(playerOIconRow, playerOIcon);
+
+                // Load and set volume
+                const savedMusicVolume = parseFloat(localStorage.getItem(LS_MUSIC_VOLUME));
+                const savedSoundVolume = parseFloat(localStorage.getItem(LS_SOUND_VOLUME));
+
+                if (!isNaN(savedMusicVolume)) {
+                    bgMusic.volume = savedMusicVolume;
+                    musicVolumeSlider.value = savedMusicVolume;
+                } else {
+                    bgMusic.volume = 0.3; // Default
+                    musicVolumeSlider.value = 0.3;
+                }
+
+                if (!isNaN(savedSoundVolume)) {
+                    clickSound.volume = savedSoundVolume;
+                    winSound.volume = savedSoundVolume;
+                    drawSound.volume = savedSoundVolume;
+                    celebrationSound.volume = savedSoundVolume;
+                    soundVolumeSlider.value = savedSoundVolume;
+                } else {
+                    clickSound.volume = 1; // Default
+                    winSound.volume = 1;
+                    drawSound.volume = 1;
+                    celebrationSound.volume = 1;
+                    soundVolumeSlider.value = 1;
+                }
+
+                // Load game history
+                const savedHistory = localStorage.getItem(LS_GAME_HISTORY);
+                if (savedHistory) {
+                    gameHistory = JSON.parse(savedHistory);
+                }
+                renderHistory();
+
+                // Set initial active mode button based on loaded gameMode
+                if (gameMode === '1player') {
+                    player1Btn.classList.add('active');
+                    player2Btn.classList.remove('active');
+                    document.querySelector('.difficulty-selector').style.display = 'flex';
+                    playerONameInput.value = "Computer";
+                    playerONameInput.disabled = true;
+                } else { // Default to 2 players
+                    player2Btn.classList.add('active');
+                    player1Btn.classList.remove('active');
+                    document.querySelector('.difficulty-selector').style.display = 'none';
+                    playerONameInput.value = "Player O";
+                    playerONameInput.disabled = false;
+                }
+            }
+
+            // Saves current settings to local storage
+            function saveSettings() {
+                localStorage.setItem(LS_PLAYER_X_NAME, playerXName);
+                localStorage.setItem(LS_PLAYER_O_NAME, playerOName);
+                localStorage.setItem(LS_PLAYER_X_ICON, playerXIcon);
+                localStorage.setItem(LS_PLAYER_O_ICON, playerOIcon);
+                localStorage.setItem(LS_MUSIC_VOLUME, musicVolumeSlider.value);
+                localStorage.setItem(LS_SOUND_VOLUME, soundVolumeSlider.value);
+                localStorage.setItem(LS_GAME_HISTORY, JSON.stringify(gameHistory));
+            }
+
+            // Initializes the game board and state
+            function initGame() {
+                board = ['', '', '', '', '', '', '', '', ''];
+                currentPlayer = 'X';
+                gameActive = true;
+                winningLine.classList.remove('active'); // Hide winning line
+                
+                cells.forEach(cell => {
+                    cell.textContent = '';
+                    cell.classList.remove('x', 'o', 'win', 'winning-glow'); // Remove winning-glow
+                });
+                
+                updateStatusMessage();
+                // Clear any existing confetti and fireworks
+                document.querySelectorAll('.confetti, .firework').forEach(el => el.remove());
+            }
+            
+            // Updates the status message based on current player
+            function updateStatusMessage() {
+                const currentPlayersName = currentPlayer === 'X' ? playerXName : playerOName;
+                statusMessage.textContent = `${currentPlayersName}'S TURN`;
+                statusMessage.classList.remove('x-turn', 'o-turn');
+                statusMessage.classList.add(currentPlayer === 'X' ? 'x-turn' : 'o-turn');
+
+                xPlayerIconDisplay.textContent = playerXIcon;
+                oPlayerIconDisplay.textContent = playerOIcon;
+
+                // NEW: Add/remove active-turn class to score boxes
+                scoreXElement.classList.remove('active-turn');
+                scoreOElement.classList.remove('active-turn');
+
+                if (currentPlayer === 'X') {
+                    scoreXElement.classList.add('active-turn');
+                } else {
+                    scoreOElement.classList.add('active-turn');
+                }
+            }
+
+            // Displays a temporary message in the status area
+            let statusMessageTimeout;
+            function displayTemporaryMessage(message, isError = false) {
+                clearTimeout(statusMessageTimeout);
+                statusMessage.textContent = message;
+                statusMessage.classList.remove('x-turn', 'o-turn'); // Remove turn specific colors
+                // NEW: Also remove active-turn class from score boxes during temporary message
+                scoreXElement.classList.remove('active-turn');
+                scoreOElement.classList.remove('active-turn');
+
+                if (isError) {
+                    statusMessage.style.color = '#ff4d4d'; // Red for errors
+                    statusMessage.style.textShadow = '0 0 8px #ff4d4d';
+                } else {
+                    statusMessage.style.color = 'white'; // Default white
+                    statusMessage.style.textShadow = '0 0 6px white';
+                }
+                statusMessageTimeout = setTimeout(() => {
+                    updateStatusMessage(); // Revert to normal status message
+                    statusMessage.style.color = ''; // Clear inline styles
+                    statusMessage.style.textShadow = '';
+                }, 3000); // Message disappears after 3 seconds
+            }
+            
+            // Handles a click on a game cell
+            function handleCellClick(e) {
+                const clickedCell = e.target;
+                const clickedCellIndex = parseInt(clickedCell.getAttribute('data-index'));
+                
+                if (board[clickedCellIndex] !== '' || !gameActive) return;
+                
+                if (soundEnabled) {
+                    clickSound.currentTime = 0;
+                    clickSound.play();
+                }
+                
+                board[clickedCellIndex] = currentPlayer;
+                
+                // Use the selected icon instead of Font Awesome classes
+                clickedCell.textContent = currentPlayer === 'X' ? playerXIcon : playerOIcon;
+                clickedCell.classList.add(currentPlayer.toLowerCase());
+                clickedCell.classList.add('bounce');
+                
+                setTimeout(() => {
+                    clickedCell.classList.remove('bounce');
+                }, 500);
+                
+                const roundWon = checkWin();
+                const roundDraw = checkDraw();
+                
+                if (roundWon) {
+                    handleWin(roundWon); // Pass the winning combination to handleWin
+                    return;
+                }
+                
+                if (roundDraw) {
+                    handleDraw();
+                    return;
+                }
+                
+                switchPlayer();
+                
+                if (gameMode === '1player' && currentPlayer === 'O' && gameActive) {
+                    setTimeout(makeAIMove, 500);
+                }
+            }
+            
+            // Checks if the current board state results in a win
+            // Returns the winning combination array if a win is found, otherwise null
+            function checkWinState(currentBoard) {
+                for (let i = 0; i < winningConditions.length; i++) {
+                    const [a, b, c] = winningConditions[i];
+                    if (currentBoard[a] && currentBoard[a] === currentBoard[b] && currentBoard[a] === currentBoard[c]) {
+                        return winningConditions[i]; // Returns the winning combination array
+                    }
+                }
+                return null;
+                }
+
+            // checkWin now just calls checkWinState and returns its result
+            function checkWin() {
+                return checkWinState(board);
+            }
+            
+            // Checks if the game is a draw
+            function checkDraw() {
+                // Check if all cells are filled AND there is no winner
+                return !board.includes('') && checkWinState(board) === null;
+            }
+            
+            // Handles a win condition
+            function handleWin(winningCombination) {
+                gameActive = false;
+                
+                winningCombination.forEach(index => {
+                    cells[index].classList.add('win', 'winning-glow'); // Added winning-glow
+                });
+                
+                scores[currentPlayer]++;
+                updateScores();
+                
+                if (soundEnabled) {
+                    winSound.currentTime = 0;
+                    winSound.play();
+                    celebrationSound.currentTime = 0; // Play new celebration sound
+                    celebrationSound.play();
+                }
+                
+                drawWinningLine(winningCombination); // Draw the winning line
+                createCelebration(); // Call the new combined celebration function
+
+                const winnerName = currentPlayer === 'X' ? playerXName : playerOName;
+                showModal(`${winnerName} WINS!`, `Congratulations! ${winnerName} has won the game.`);
+                addGameToHistory(`${winnerName} Wins!`, playerXIcon, playerOIcon); // Pass icons
+            }
+            
+            // Handles a draw condition
+            function handleDraw() {
+                gameActive = false;
+                scores.draw++;
+                updateScores();
+                
+                if (soundEnabled) {
+                    drawSound.currentTime = 0;
+                    drawSound.play();
+                }
+                
+                showModal('GAME DRAW!', 'The game ended in a draw. Try again!');
+                addGameToHistory('Game Draw!', playerXIcon, playerOIcon); // Pass icons
+            }
+            
+            // Switches the current player
+            function switchPlayer() {
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                updateStatusMessage();
+            }
+            
+            // Updates the displayed scores
+            function updateScores() {
+                xScoreDisplay.textContent = scores.X;
+                oScoreDisplay.textContent = scores.O;
+                drawScoreDisplay.textContent = scores.draw;
+            }
+            
+            // Minimax Algorithm for AI
+            function minimax(currentBoard, player) {
+                const winnerCombination = checkWinState(currentBoard); // Get the winning combination or null
+
+                if (winnerCombination !== null) { // If there's a winner
+                    if (currentBoard[winnerCombination[0]] === 'O') { // AI wins
+                        return 10;
+                    } else { // Human wins
+                        return -10;
+                    }
+                } else if (!currentBoard.includes('')) { // Draw
+                    return 0;
+                }
+
+                if (player === 'O') { // AI's turn (Maximizing player)
+                    let bestScore = -Infinity;
+                    for (let i = 0; i < currentBoard.length; i++) {
+                        if (currentBoard[i] === '') {
+                            currentBoard[i] = 'O';
+                            let score = minimax(currentBoard, 'X');
+                            currentBoard[i] = ''; // Undo move
+                            bestScore = Math.max(score, bestScore);
+                        }
+                    }
+                    return bestScore;
+                } else { // Human's turn (Minimizing player)
+                    let bestScore = Infinity;
+                    for (let i = 0; i < currentBoard.length; i++) {
+                        if (currentBoard[i] === '') {
+                            currentBoard[i] = 'X';
+                            let score = minimax(currentBoard, 'O');
+                            currentBoard[i] = ''; // Undo move
+                            bestScore = Math.min(score, bestScore);
+                        }
+                    }
+                    return bestScore;
+                }
+            }
+
+            // AI logic for making a move based on difficulty
+            function makeAIMove() {
+                if (!gameActive) return;
+                
+                let bestMove = null;
+                
+                switch(difficulty) {
+                    case 'easy':
+                        bestMove = randomMove();
+                        break;
+                    case 'medium':
+                        // Medium: 70% chance of a good move, 30% random
+                        if (Math.random() < 0.7) { 
+                            bestMove = findWinningMove('O') || blockPlayer() || takeCenter() || randomMove();
+                        } else {
+                            bestMove = randomMove();
+                        }
+                        break;
+                    case 'hard':
+                        // Hard: 60% chance of optimal move, 40% random move
+                        if (Math.random() < 0.6) { // Changed from 0.8 to 0.6
+                            let bestScore = -Infinity;
+                            for (let i = 0; i < board.length; i++) {
+                                if (board[i] === '') {
+                                    board[i] = 'O'; // Simulate AI's move
+                                    let score = minimax(board, 'X');
+                                    board[i] = ''; // Undo the simulated move
+
+                                    if (score > bestScore) {
+                                        bestScore = score;
+                                        bestMove = i;
+                                    }
+                                }
+                            }
+                        } else { // 40% chance for a random move
+                            bestMove = randomMove();
+                        }
+                        break;
+                    default:
+                        bestMove = randomMove();
+                }
+                
+                if (bestMove !== null) {
+                    const cell = cells[bestMove];
+                    const event = { target: cell };
+                    handleCellClick(event);
+                }
+            }
+            
+            // Helper function to find a winning move for a given player
+            function findWinningMove(player) {
+                for (let i = 0; i < winningConditions.length; i++) {
+                    const [a, b, c] = winningConditions[i];
+                    // Check if two in a row and third is empty
+                    if (board[a] === player && board[b] === player && board[c] === '') return c;
+                    if (board[a] === player && board[c] === player && board[b] === '') return b;
+                    if (board[b] === player && board[c] === player && board[a] === '') return a;
+                }
+                return null;
+            }
+            
+            // Helper function to block opponent's winning move
+            function blockPlayer() {
+                return findWinningMove('X');
+            }
+            
+            // Helper function to take the center cell if available
+            function takeCenter() {
+                return board[4] === '' ? 4 : null;
+            }
+
+            // Helper function to make a random move on an empty cell
+            function randomMove() {
+                const availableCells = [];
+                for (let i = 0; i < board.length; i++) {
+                    if (board[i] === '') {
+                        availableCells.push(i);
+                    }
+                }
+                if (availableCells.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * availableCells.length);
+                    return availableCells[randomIndex];
+                }
+                return null;
+            }
+
+            // Displays the game over modal
+            function showModal(title, message) {
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                modalOverlay.classList.add('active');
+            }
+
+            // Hides the game over modal
+            function hideModal() {
+                modalOverlay.classList.remove('active');
+            }
+
+            // Draws a neon line across the winning combination
+            function drawWinningLine(combination) {
+                const startCell = cells[combination[0]];
+                const endCell = cells[combination[2]];
+
+                const boardRect = gameBoard.getBoundingClientRect();
+                const startRect = startCell.getBoundingClientRect();
+                const endRect = endCell.getBoundingClientRect();
+
+                // Calculate center points relative to the game board
+                const startX = (startRect.left + startRect.right) / 2 - boardRect.left;
+                const startY = (startRect.top + startRect.bottom) / 2 - boardRect.top;
+                const endX = (endRect.left + endRect.right) / 2 - boardRect.left;
+                const endY = (endRect.top + endRect.bottom) / 2 - boardRect.top;
+
+                const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
+                const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+
+                winningLine.style.width = `${length}px`;
+                winningLine.style.height = '4px'; /* Reduced thickness of the line */
+                winningLine.style.left = `${startX}px`;
+                winningLine.style.top = `${startY}px`;
+                winningLine.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+                winningLine.style.transformOrigin = 'left center'; // Ensure rotation from start
+                winningLine.classList.add('active');
+            }
+
+            // Create celebration effects (user's provided function)
+            function createCelebration() {
+                // Confetti
+                const shapes = ['square', 'circle', 'triangle', 'bubble', 'emoji']; // Added 'emoji'
+                const customEmojis = ['✨', '🎮', '🚀', '🌟', '👾', '🎉', '🏆', '💯', '🥳', '🤩', '💫', '🔥', '🎵', '🎶', '🌈', '💖', '💡', '👑', '🎉', '🎊', '🎁']; // More emojis/icons
+                
+                for (let i = 0; i < 200; i++) { // Increased particles for more impact
+                    const confetti = document.createElement('div');
+                    const size = Math.random() * 6 + 4; // Size between 4px and 10px
+                    const duration = Math.random() * 2 + 3; // Duration between 3s and 5s
+                    const delay = Math.random() * 0.5; // Delay up to 0.5s
+                    const endX = (Math.random() - 0.5) * 200; // Horizontal drift up to +/- 100px
+                    const color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+
+                    confetti.className = 'confetti';
+                    confetti.style.left = `${Math.random() * 100}%`;
+                    confetti.style.setProperty('--size', `${size}px`);
+                    confetti.style.setProperty('--size-half', `${size / 2}px`); // For triangle
+                    confetti.style.setProperty('--color', color); // For triangle border and emoji color
+                    confetti.style.setProperty('--duration', `${duration}s`);
+                    confetti.style.setProperty('--delay', `${delay}s`);
+                    confetti.style.setProperty('--end-x', `${endX}px`);
+
+                    if (shape === 'circle') {
+                        confetti.classList.add('confetti-shape-circle');
+                        confetti.style.backgroundColor = color; // Circles still get background color
+                    } else if (shape === 'triangle') {
+                        confetti.classList.add('confetti-shape-triangle');
+                        // Background color is handled by border-bottom for triangles
+                    } else if (shape === 'bubble') {
+                        confetti.classList.add('confetti-shape-bubble');
+                        // Bubbles have their own background/border/shadow
+                        confetti.style.setProperty('--duration', `${Math.random() * 4 + 4}s`); // Bubbles float slower
+                        confetti.style.setProperty('--size', `${Math.random() * 15 + 10}px`); // Bubbles are larger
+                        confetti.style.setProperty('--size-half', `${(Math.random() * 15 + 10) / 2}px`);
+                    } else if (shape === 'emoji') {
+                        confetti.classList.add('confetti-shape-emoji');
+                        // Create a span element for the emoji/icon content
+                        const content = document.createElement('span');
+                        const randomEmoji = customEmojis[Math.floor(Math.random() * customEmojis.length)];
+                        // Check if it's a Font Awesome class or a direct emoji
+                        if (randomEmoji.startsWith('fa')) {
+                            const icon = document.createElement('i');
+                            icon.className = `fas ${randomEmoji}`;
+                            content.appendChild(icon);
+                        } else {
+                            content.textContent = randomEmoji;
+                        }
+                        confetti.appendChild(content);
+                        confetti.style.setProperty('--size', `${Math.random() * 10 + 15}px`); // Larger size for emojis
+                        confetti.style.setProperty('--duration', `${Math.random() * 2 + 4}s`); // Slightly longer duration for emojis
+                        confetti.style.setProperty('--delay', `${Math.random() * 0.8}s`); // More varied delay
+                    } else { /* square */
+                        confetti.style.backgroundColor = color;
+                    }
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), duration * 1000 + delay * 1000); // Remove after animation ends
+                }
+
+                // Fireworks
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(() => {
+                        const firework = document.createElement('div');
+                        firework.className = 'firework';
+                        firework.style.left = `${Math.random() * 100}%`;
+                        firework.style.top = `${Math.random() * 100}%`;
+                        firework.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                        firework.style.setProperty('--x', `${Math.random() * 100 - 50}px`);
+                        firework.style.setProperty('--y', `${Math.random() * 100 - 50}px`);
+                        document.body.appendChild(firework);
+                        
+                        setTimeout(() => firework.remove(), 2000);
+                    }, i * 100);
+                }
+            }
+
+            // --- Game History Functions ---
+            // Modified to accept player icons
+            function addGameToHistory(result, iconX, iconO) {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const dateString = now.toLocaleDateString();
+                gameHistory.unshift({ result, time: `${dateString} ${timeString}`, iconX, iconO }); // Store icons
+                if (gameHistory.length > 10) {
+                    gameHistory.pop(); // Keep only last 10
+                }
+                saveSettings(); // Save history to local storage
+                renderHistory();
+            }
+
+            function renderHistory() {
+                historyList.innerHTML = ''; // Clear existing list
+                gameHistory.forEach(item => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('history-item');
+                    if (item.result.includes('Wins')) {
+                        listItem.classList.add('win');
+                    } else if (item.result.includes('Draw')) {
+                        listItem.classList.add('draw');
+                    }
+                    // Display icons and result
+                    listItem.innerHTML = `
+                        <div class="history-players">
+                            <span class="history-player-icon">${item.iconX}</span>
+                            vs
+                            <span class="history-player-icon">${item.iconO}</span>
+                            - ${item.result}
+                        </div>
+                        <span>${item.time}</span>
+                    `;
+                    historyList.appendChild(listItem);
+                });
+            }
+
+            // --- Icon Selection Functions ---
+            function setActiveIconButton(container, activeIcon) {
+                container.querySelectorAll('.icon-btn').forEach(btn => {
+                    if (btn.dataset.icon === activeIcon) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+
+            // --- Scroll Indicator Visibility Logic ---
+            function checkScrollIndicatorVisibility() {
+                // Check if content height is greater than viewport height
+                if (document.documentElement.scrollHeight > window.innerHeight) {
+                    scrollIndicator.classList.add('visible');
+                } else {
+                    scrollIndicator.classList.remove('visible');
+                }
+            }
+
+            // Hide scroll indicator if user scrolls down
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 40) { // Reduced scroll threshold
+                    scrollIndicator.classList.remove('visible');
+                } else {
+                    // Re-check visibility if scrolled back to top
+                    checkScrollIndicatorVisibility();
+                }
+            });
+
+
+            // --- Event Listeners ---
+            cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+
+            newGameBtn.addEventListener('click', initGame);
+
+            resetBtn.addEventListener('click', () => {
+                scores = { X: 0, O: 0, draw: 0 };
+                gameHistory = []; // Clear history on reset
+                updateScores();
+                initGame();
+                saveSettings(); // Save cleared scores and history
+            });
+
+            player1Btn.addEventListener('click', () => {
+                gameMode = '1player';
+                player1Btn.classList.add('active');
+                player2Btn.classList.remove('active');
+                document.querySelector('.difficulty-selector').style.display = 'flex';
+                playerONameInput.value = "Computer"; // Set AI name
+                playerONameInput.disabled = true; // Disable input for AI
+                playerXNameInput.focus(); // Focus on player X name input
+                saveSettings(); // Save game mode
+                initGame();
+            });
+
+            player2Btn.addEventListener('click', () => {
+                gameMode = '2players';
+                player2Btn.classList.add('active');
+                player1Btn.classList.remove('active');
+                document.querySelector('.difficulty-selector').style.display = 'none';
+                playerONameInput.value = "Player O"; // Reset to default for 2 players
+                playerONameInput.disabled = false; // Enable input for player O
+                playerXNameInput.focus(); // Focus on player X name input
+                saveSettings(); // Save game mode
+                initGame();
+            });
+
+            difficultyBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    difficultyBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    difficulty = btn.dataset.level;
+                    saveSettings(); // Save difficulty
+                    initGame(); 
+                });
+            });
+
+            playerXNameInput.addEventListener('input', (e) => {
+                playerXName = e.target.value.trim() || "Player X";
+                updateStatusMessage(); 
+                saveSettings(); // Save name
+            });
+
+            playerONameInput.addEventListener('input', (e) => {
+                playerOName = e.target.value.trim() || "Player O";
+                updateStatusMessage(); 
+                saveSettings(); // Save name
+            });
+
+            // Icon selection event listeners
+            playerXIconRow.addEventListener('click', (e) => {
+                if (e.target.classList.contains('icon-btn')) {
+                    playerXIcon = e.target.dataset.icon;
+                    setActiveIconButton(playerXIconRow, playerXIcon);
+                    updateStatusMessage();
+                    saveSettings(); // Save icon
+                    initGame(); // Restart game with new icon
+                }
+            });
+
+            playerOIconRow.addEventListener('click', (e) => {
+                if (e.target.classList.contains('icon-btn')) {
+                    playerOIcon = e.target.dataset.icon;
+                    setActiveIconButton(playerOIconRow, playerOIcon);
+                    updateStatusMessage();
+                    saveSettings(); // Save icon
+                    initGame(); // Restart game with new icon
+                }
+            });
+
+            playAgainBtn.addEventListener('click', () => {
+                hideModal();
+                initGame();
+            });
+
+            backToToolsBtn.addEventListener('click', () => {
+                hideModal();
+                // In a real application, you might redirect the user here.
+                // For this example, we just close the modal.
+            });
+
+            backMenuBtn.addEventListener('click', () => {
+                hideModal();
+                initGame();
+            });
+
+            musicToggle.addEventListener('click', () => {
+                musicEnabled = !musicEnabled;
+                if (musicEnabled) {
+                    bgMusic.play();
+                    musicToggle.querySelector('i').classList.replace('fa-music-slash', 'fa-music');
+                } else {
+                    bgMusic.pause();
+                    musicToggle.querySelector('i').classList.replace('fa-music', 'fa-music-slash');
+                }
+            });
+
+            soundToggle.addEventListener('click', () => {
+                soundEnabled = !soundEnabled;
+                if (soundEnabled) {
+                    soundToggle.querySelector('i').classList.replace('fa-volume-mute', 'fa-volume-up');
+                } else {
+                    soundToggle.querySelector('i').classList.replace('fa-volume-up', 'fa-volume-mute');
+                }
+            });
+
+            // Volume slider event listeners
+            musicVolumeSlider.addEventListener('input', (e) => {
+                bgMusic.volume = e.target.value;
+                saveSettings();
+            });
+
+            soundVolumeSlider.addEventListener('input', (e) => {
+                clickSound.volume = e.target.value;
+                winSound.volume = e.target.value;
+                drawSound.volume = e.target.value;
+                celebrationSound.volume = e.target.value; // Apply to new sound
+                saveSettings();
+            });
+
+            // Mobile menu toggle
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+
+            // Close mobile menu when a link is clicked
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            // Settings menu toggle
+            settingsMenuToggle.addEventListener('click', (event) => {
+                audioSettingsPanel.classList.toggle('active');
+                event.stopPropagation(); // Prevent document click from closing it immediately
+            });
+
+            // Close settings panel if clicked outside
+            document.addEventListener('click', (event) => {
+                if (!audioSettingsPanel.contains(event.target) && !settingsMenuToggle.contains(event.target)) {
+                    audioSettingsPanel.classList.remove('active');
+                }
+            });
+
+            // --- Initial Setup ---
+            loadSettings(); // Load settings first
+            initGame();
+            updateScores();
+            playMusic(); // Attempt to play music after settings are loaded
+
+            // Check scroll indicator visibility on load and resize
+            checkScrollIndicatorVisibility();
+            window.addEventListener('resize', checkScrollIndicatorVisibility);
+        });
+    </script>
+</body>
+</html>
